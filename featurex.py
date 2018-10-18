@@ -108,30 +108,30 @@ print (tfidf_text.shape)
 
 likes = dataset['likes']
 
-# tfidf_text_train, tfidf_text_test, likes_train, likes_test = \
-# train_test_split(tfidf_text, likes, test_size=0.3)
+tfidf_text_train, tfidf_text_test, likes_train, likes_test = \
+train_test_split(tfidf_text, likes, test_size=0.3)
 
-# print (len(tfidf_text_train), len(tfidf_text_test), len(tfidf_text_train) + len(tfidf_text_test))
+print (len(tfidf_text_train), len(tfidf_text_test), len(tfidf_text_train) + len(tfidf_text_test))
 
-# regr = linear_model.LinearRegression()
-# regr.fit(tfidf_text_train, likes_train)
-# likes_pred = regr.predict(tfidf_text_test)
+regr = linear_model.LinearRegression()
+regr.fit(tfidf_text_train, likes_train)
+likes_pred = regr.predict(tfidf_text_test)
 
-# # The coefficients
-# print('Coefficients: \n', regr.coef_)
+# The coefficients
+print('Coefficients: \n', regr.coef_)
 
-# # The mean squared error
-# tfidf_mse = mean_squared_error(likes_pred, likes_test)
-# print("MSE Mean squared error: %.2f" % tfidf_mse)
+# The mean squared error
+tfidf_mse = mean_squared_error(likes_pred, likes_test)
+print("MSE Mean squared error: %.2f" % tfidf_mse)
 
-# tfidf_rmse = np.sqrt(tfidf_mse)
-# print('TFIDF RMSE: %.4f' % tfidf_rmse)
+tfidf_rmse = np.sqrt(tfidf_mse)
+print('TFIDF RMSE: %.4f' % tfidf_rmse)
 
-# lin_mae = mean_absolute_error(likes_pred, likes_test)
-# print('Liner Regression MAE: %.4f' % lin_mae)
+lin_mae = mean_absolute_error(likes_pred, likes_test)
+print('Liner Regression MAE: %.4f' % lin_mae)
 
-# # Explained variance score: 1 is perfect prediction
-# print('Variance score: %.2f' % r2_score(likes_test, likes_pred))
+# Explained variance score: 1 is perfect prediction
+print('Variance score: %.2f' % r2_score(likes_test, likes_pred))
 
 # import matplotlib.pyplot as plt2
 # Plot outputs
@@ -144,20 +144,20 @@ likes = dataset['likes']
 
 # plt2.show()
 
-# from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
+from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
 
-# forest_reg = RandomForestRegressor(random_state=42)
-# forest_reg.fit(tfidf_text_train, likes_train)
-# likes_pred = forest_reg.predict(tfidf_text_test)
-# forest_mse = mean_squared_error(likes_pred, likes_test)
-# forest_rmse = np.sqrt(forest_mse)
-# print('Random Forest RMSE: %.4f' % forest_rmse)
+forest_reg = RandomForestRegressor(random_state=42)
+forest_reg.fit(tfidf_text_train, likes_train)
+likes_pred = forest_reg.predict(tfidf_text_test)
+forest_mse = mean_squared_error(likes_pred, likes_test)
+forest_rmse = np.sqrt(forest_mse)
+print('Random Forest RMSE: %.4f' % forest_rmse)
 
-# from sklearn import ensemble
-# from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
-# model = ensemble.GradientBoostingRegressor()
-# model.fit(tfidf_text_train, likes_train)
-# likes_pred = model.predict(tfidf_text_test)
-# gb_mse = mean_squared_error(likes_pred, likes_test)
-# gb_rmse = np.sqrt(gb_mse)
-# print('Gradient Boosting RMSE: %.4f' % gb_rmse)
+from sklearn import ensemble
+from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
+model = ensemble.GradientBoostingRegressor()
+model.fit(tfidf_text_train, likes_train)
+likes_pred = model.predict(tfidf_text_test)
+gb_mse = mean_squared_error(likes_pred, likes_test)
+gb_rmse = np.sqrt(gb_mse)
+print('Gradient Boosting RMSE: %.4f' % gb_rmse)

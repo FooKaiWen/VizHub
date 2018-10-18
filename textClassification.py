@@ -14,23 +14,27 @@ stemmer = PorterStemmer()
 
 data = []
 
-for i in range(dataset.shape[0]): # This is where messages are cleaned and stemmed to make them uniform.
+for i in range(dataset.shape[0]):
     if(pd.notna(dataset.iloc[i,1])):
         text = dataset.iloc[i,1]
         data.append(text)
     
 vectorizer = TfidfVectorizer()
-x = vectorizer.fit_transform(data).toarray()
+x = vectorizer.fit_transform(data)
 
 from scipy import sparse
 from scipy.stats import uniform
 import numpy as np
-import numpy
-numpy.set_printoptions(threshold=numpy.nan)
+from sklearn.decomposition import TruncatedSVD
 
-
-data_csr = sparse.csr_matrix(x).toarray()
-print(data_csr)
+data_csr = sparse.csr_matrix(x)
+# print(data_csr)
+tsvd = TruncatedSVD(n_components=4000)
+X_sparse_tsvd = tsvd.fit(data_csr).transform(data_csr)
+# print(X_sparse_tsvd)
+print('Original number of features:', data_csr.shape[1])
+print('Reduced number of features:', X_sparse_tsvd.shape[1])
+print(tsvd.explained_variance_ratio_[0:2000].sum())
 # data_csr_size = data_csr.nbytes/(1024**2)
 # print('Size of full matrix: '+ '%3.2f' %data_csr_size + ' MB')
 
