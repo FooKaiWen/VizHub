@@ -1,10 +1,34 @@
-<!DOCTYPE HTML>
+<!-- <!DOCTYPE HTML>
 <html>
-  <head>
-    <title>VizHub</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    
-  </head>
+<title>VizHub</title>
+<style type="text/css">
+  body{
+    background-color: rgba(120,245,234,0.15);
+    background-image: none;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: 0 0;
+}
+  .title { 
+    color: #573FD1;
+  }
+
+  .introduction {
+    text-shadow: 1px 2px 2px rgba(139,101,206,0.26);
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 20px;
+    letter-spacing: 0px;
+    word-spacing: 2px;
+    color: #000000;
+    font-weight: normal;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    }
+
+</style>
+
   <body>
     <div class="title">
       <h1>VizHub &trade; : Data Insight Provider</h1>
@@ -33,27 +57,32 @@
       <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15889.642903317785!2d100.28805829776803!3d5.354124675719885!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac1a836ae7e53%3A0x835ac54fe8f4d95a!2sUniversity+of+Science%2C+Malaysia!5e0!3m2!1sen!2smy!4v1538313473518" 
       width="400" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
 
-      <?php
-
-      require_once  'Facebook/autoload.php';
-
-      $fb = new Facebook\Facebook([
-        'app_id' => '', // Replace {app-id} with your app id
-        'app_secret' => '',
-        'default_graph_version' => 'v3.1',
-        ]);
-
-      $helper = $fb->getRedirectLoginHelper();
-
-      $permissions = ['email']; // Optional permissions
-      $loginUrl = $helper->getLoginUrl('https://localhost/project/fb-callback.php', $permissions);
-
-      echo '<p><a href="' . htmlspecialchars($loginUrl) . '">Click here</a> to login!</p>';
-
-      shell_exec("python plot.py");
-      ?>
+      
     </div>
-
-    <p><a href="http://localhost/project/output.html">Plot</a></p>
   </body>
-</html>
+</html> -->
+
+<?php
+
+require_once  'Facebook/autoload.php';
+
+$fb = new Facebook\Facebook([
+  'app_id' => '', // Replace {app-id} with your app id
+  'app_secret' => '',
+  'default_graph_version' => 'v3.1',
+  ]);
+
+$helper = $fb->getRedirectLoginHelper();
+
+$permissions = ['email']; // Optional permissions
+$loginUrl = $helper->getLoginUrl('https://localhost/project/fb-callback.php', $permissions);
+
+  if (isset($_POST['logInBtn']))
+  {
+    echo "<script language='javascript' type='text/javascript'>";
+    echo "window.location='$loginUrl';";
+    echo "</script>";
+  }
+
+
+?>
