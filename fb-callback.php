@@ -160,7 +160,9 @@ foreach ($cursor as $doc) {
 $query = new MongoDB\Driver\Query([]); 
      
 $rows = $connection->executeQuery('test.post', $query);
-    
+
+
+$likearray = array();
 foreach ($rows as $row) {
   if(!isset($row->message)){
   // $msg = $row->message;  
@@ -171,9 +173,12 @@ foreach ($rows as $row) {
 
    echo nl2br ("\n");
   }
+  $likearray [] = $row->$row->like->summary->total_count;
   echo $row->message;
   echo nl2br ("\n");
 }
+
+print_r($likearray);
      
     // $rows = $connection->executeQuery('test.post', $query);
     // $pops = $connection->executeQuery('test.post', $query);
