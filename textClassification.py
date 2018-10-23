@@ -29,12 +29,12 @@ from sklearn.decomposition import TruncatedSVD
 
 data_csr = sparse.csr_matrix(x)
 # print(data_csr)
-tsvd = TruncatedSVD(n_components=4000)
+tsvd = TruncatedSVD(n_components=1997)
 X_sparse_tsvd = tsvd.fit(data_csr).transform(data_csr)
 # print(X_sparse_tsvd)
 print('Original number of features:', data_csr.shape[1])
 print('Reduced number of features:', X_sparse_tsvd.shape[1])
-print(tsvd.explained_variance_ratio_[0:2000].sum())
+print(tsvd.explained_variance_ratio_[0:1997].sum())
 # data_csr_size = data_csr.nbytes/(1024**2)
 # print('Size of full matrix: '+ '%3.2f' %data_csr_size + ' MB')
 
@@ -42,6 +42,6 @@ print(tsvd.explained_variance_ratio_[0:2000].sum())
 # ZeroElem = (x.shape[0] * x.shape[1]) - x.nnz
 # print ('Amount of Zero occurences: ', ZeroElem)
 # print ('Sparsity: %.2f%%' % (100.0 * ZeroElem / (x.shape[0] * x.shape[1])))
-# print(vectorizer.fit_transform(data).todense())
+# print(vectorizer.fit_transform(data))
 # print(vectorizer.vocabulary_)
 # print(vectorizer.idf_)
