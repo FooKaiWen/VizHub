@@ -1,5 +1,18 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>VizHub</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="design.css">
+  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
 
+<?php
 require_once  'Facebook/autoload.php';
 require_once  "vendor/autoload.php";
 
@@ -16,6 +29,7 @@ $temp = $client->selectDatabase('test');
 $newdb = $temp->drop();
 $newdb = $client->selectDatabase('test');
 $col = $newdb->selectCollection('user');
+$collection = $newdb->selectCollection('post');
 
 // $insertManyResult = $col->insertMany([
 //     [
@@ -118,7 +132,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(10){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(1){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -153,7 +167,6 @@ foreach ($cursor as $doc) {
     exit;
 }
   $ReactionNode = $reactions_request->getDecodedBody();
-  $collection = $newdb->selectCollection('post');
   $insertManyResult = $collection->insertOne($ReactionNode);
 }
 
@@ -170,15 +183,15 @@ foreach ($rows as $row) {
    $collection->updateOne(
     [ 'id' => "$curr_id" ],
     [ '$set' => [ 'message' => " " ]]);
-
-   echo nl2br ("\n");
   }
-  $likearray [] = $row->$row->like->summary->total_count;
-  echo $row->message;
-  echo nl2br ("\n");
+  // echo $row->message;
+  $likearray [] = $row->like->summary->total_count;
 }
 
-print_r($likearray);
+foreach ($likearray as $like){
+  // print($like);
+  echo nl2br ("\n");
+}
      
     // $rows = $connection->executeQuery('test.post', $query);
     // $pops = $connection->executeQuery('test.post', $query);
@@ -267,6 +280,26 @@ print_r($likearray);
   // You can redirect them to a members-only page.
   //header('Location: https://example.com/members.php');
 
+  try {
+    // Returns a `FacebookFacebookResponse` object
+    $picture = $fb->get("/me/picture?type=large&redirect=false",$accessToken
+    );
+  } catch(FacebookExceptionsFacebookResponseException $e) {
+    echo 'Graph returned an error: ' . $e->getMessage();
+    exit;
+  } catch(FacebookExceptionsFacebookSDKException $e) {
+    echo 'Facebook SDK returned an error: ' . $e->getMessage();
+    exit;
+  }
+  $graphNode = $picture->getGraphNode();
+  $url = $graphNode->getField('url');
 ?>
+
+<header class="container">
+  <img src="<?php echo $url; ?>" alt="Profile Picture">
+</header>
+
+</body>
+</html>
 
 
