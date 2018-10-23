@@ -1,3 +1,43 @@
-.container{
-    
+img{
+    float:left;
+    margin:0px 50px;
+}
+
+#detail-name, #detail-id{
+    float:middle;
+    margin:0px 0px
+}
+
+#detail-id{
+    padding-top: 6%;
+    padding-bottom: 0%;
+}
+
+.jumbotron{
+    height:300px;
+}
+
+.extractionButton {
+    color: rgb(255, 255, 255); 
+    font-size: 21px; 
+    line-height: 21px; 
+    padding: 5px; 
+    border-radius: 3px; 
+    font-family: Georgia, serif; 
+    font-weight: normal; 
+    text-decoration: none; 
+    font-style: normal; 
+    font-variant: normal; 
+    text-transform: none; 
+    background-image: linear-gradient(to right, rgb(28, 110, 164) 0%, rgb(35, 136, 203) 50%, rgb(20, 78, 117) 100%); 
+    box-shadow: rgb(36, 36, 36) 5px 5px 10px 5px;
+    border: 2px solid rgb(100, 110, 164); 
+    display: inline-block;
+    float: right;
+}
+.extractionButton:hover {
+    background: rgb(26, 62, 87); 
+}
+.extractionButton:active {
+    background: #144E75; 
 }

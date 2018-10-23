@@ -11,6 +11,10 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div class="alert alert-dismissible alert-success">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Well done!</strong> You successfully logged in! 👍</a>.
+</div>
 
 <?php
 require_once  'Facebook/autoload.php';
@@ -152,7 +156,7 @@ $graphNode = $posts_request->getGraphNode();
 $insertManyResult = $col->insertOne(json_decode($graphNode));
 $cursor = $col->distinct("posts.id");
 
-echo nl2br ("\n\n");
+// echo nl2br ("\n\n");
 
 foreach ($cursor as $doc) {
   try {
@@ -190,7 +194,7 @@ foreach ($rows as $row) {
 
 foreach ($likearray as $like){
   // print($like);
-  echo nl2br ("\n");
+  // echo nl2br ("\n");
 }
      
     // $rows = $connection->executeQuery('test.post', $query);
@@ -282,8 +286,8 @@ foreach ($likearray as $like){
 
   try {
     // Returns a `FacebookFacebookResponse` object
-    $picture = $fb->get("/me/picture?type=large&redirect=false",$accessToken
-    );
+    $pictureNode = $fb->get("/me/picture?type=large&redirect=false",$accessToken);
+    $userDetailNode = $fb->get("/me?fields=id,name",$accessToken);
   } catch(FacebookExceptionsFacebookResponseException $e) {
     echo 'Graph returned an error: ' . $e->getMessage();
     exit;
@@ -291,13 +295,28 @@ foreach ($likearray as $like){
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
   }
-  $graphNode = $picture->getGraphNode();
+  $graphNode = $pictureNode->getGraphNode();
   $url = $graphNode->getField('url');
+  $userDetail = $userDetailNode->getGraphNode();
+  $name = $userDetail->getField('name');
+  $id = $userDetail->getField('id');
 ?>
 
-<header class="container">
-  <img src="<?php echo $url; ?>" alt="Profile Picture">
-</header>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <img src="<?php echo $url; ?>" alt="Profile Picture">
+    <h2 id="detail-name">Name: <?php echo $name; ?><br/></h2>
+    <h2 id="detail-id">ID: <?php echo $id; ?></h2>
+    <button class="extractionButton">Extract Data</button>
+  </div>
+</div>
+
+<div style="width: 100px; float:left; height:100px; background:gray; margin:10px">
+First DIV
+</div>
+<div style="width: 100px; float:left; height:100px; background:yellow; margin:10px">
+Second DIV
+</div>
 
 </body>
 </html>
