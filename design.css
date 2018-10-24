@@ -42,6 +42,31 @@ img{
     background: #144E75; 
 }
 
+.extractionButton2 {
+    color: rgb(255, 255, 255); 
+    font-size: 21px; 
+    line-height: 21px; 
+    padding: 5px; 
+    border-radius: 3px; 
+    font-family: Georgia, serif; 
+    font-weight: normal; 
+    text-decoration: none; 
+    font-style: normal; 
+    font-variant: normal; 
+    text-transform: none; 
+    background-image: linear-gradient(to right, rgb(28, 110, 164) 0%, rgb(35, 136, 203) 50%, rgb(20, 78, 117) 100%); 
+    box-shadow: rgb(36, 36, 36) 3px 3px 7px 3px;
+    border: 2px solid rgb(100, 110, 164); 
+    display: inline-block;
+    float: right;
+}
+.extractionButton2:hover {
+    background: rgb(26, 62, 87); 
+}
+.extractionButton2:active {
+    background: #144E75; 
+}
+
 .lds-hourglass {
     padding-top: 20%;
     display: inline-block;

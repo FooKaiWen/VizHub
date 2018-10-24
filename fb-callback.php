@@ -62,12 +62,10 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 
 // echo "connected";
 
-
-
 $fb = new Facebook\Facebook([
-  'app_id' => '', // Replace {app-id} with your app id
-  'app_secret' => '',
-  'default_graph_version' => '',
+  'app_id' => '267157010556839', // Replace {app-id} with your app id
+  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
+  'default_graph_version' => 'v3.1',
     ]);
   
 $helper = $fb->getRedirectLoginHelper();
@@ -307,16 +305,15 @@ foreach ($likearray as $like){
     <img src="<?php echo $url; ?>" alt="Profile Picture">
     <h2 id="detail-name">Name: <?php echo $name; ?><br/></h2>
     <h2 id="detail-id">ID: <?php echo $id; ?></h2>
-    <button class="extractionButton">Extract Data</button>
+    <!-- <form method="post" action="#"> -->
+        <!-- <input type="submit" name="Extract Data" value="Extract Data" class="extractionButton"> -->
+     <!-- </form> -->
+     <button class="extractionButton">Extract Data</button>
   </div>
 </div>
 
-<div style="width: 100px; float:left; height:100px; background:gray; margin:10px">
-First DIV
-</div>
-<div style="width: 100px; float:left; height:100px; background:yellow; margin:10px">
-Second DIV
-</div>
+<button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
+<button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
 
 </body>
 </html>
