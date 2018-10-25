@@ -9,6 +9,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>  
+  <script type="text/javascript" src="chart.js"></script>
 </head>
 <body>
 <div class="alert alert-dismissible alert-success">
@@ -189,7 +191,7 @@ foreach ($rows as $row) {
   // echo $row->message;
   $likearray [] = $row->like->summary->total_count;
 }
-
+$likearray [] = [1,2,3,4,5,6];
 foreach ($likearray as $like){
   // print($like);
   // echo nl2br ("\n");
@@ -312,9 +314,24 @@ foreach ($likearray as $like){
   </div>
 </div>
 
-<button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
+<form method="post" action="chart.html">
+  <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
+</form>
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
 
+<!-- <div id="a"></div> -->
+<!-- <div id="aligned"> -->
+    <!-- <div class="label">Aligned</div> -->
+    <!-- <div class="chart_container"> -->
+        <!-- <canvas id="chart1"></canvas> -->
+        <canvas id="chart1" float="left" width="400" height="400"></canvas>
+    <!-- </div> -->
+    <!-- <div class="chart_container"> -->
+        <!-- <canvas id="chart1"></canvas> -->
+        <canvas id="chart2" float="right" width="400" height="400"></canvas>
+    <!-- </div> -->
+<!-- </div> -->
+<script>plot()</script> 
 </body>
 </html>
 

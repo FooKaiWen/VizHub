@@ -19,8 +19,8 @@ def stem(word):
     return word
 
 for i in range(dataset.shape[0]): # This is where messages are cleaned and stemmed to make them uniform.
-    if(pd.notna(dataset.iloc[i,1])):
-        message = dataset.iloc[i,1]
+    if(pd.notna(dataset.iloc[i,2])):
+        message = dataset.iloc[i,2]
         # print ("Ori Message")
         # print (message)
         #remove non alphabetic characters
@@ -56,7 +56,7 @@ import numpy as np
 matrix = TfidfVectorizer()
 x = matrix.fit_transform(data).toarray()
 from sklearn.decomposition import TruncatedSVD
-tsvd = TruncatedSVD(n_components=1000)
+tsvd = TruncatedSVD(n_components=1998)
 sparse_tsvd = tsvd.fit(x).transform(x)
 print('Reduced number of features:', sparse_tsvd.shape[1], sparse_tsvd.shape[0])
 y = dataset['likes']
@@ -66,7 +66,7 @@ x_train, x_test, y_train, y_test = train_test_split(sparse_tsvd,y)
 regr = linear_model.LinearRegression()
 regr.fit(x_train, y_train)
 y_pred = regr.predict(x_test)
-
+print(x_test)
 # The coefficients
 print('Coefficients: \n', regr.coef_)
 
@@ -86,11 +86,11 @@ print('Variance score: %.2f' % r2_score(y_test, y_pred))
 import matplotlib.pyplot as plt
 # # Plot outputs
 # plt.scatter(x_test, y_test,  color='black')
-plt.plot(x_test, y_pred, color='blue', linewidth=1)
-plt.plot(x_test, y_test, color='black', linewidth=1)
-plt.xticks(())
-plt.yticks(())
-plt.show()
+# plt.plot(y_test, y_pred, color='blue', linewidth=1)
+# plt.plot(y_test, y_test, color='black', linewidth=1)
+# plt.xticks(())
+# plt.yticks(())
+# plt.show()
 
 matrix2 = CountVectorizer()
 matrix2.fit(data)
@@ -116,19 +116,19 @@ train_test_split(tfidf_text, likes, test_size=0.3)
 
 # print (len(tfidf_text_train), len(tfidf_text_test), len(tfidf_text_train) + len(tfidf_text_test))
 
-# regr = linear_model.LinearRegression()
-# regr.fit(tfidf_text_train, likes_train)
-# likes_pred = regr.predict(tfidf_text_test)
+regr = linear_model.LinearRegression()
+regr.fit(tfidf_text_train, likes_train)
+likes_pred = regr.predict(tfidf_text_test)
 
 # # The coefficients
 # print('Coefficients: \n', regr.coef_)
 
 # # The mean squared error
-# tfidf_mse = mean_squared_error(likes_pred, likes_test)
+tfidf_mse = mean_squared_error(likes_pred, likes_test)
 # print("MSE Mean squared error: %.2f" % tfidf_mse)
 
-# tfidf_rmse = np.sqrt(tfidf_mse)
-# print('TFIDF RMSE: %.4f' % tfidf_rmse)
+tfidf_rmse = np.sqrt(tfidf_mse)
+print('TFIDF RMSE: %.4f' % tfidf_rmse)
 
 # lin_mae = mean_absolute_error(likes_pred, likes_test)
 # print('Liner Regression MAE: %.4f' % lin_mae)
@@ -149,21 +149,21 @@ train_test_split(tfidf_text, likes, test_size=0.3)
 
 from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
 
-forest_reg = RandomForestRegressor(random_state=42)
-forest_reg.fit(x_train, y_train)
-likes_pred = forest_reg.predict(x_test)
-forest_mse = mean_squared_error(y_pred, y_test)
-forest_rmse = np.sqrt(forest_mse)
-print('Random Forest RMSE: %.4f' % forest_rmse)
+# forest_reg = RandomForestRegressor(random_state=42)
+# forest_reg.fit(x_train, y_train)
+# likes_pred = forest_reg.predict(x_test)
+# forest_mse = mean_squared_error(y_pred, y_test)
+# forest_rmse = np.sqrt(forest_mse)
+# print('Random Forest RMSE: %.4f' % forest_rmse)
 
-from sklearn import ensemble
-from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
-model = ensemble.GradientBoostingRegressor()
-model.fit(x_train, y_train)
-likes_pred = model.predict(x_test)
-gb_mse = mean_squared_error(y_pred, y_test)
-gb_rmse = np.sqrt(gb_mse)
-print('Gradient Boosting RMSE: %.4f' % gb_rmse)
+# from sklearn import ensemble
+# from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
+# model = ensemble.GradientBoostingRegressor()
+# model.fit(x_train, y_train)
+# likes_pred = model.predict(x_test)
+# gb_mse = mean_squared_error(y_pred, y_test)
+# gb_rmse = np.sqrt(gb_mse)
+# print('Gradient Boosting RMSE: %.4f' % gb_rmse)
 
 
 
@@ -174,9 +174,15 @@ forest_mse = mean_squared_error(likes_pred, likes_test)
 forest_rmse = np.sqrt(forest_mse)
 print('Random Forest RMSE: %.4f' % forest_rmse)
 
-model = ensemble.GradientBoostingRegressor()
-model.fit(tfidf_text_train, likes_train)
-likes_pred = model.predict(tfidf_text_test)
-gb_mse = mean_squared_error(likes_pred, likes_test)
-gb_rmse = np.sqrt(gb_mse)
-print('Gradient Boosting RMSE: %.4f' % gb_rmse)
+plt.plot(likes_test, likes_pred, color='black', linewidth=1)
+plt.plot(likes_test,likes_test,color='blue',linewidth=1)
+plt.xticks(())
+plt.yticks(())
+plt.show()
+
+# model = ensemble.GradientBoostingRegressor()
+# model.fit(tfidf_text_train, likes_train)
+# likes_pred = model.predict(tfidf_text_test)
+# gb_mse = mean_squared_error(likes_pred, likes_test)
+# gb_rmse = np.sqrt(gb_mse)
+# print('Gradient Boosting RMSE: %.4f' % gb_rmse)

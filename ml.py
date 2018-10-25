@@ -47,7 +47,7 @@ matrix.fit(data)
 countVec = matrix.transform(data)
 y = dataset['likes']
 
-x_train, x_test, y_train, y_test = train_test_split(x,y)
+x_train, x_test, y_train, y_test = train_test_split(countVec,y)
 
 regr = linear_model.LinearRegression()
 regr.fit(x_train, y_train)
@@ -64,30 +64,32 @@ lin_mae = mean_absolute_error(y_pred, y_test)
 print('countVec MAE: %.4f' % lin_mae)
 # Explained variance score: 1 is perfect prediction
 print('countVec variance score: %.2f' % r2_score(y_test, y_pred))
-
+print()
+print("==================================================================")
 from sklearn.feature_extraction.text import TfidfVectorizer #This method counts how many times a word is used.
 
 tfidf = TfidfVectorizer()
 tfidfVec = tfidf.fit_transform(data).toarray()
 
-tfidfVec_train, tfidfVec_test, tfidfVec_train, tfidfVec_test = train_test_split(tfidfVec,y)
+tfidfVec_train, tfidfVec_test, tfidfVec_train1, tfidfVec_test1 = train_test_split(tfidfVec,y)
 
 regr = linear_model.LinearRegression()
-regr.fit(tfidfVec_train, tfidfVec_train)
+regr.fit(tfidfVec_train, tfidfVec_train1)
 tfidfVec_pred = regr.predict(tfidfVec_test)
 
 # The coefficients
 print('tfidfVec Coefficients: \n', regr.coef_)
 # The mean squared error
-mse = mean_squared_error(tfidfVec_pred, tfidfVec_test)
+mse = mean_squared_error(tfidfVec_pred, tfidfVec_test1)
 print("tfidfVec MSE: %.2f" % mse)
 rmse = np.sqrt(mse)
 print('tfidfVec RMSE: %.4f' % rmse)
-lin_mae = mean_absolute_error(tfidfVec_pred, tfidfVec_test)
+lin_mae = mean_absolute_error(tfidfVec_pred, tfidfVec_test1)
 print('tfidfVec MAE: %.4f' % lin_mae)
 # Explained variance score: 1 is perfect prediction
-print('tfidfVec variance score: %.2f' % r2_score(tfidfVec_test, tfidfVec_pred))
-
+print('tfidfVec variance score: %.2f' % r2_score(tfidfVec_test1, tfidfVec_pred))
+print()
+print("==================================================================")
 
 
 tfidf2 = TfidfVectorizer()
@@ -96,26 +98,27 @@ tfidfVec2 = tfidf2.fit_transform(data).toarray()
 from sklearn.decomposition import TruncatedSVD
 tsvd = TruncatedSVD(n_components=1998)
 sparse_tsvd = tsvd.fit(tfidfVec2).transform(tfidfVec2)
-print('Reduced number of features:', sparse_tsvd.shape[1], sparse_tsvd.shape[0])
+# print('Reduced number of features:', sparse_tsvd.shape[1], sparse_tsvd.shape[0])
 
-tsvd_tfidf_train, tsvd_tfidf_test, tsvd_tfidf_train, tsvd_tfidf_test = train_test_split(sparse_tsvd,y)
+tsvd_tfidf_train, tsvd_tfidf_test, tsvd_tfidf_train1, tsvd_tfidf_test1 = train_test_split(sparse_tsvd,y)
 
 regr = linear_model.LinearRegression()
-regr.fit(tsvd_tfidf_train, tsvd_tfidf_train)
+regr.fit(tsvd_tfidf_train, tsvd_tfidf_train1)
 tsvd_tfidf_pred = regr.predict(tsvd_tfidf_test)
 
 # The coefficients
 print('tsvd_tfidf Coefficients: \n', regr.coef_)
 # The mean squared error
-mse = mean_squared_error(tsvd_tfidf_pred, tsvd_tfidf_test)
+mse = mean_squared_error(tsvd_tfidf_pred, tsvd_tfidf_test1)
 print("tsvd_tfidf MSE: %.2f" % mse)
 rmse = np.sqrt(mse)
 print('tsvd_tfidf RMSE: %.4f' % rmse)
-lin_mae = mean_absolute_error(tsvd_tfidf_pred, tsvd_tfidf_test)
+lin_mae = mean_absolute_error(tsvd_tfidf_pred, tsvd_tfidf_test1)
 print('tsvd_tfidf MAE: %.4f' % lin_mae)
 # Explained variance score: 1 is perfect prediction
-print('tsvd_tfidf variance score: %.2f' % r2_score(tsvd_tfidf_test, tsvd_tfidf_pred))
-
+print('tsvd_tfidf variance score: %.2f' % r2_score(tsvd_tfidf_test1, tsvd_tfidf_pred))
+print()
+print("==================================================================")
 
 
 #This method balance out the number of times of used words with others
@@ -128,8 +131,8 @@ tfidf_transformer = TfidfTransformer().fit(countVec2)
 
 tfidf_countVec2 = tfidf_transformer.transform(countVec2).toarray()
 
-print (tfidf_countVec2)
-print (tfidf_countVec2.shape)
+# print (tfidf_countVec2)
+# print (tfidf_countVec2.shape)
 
 likes = dataset['likes']
 
@@ -153,7 +156,8 @@ lin_mae = mean_absolute_error(likes_pred, likes_test)
 print('tfidf_countVec2 MAE: %.4f' % lin_mae)
 # Explained variance score: 1 is perfect prediction
 print('tfidf_countVec2 variance score: %.2f' % r2_score(likes_test, likes_pred))
-
+print()
+print("==================================================================")
 
 
 from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
@@ -174,6 +178,8 @@ likes_pred = model.predict(x_test)
 gb_mse = mean_squared_error(y_pred, y_test)
 gb_rmse = np.sqrt(gb_mse)
 print('countVec Gradient Boosting RMSE: %.4f' % gb_rmse)
+print()
+print("==================================================================")
 
 forest_reg = RandomForestRegressor(random_state=42)
 forest_reg.fit(tfidf_countVec2_train, likes_train)
