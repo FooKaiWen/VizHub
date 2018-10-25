@@ -65,9 +65,9 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 // echo "connected";
 
 $fb = new Facebook\Facebook([
-  'app_id' => '267157010556839', // Replace {app-id} with your app id
-  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
-  'default_graph_version' => 'v3.1',
+  'app_id' => '', // Replace {app-id} with your app id
+  'app_secret' => '',
+  'default_graph_version' => '',
     ]);
   
 $helper = $fb->getRedirectLoginHelper();
