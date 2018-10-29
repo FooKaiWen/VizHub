@@ -191,7 +191,7 @@ foreach ($rows as $row) {
   // echo $row->message;
   $likearray [] = $row->like->summary->total_count;
 }
-$likearray [] = [1,2,3,4,5,6];
+// $likearray = [2,4,6,8,10];
 foreach ($likearray as $like){
   // print($like);
   // echo nl2br ("\n");
@@ -331,7 +331,9 @@ foreach ($likearray as $like){
         <canvas id="chart2" float="right" width="400" height="400"></canvas>
     <!-- </div> -->
 <!-- </div> -->
-<script>plot()</script> 
+<script>plot()</script>
+<?php print_r($likearray) ?> 
+<script>addData(<?php echo json_encode($likearray) ?>)</script>
 </body>
 </html>
 

@@ -1,7 +1,7 @@
+var linechart;
 function plot(){
 var ctx = document.getElementById("chart1").getContext('2d');
-// var chart1 
-new Chart(ctx, {
+var barchart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
@@ -40,8 +40,7 @@ new Chart(ctx, {
 });
 
 var ctx = document.getElementById("chart2").getContext('2d');
-// var chart2 
-new Chart(ctx, {
+linechart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
@@ -78,4 +77,11 @@ new Chart(ctx, {
         }
     }
 });
+
+}
+
+function addData(newdata) {
+    // var data = [5,10,50,100];
+    linechart.data.datasets[0].data = newdata;
+    linechart.update();
 }

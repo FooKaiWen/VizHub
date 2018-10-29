@@ -84,105 +84,105 @@ print('Linear Regression MAE: %.4f' % lin_mae)
 print('Variance score: %.2f' % r2_score(y_test, y_pred))
 
 import matplotlib.pyplot as plt
-# # Plot outputs
-# plt.scatter(x_test, y_test,  color='black')
-# plt.plot(y_test, y_pred, color='blue', linewidth=1)
-# plt.plot(y_test, y_test, color='black', linewidth=1)
-# plt.xticks(())
-# plt.yticks(())
-# plt.show()
-
-matrix2 = CountVectorizer()
-matrix2.fit(data)
-x = matrix2.transform(data)
-
-# print ('Shape of Sparse Matrix: ', x.shape)
-# print ('Amount of Non-Zero occurences: ', x.nnz)
-# print ('Sparsity: %.2f%%' % (100.0 * x.nnz / (x.shape[0] * x.shape[1])))
-
-#This method balance out the number of times of used words with others
-from sklearn.feature_extraction.text import TfidfTransformer
-tfidf_transformer = TfidfTransformer().fit(x)
-
-tfidf_text = tfidf_transformer.transform(x).toarray()
-
-print (tfidf_text)
-print (tfidf_text.shape)
-
-likes = dataset['likes']
-
-tfidf_text_train, tfidf_text_test, likes_train, likes_test = \
-train_test_split(tfidf_text, likes, test_size=0.3)
-
-# print (len(tfidf_text_train), len(tfidf_text_test), len(tfidf_text_train) + len(tfidf_text_test))
-
-regr = linear_model.LinearRegression()
-regr.fit(tfidf_text_train, likes_train)
-likes_pred = regr.predict(tfidf_text_test)
-
-# # The coefficients
-# print('Coefficients: \n', regr.coef_)
-
-# # The mean squared error
-tfidf_mse = mean_squared_error(likes_pred, likes_test)
-# print("MSE Mean squared error: %.2f" % tfidf_mse)
-
-tfidf_rmse = np.sqrt(tfidf_mse)
-print('TFIDF RMSE: %.4f' % tfidf_rmse)
-
-# lin_mae = mean_absolute_error(likes_pred, likes_test)
-# print('Liner Regression MAE: %.4f' % lin_mae)
-
-# # Explained variance score: 1 is perfect prediction
-# print('Variance score: %.2f' % r2_score(likes_test, likes_pred))
-
-# # import matplotlib.pyplot as plt2
-# # Plot outputs
-# #plt.scatter(x_test, y_test,  color='black')
-# # plt2.plot(tfidf_text_test, likes_pred, color='blue', linewidth=1)
-# # plt2.plot(tfidf_text_test, likes_test, color='black', linewidth=1)
-
-# # plt2.xticks(())
-# # plt2.yticks(())
-
-# # plt2.show()
-
-from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
-
-# forest_reg = RandomForestRegressor(random_state=42)
-# forest_reg.fit(x_train, y_train)
-# likes_pred = forest_reg.predict(x_test)
-# forest_mse = mean_squared_error(y_pred, y_test)
-# forest_rmse = np.sqrt(forest_mse)
-# print('Random Forest RMSE: %.4f' % forest_rmse)
-
-# from sklearn import ensemble
-# from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
-# model = ensemble.GradientBoostingRegressor()
-# model.fit(x_train, y_train)
-# likes_pred = model.predict(x_test)
-# gb_mse = mean_squared_error(y_pred, y_test)
-# gb_rmse = np.sqrt(gb_mse)
-# print('Gradient Boosting RMSE: %.4f' % gb_rmse)
-
-
-
-forest_reg = RandomForestRegressor(random_state=42)
-forest_reg.fit(tfidf_text_train, likes_train)
-likes_pred = forest_reg.predict(tfidf_text_test)
-forest_mse = mean_squared_error(likes_pred, likes_test)
-forest_rmse = np.sqrt(forest_mse)
-print('Random Forest RMSE: %.4f' % forest_rmse)
-
-plt.plot(likes_test, likes_pred, color='black', linewidth=1)
-plt.plot(likes_test,likes_test,color='blue',linewidth=1)
+# Plot outputs
+plt.scatter(x_test, y_test,  color='black')
+plt.plot(y_test, y_pred, color='blue', linewidth=1)
+plt.plot(y_test, y_test, color='black', linewidth=1)
 plt.xticks(())
 plt.yticks(())
 plt.show()
 
-# model = ensemble.GradientBoostingRegressor()
-# model.fit(tfidf_text_train, likes_train)
-# likes_pred = model.predict(tfidf_text_test)
-# gb_mse = mean_squared_error(likes_pred, likes_test)
-# gb_rmse = np.sqrt(gb_mse)
-# print('Gradient Boosting RMSE: %.4f' % gb_rmse)
+# matrix2 = CountVectorizer()
+# matrix2.fit(data)
+# x = matrix2.transform(data)
+
+# # print ('Shape of Sparse Matrix: ', x.shape)
+# # print ('Amount of Non-Zero occurences: ', x.nnz)
+# # print ('Sparsity: %.2f%%' % (100.0 * x.nnz / (x.shape[0] * x.shape[1])))
+
+# #This method balance out the number of times of used words with others
+# from sklearn.feature_extraction.text import TfidfTransformer
+# tfidf_transformer = TfidfTransformer().fit(x)
+
+# tfidf_text = tfidf_transformer.transform(x).toarray()
+
+# print (tfidf_text)
+# print (tfidf_text.shape)
+
+# likes = dataset['likes']
+
+# tfidf_text_train, tfidf_text_test, likes_train, likes_test = \
+# train_test_split(tfidf_text, likes, test_size=0.3)
+
+# # print (len(tfidf_text_train), len(tfidf_text_test), len(tfidf_text_train) + len(tfidf_text_test))
+
+# regr = linear_model.LinearRegression()
+# regr.fit(tfidf_text_train, likes_train)
+# likes_pred = regr.predict(tfidf_text_test)
+
+# # # The coefficients
+# # print('Coefficients: \n', regr.coef_)
+
+# # # The mean squared error
+# tfidf_mse = mean_squared_error(likes_pred, likes_test)
+# # print("MSE Mean squared error: %.2f" % tfidf_mse)
+
+# tfidf_rmse = np.sqrt(tfidf_mse)
+# print('TFIDF RMSE: %.4f' % tfidf_rmse)
+
+# # lin_mae = mean_absolute_error(likes_pred, likes_test)
+# # print('Liner Regression MAE: %.4f' % lin_mae)
+
+# # # Explained variance score: 1 is perfect prediction
+# # print('Variance score: %.2f' % r2_score(likes_test, likes_pred))
+
+# # # import matplotlib.pyplot as plt2
+# # # Plot outputs
+# # #plt.scatter(x_test, y_test,  color='black')
+# # # plt2.plot(tfidf_text_test, likes_pred, color='blue', linewidth=1)
+# # # plt2.plot(tfidf_text_test, likes_test, color='black', linewidth=1)
+
+# # # plt2.xticks(())
+# # # plt2.yticks(())
+
+# # # plt2.show()
+
+# from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
+
+# # forest_reg = RandomForestRegressor(random_state=42)
+# # forest_reg.fit(x_train, y_train)
+# # likes_pred = forest_reg.predict(x_test)
+# # forest_mse = mean_squared_error(y_pred, y_test)
+# # forest_rmse = np.sqrt(forest_mse)
+# # print('Random Forest RMSE: %.4f' % forest_rmse)
+
+# # from sklearn import ensemble
+# # from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
+# # model = ensemble.GradientBoostingRegressor()
+# # model.fit(x_train, y_train)
+# # likes_pred = model.predict(x_test)
+# # gb_mse = mean_squared_error(y_pred, y_test)
+# # gb_rmse = np.sqrt(gb_mse)
+# # print('Gradient Boosting RMSE: %.4f' % gb_rmse)
+
+
+
+# forest_reg = RandomForestRegressor(random_state=42)
+# forest_reg.fit(tfidf_text_train, likes_train)
+# likes_pred = forest_reg.predict(tfidf_text_test)
+# forest_mse = mean_squared_error(likes_pred, likes_test)
+# forest_rmse = np.sqrt(forest_mse)
+# print('Random Forest RMSE: %.4f' % forest_rmse)
+
+# plt.plot(likes_test, likes_pred, color='black', linewidth=1)
+# plt.plot(likes_test,likes_test,color='blue',linewidth=1)
+# plt.xticks(())
+# plt.yticks(())
+# plt.show()
+
+# # model = ensemble.GradientBoostingRegressor()
+# # model.fit(tfidf_text_train, likes_train)
+# # likes_pred = model.predict(tfidf_text_test)
+# # gb_mse = mean_squared_error(likes_pred, likes_test)
+# # gb_rmse = np.sqrt(gb_mse)
+# # print('Gradient Boosting RMSE: %.4f' % gb_rmse)
