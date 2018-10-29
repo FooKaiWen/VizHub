@@ -21,7 +21,7 @@ require_once  'Facebook/autoload.php';
 $fb = new Facebook\Facebook([
   'app_id' => '', // Replace {app-id} with your app id
   'app_secret' => '',
-  'default_graph_version' => '',
+  'default_graph_version' => 'v3.1',
   ]);
 
 $helper = $fb->getRedirectLoginHelper();
