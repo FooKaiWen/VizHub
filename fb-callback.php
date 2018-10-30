@@ -137,7 +137,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(15){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(3){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -178,11 +178,12 @@ foreach ($cursor as $doc) {
 $query = new MongoDB\Driver\Query([]); 
      
 $rows = $connection->executeQuery('test.post', $query);
-
+$tests = $connection->executeQuery('test.post', $query);
 
 $likearray = array();
 $timearray = array();
 foreach ($rows as $row) {
+  $likearray [] = [];
   if(!isset($row->message)){
   // $msg = $row->message;  
    $curr_id = $row->id;
@@ -194,12 +195,28 @@ foreach ($rows as $row) {
   $likearray [] = $row->like->summary->total_count;
   $timearray [] = $row->created_time;
 }
+$likearray [] = [1,2,3,4,5,6];
+print_r($likearray);
 $_SESSION["likes"] = $likearray;
 $_SESSION["time"] = $timearray;
-foreach ($likearray as $like){
-  // print($like);
-  // echo nl2br ("\n");
+
+$big[] = array();
+foreach($tests as $test){
+  $t[] = array();
+  $t[] = $test->like->summary->total_count;
+  $t[] = $test->created_time;
+  $big = array($t);
 }
+// print_r($big);
+// foreach ($big as $b){
+//   print("out");
+//   print_r($b);
+//   echo nl2br ("\n");
+//   foreach($b as $bs){
+//     print_r($bs);
+//     echo nl2br ("\n");
+//   }
+// }
      
     // $rows = $connection->executeQuery('test.post', $query);
     // $pops = $connection->executeQuery('test.post', $query);
