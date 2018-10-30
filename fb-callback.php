@@ -65,9 +65,10 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 // echo "connected";
 
 $fb = new Facebook\Facebook([
-  'app_id' => '', // Replace {app-id} with your app id
-  'app_secret' => '',
+  'app_id' => '590344301384464', // Replace {app-id} with your app id
+  'app_secret' => '0e62c56caa857d32e479b8703a7501c4',
   'default_graph_version' => 'v3.1',
+
     ]);
   
 $helper = $fb->getRedirectLoginHelper();
@@ -136,7 +137,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(1){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(15){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -180,6 +181,7 @@ $rows = $connection->executeQuery('test.post', $query);
 
 
 $likearray = array();
+$timearray = array();
 foreach ($rows as $row) {
   if(!isset($row->message)){
   // $msg = $row->message;  
@@ -190,8 +192,9 @@ foreach ($rows as $row) {
   }
   // echo $row->message;
   $likearray [] = $row->like->summary->total_count;
+  $timearray [] = $row->created_time;
 }
-// $likearray = [2,4,6,8,10];
+
 foreach ($likearray as $like){
   // print($like);
   // echo nl2br ("\n");
@@ -319,21 +322,10 @@ foreach ($likearray as $like){
 </form>
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
 
-<!-- <div id="a"></div> -->
-<!-- <div id="aligned"> -->
-    <!-- <div class="label">Aligned</div> -->
-    <!-- <div class="chart_container"> -->
-        <!-- <canvas id="chart1"></canvas> -->
-        <canvas id="chart1" float="left" width="400" height="400"></canvas>
-    <!-- </div> -->
-    <!-- <div class="chart_container"> -->
-        <!-- <canvas id="chart1"></canvas> -->
-        <canvas id="chart2" float="right" width="400" height="400"></canvas>
-    <!-- </div> -->
-<!-- </div> -->
-<script>plot()</script>
-<?php print_r($likearray) ?> 
-<script>addData(<?php echo json_encode($likearray) ?>)</script>
+<canvas id="chart1" float="left" width="400" height="400"></canvas>
+<canvas id="chart2" float="right" width="400" height="400"></canvas>
+
+<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script>
 </body>
 </html>
 

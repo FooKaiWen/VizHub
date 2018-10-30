@@ -4,6 +4,7 @@
   <title>VizHub</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="home.css">
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -28,11 +29,21 @@
             </li>
           </ul>
 
-          <form method="POST" action ="login.php">
-            <input type ="submit" class ="btn btn-secondary btn-sm my-2 my-sm-0" name = "logInBtn" value = "Log In With Facebook">
-          </form>  
+          <!-- <a href="login.php" class="loginBtn loginBtnfacebook">Go to Google</a> -->
+          <form method="POST" action ="http://localhost/VizHub/login.php">
+            <!-- <button class="loginBtn loginBtnfacebook"> -->
+                <!-- <input type ="submit" class ="loginBtn loginBtnfacebook" name = "logInBtn" value = "Log In With Facebook"> -->
+            <!-- </button> -->
+            <div class="loginBtn loginBtn--facebook">
+                <input type ="submit" class="loginBtn" name = "logInBtn" value="Log In With Facebook">
+            </div>
+            <!-- <a href="login.php"> -->
+              <!-- <button type ="submit" class="loginBtn loginBtnfacebook">
+              Login with Facebook
+            </button> -->
+          <!-- </a> -->
 
-        </div>
+          </form>  
 
       </nav>
 
