@@ -65,8 +65,8 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 // echo "connected";
 
 $fb = new Facebook\Facebook([
-  'app_id' => '590344301384464', // Replace {app-id} with your app id
-  'app_secret' => '0e62c56caa857d32e479b8703a7501c4',
+  'app_id' => '', // Replace {app-id} with your app id
+  'app_secret' => '',
   'default_graph_version' => 'v3.1',
 
     ]);
@@ -195,17 +195,19 @@ foreach ($rows as $row) {
   $likearray [] = $row->like->summary->total_count;
   $timearray [] = $row->created_time;
 }
-$likearray [] = [1,2,3,4,5,6];
-print_r($likearray);
+// $likearray [] = [1,2,3,4,5,6];
+// print_r($likearray);
 $_SESSION["likes"] = $likearray;
 $_SESSION["time"] = $timearray;
 
-$big[] = array();
+
+//Array for to put on table for visualization
+$big = array();
 foreach($tests as $test){
-  $t[] = array();
-  $t[] = $test->like->summary->total_count;
-  $t[] = $test->created_time;
-  $big = array($t);
+  $likes = $test->like->summary->total_count;
+  $time = $test->created_time;
+  $temp_Holder = array ($likes,$time);
+  array_push($big,$temp_Holder);
 }
 // print_r($big);
 // foreach ($big as $b){
