@@ -194,7 +194,8 @@ foreach ($rows as $row) {
   $likearray [] = $row->like->summary->total_count;
   $timearray [] = $row->created_time;
 }
-
+$_SESSION["likes"] = $likearray;
+$_SESSION["time"] = $timearray;
 foreach ($likearray as $like){
   // print($like);
   // echo nl2br ("\n");
@@ -317,7 +318,7 @@ foreach ($likearray as $like){
   </div>
 </div>
 
-<form method="post" action="chart.html">
+<form action="engagementChart.php">
   <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
 </form>
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
