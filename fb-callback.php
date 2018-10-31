@@ -6,10 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="design.css">
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>  
+  
   <script type="text/javascript" src="chart.js"></script>
 </head>
 <body>
@@ -36,6 +33,9 @@ $newdb = $temp->drop();
 $newdb = $client->selectDatabase('test');
 $col = $newdb->selectCollection('user');
 $collection = $newdb->selectCollection('post');
+$location_col = $newdb->selectCollection('location');
+$place = $newdb->selectCollection('place');
+
 
 // $insertManyResult = $col->insertMany([
 //     [
@@ -149,15 +149,9 @@ try {
 }
 
 $graphNode = $posts_request->getGraphNode();
-// echo nl2br("\n\n\n\n");
-// print_r (json_decode($graphNode)); // From GraphNode
-
-// var_dump($col->distinct("posts.id"));
-
 $insertManyResult = $col->insertOne(json_decode($graphNode));
 $cursor = $col->distinct("posts.id");
 
-// echo nl2br ("\n\n");
 
 foreach ($cursor as $doc) {
   try {
@@ -178,7 +172,7 @@ foreach ($cursor as $doc) {
 $query = new MongoDB\Driver\Query([]); 
      
 $rows = $connection->executeQuery('test.post', $query);
-$tests = $connection->executeQuery('test.post', $query);
+
 
 $likearray = array();
 $timearray = array();
@@ -201,14 +195,53 @@ $_SESSION["likes"] = $likearray;
 $_SESSION["time"] = $timearray;
 
 
+//Get tagged place
+try {
+  $location_request = $fb->get('/me?fields=tagged_places.limit(5)',$accessToken);
+} catch(Facebook\Exceptions\FacebookResponseException $e) {
+  // When Graph returns an error
+  echo 'Graph returned an error: ' . $e->getMessage();
+  exit;
+} catch(Facebook\Exceptions\FacebookSDKException $e) {
+  // When validation fails or other local issues
+  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+  exit;
+}
+
+$graphNode = $location_request->getGraphNode();
+$insertManyResult = $location_col->insertOne(json_decode($graphNode));
+
+$tagged = $location_col->distinct("tagged_places.id");
+foreach ($tagged as $doc) {
+  try {
+    $place_request = $fb->get("/$doc?fields=place",$accessToken);
+  } catch(Facebook\Exceptions\FacebookResponseException $e) {
+    // When Graph returns an error
+    echo 'Graph returned an error: ' . $e->getMessage();
+    exit;
+  } catch(Facebook\Exceptions\FacebookSDKException $e) {
+    // When validation fails or other local issues
+    echo 'Facebook SDK returned an error: ' . $e->getMessage();
+    exit;
+}
+  $PlaceNode = $place_request->getDecodedBody();
+  $insertManyResult = $place->insertOne($PlaceNode);
+}
+
+
+
+$tests = $connection->executeQuery('test.place', $query);
 //Array for to put on table for visualization
 $big = array();
 foreach($tests as $test){
-  $likes = $test->like->summary->total_count;
-  $time = $test->created_time;
-  $temp_Holder = array ($likes,$time);
+  $lat = $test->place->location->latitude;
+  $long = $test->place->location->longitude;
+  $place_name = $test->place->name;
+  $temp_Holder = array ($lat,$long,$place_name);
   array_push($big,$temp_Holder);
 }
+
+$_SESSION["location"]=$big;
 // print_r($big);
 // foreach ($big as $b){
 //   print("out");
@@ -339,7 +372,7 @@ foreach($tests as $test){
 
 <form action="engagementChart.php">
   <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
-</form>
+<form action="MapChart.php">
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
 
 <canvas id="chart1" float="left" width="400" height="400"></canvas>
