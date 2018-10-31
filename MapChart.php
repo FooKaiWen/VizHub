@@ -4,7 +4,6 @@
 <?php
 session_start();
 $place = $_SESSION["location"];
-
 ?>
 
 
@@ -14,7 +13,7 @@ $place = $_SESSION["location"];
       'packages': ['map'],
       // Note: you will need to get a mapsApiKey for your project.
       // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-      'mapsApiKey': 'AIzaSyDycJODMgrTMd6ir8-glqdvhKKRpm0fwjY'
+      'mapsApiKey': ''
     });
     google.charts.setOnLoadCallback(drawMap);
 
