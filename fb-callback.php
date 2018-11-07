@@ -8,8 +8,22 @@
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
   
   <script type="text/javascript" src="chart.js"></script>
+ 
+
+
+
 </head>
 <body>
+
+ <script>
+      function copyText() {
+        var copyText = document.getElementById("message");
+        copyText.select();
+        document.execCommand("copy");
+        alert("Copied the text: " + copyText.value);
+      }
+  </script>
+
 <div class="alert alert-dismissible alert-success">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <strong>Well done!</strong> You successfully logged in! 👍</a>.
@@ -67,7 +81,7 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $fb = new Facebook\Facebook([
   'app_id' => '', // Replace {app-id} with your app id
   'app_secret' => '',
-  'default_graph_version' => 'v3.1',
+  'default_graph_version' => '',
 
     ]);
   
@@ -137,7 +151,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(3){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(1){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -197,7 +211,7 @@ $_SESSION["time"] = $timearray;
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(5)',$accessToken);
+  $location_request = $fb->get('/me?fields=tagged_places.limit(1)',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -370,15 +384,37 @@ $_SESSION["location"]=$big;
   </div>
 </div>
 
+<div class="container">
 <form action="engagementChart.php">
   <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
-<form action="MapChart.php">
+</form>
+  <form action="MapChart.php">
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
+</form>
+</div>
+
+
+<div class="container">
+  <div class="form-group" >
+    <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
+    <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
+      <div style ="text-align:center;">  
+    <button class ="copyText" onclick="copyText()">Copy text</button>
+    <button class ="predict" onclick="">Predict likes</button>
+      </div>
+  </div>
+</div>
+
+
 
 <canvas id="chart1" float="left" width="400" height="400"></canvas>
 <canvas id="chart2" float="right" width="400" height="400"></canvas>
 
 <script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script>
+
+
+
+
 </body>
 </html>
 
