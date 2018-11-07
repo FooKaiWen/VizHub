@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="design.css">
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="chart.js"></script>
  
 
@@ -81,7 +83,7 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $fb = new Facebook\Facebook([
   'app_id' => '', // Replace {app-id} with your app id
   'app_secret' => '',
-  'default_graph_version' => '',
+  'default_graph_version' => 'v3.1',
 
     ]);
   
@@ -151,7 +153,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(1){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(10){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -211,7 +213,7 @@ $_SESSION["time"] = $timearray;
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(1)',$accessToken);
+  $location_request = $fb->get('/me?fields=tagged_places.limit(10)',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -384,14 +386,21 @@ $_SESSION["location"]=$big;
   </div>
 </div>
 
-<div class="container">
-<form action="engagementChart.php">
+
+
+<div style="width: 50%; float:left; height:30px;">
+  <p>Click the button below to view the number of likes of your last 10 recent posts!</p>
+</div>
+<div style="width: 50%; float:right; height:30px;">
+  <p>Click the button below to view your last 10 tagged places in Google Maps!</p>
+</div>
+
+<form action="engagementChart.php" target="_blank">
   <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
 </form>
-  <form action="MapChart.php">
+<form action="MapChart.php" target="_blank">
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
 </form>
-</div>
 
 
 <div class="container">
@@ -405,15 +414,18 @@ $_SESSION["location"]=$big;
   </div>
 </div>
 
+<canvas id="chart1" float="left" width="100" height="100"></canvas>
 
+<!-- <canvas id="chart2" float="right" width="400" height="400"></canvas>
+<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script> -->
 
-<canvas id="chart1" float="left" width="400" height="400"></canvas>
-<canvas id="chart2" float="right" width="400" height="400"></canvas>
-
-<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script>
-
-
-
+<!-- <form action="featurex.py">
+  <fieldset>
+    Post Message:<br>
+    <input type="text" hint="Type your message here">
+    <input type="submit" value="Submit">
+  </fieldset>
+</form> -->
 
 </body>
 </html>

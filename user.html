@@ -13,6 +13,10 @@
   <script type="text/javascript" src="chart.js"></script>
 </head>
 <body>
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+      </div>
 <div class="alert alert-dismissible alert-success">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <strong>Well done!</strong> You successfully logged in! 👍</a>.
@@ -28,15 +32,29 @@
   </div>
 </div>
 
+<div style="width: 50%; float:left; height:30px;">
+<p>here</p>
+</div>
+<div style="width: 50%; float:right; height:30px;">
+    <p>iiiii</p>
+</div>
 <form action="javascript:plot()">
     <button type="submit" style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
   </form>
+
+<form>
   <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
-  
-  <canvas id="chart1" float="left" width="400" height="400"></canvas>
-  <canvas id="chart2" float="right" width="400" height="400"></canvas>
-  
-  <!-- <script>plot()</script> -->
+</form>
+<canvas id="chart1" float="left" width="100" height="100"></canvas>
+
+<form action="featurex.py">
+  <fieldset>
+    Post Message:<br>
+    <input type="text" hint="Type your message here">
+    <input type="submit" value="Submit">
+  </fieldset>
+</form>
+
   </body>
   </html>
 </body>

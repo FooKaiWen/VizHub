@@ -23,6 +23,7 @@ $fb = new Facebook\Facebook([
   'app_secret' => '',
   'default_graph_version' => '',
 
+
   ]);
 
 $helper = $fb->getRedirectLoginHelper();
