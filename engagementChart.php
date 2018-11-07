@@ -18,6 +18,7 @@ $likearray = $_SESSION['likes'];
 $timearray = $_SESSION['time'];
 ?>
 
+<p>Toggle for graph!</p>
 <label class="switch">
     <input type="checkbox" id="togBtn" onclick='plot("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)'>
     <div class="slider round">
@@ -28,6 +29,9 @@ $timearray = $_SESSION['time'];
 <canvas id="chart"float="right"></canvas>
 </div>
 <!-- <canvas id="chart1" float="left" width="400" height="400"></canvas> -->
+<div>
+    <p>We are still improving our visualization functionality!</p>
+</div>
 
 <!-- <script>plot("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script> -->
 </body>

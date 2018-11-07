@@ -65,8 +65,8 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 // echo "connected";
 
 $fb = new Facebook\Facebook([
-  'app_id' => '', // Replace {app-id} with your app id
-  'app_secret' => '',
+  'app_id' => '267157010556839', // Replace {app-id} with your app id
+  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
   'default_graph_version' => 'v3.1',
 
     ]);
@@ -137,7 +137,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(3){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(10){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -197,7 +197,7 @@ $_SESSION["time"] = $timearray;
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(5)',$accessToken);
+  $location_request = $fb->get('/me?fields=tagged_places.limit(10)',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -370,15 +370,33 @@ $_SESSION["location"]=$big;
   </div>
 </div>
 
-<form action="engagementChart.php">
+<div style="width: 50%; float:left; height:30px;">
+  <p>Click the button below to view the number of likes of your last 10 recent posts!</p>
+</div>
+<div style="width: 50%; float:right; height:30px;">
+  <p>Click the button below to view your last 10 tagged places in Google Maps!</p>
+</div>
+
+<form action="engagementChart.php" target="_blank">
   <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
-<form action="MapChart.php">
+</form>
+<form action="MapChart.php" target="_blank">
 <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
+</form>
 
-<canvas id="chart1" float="left" width="400" height="400"></canvas>
-<canvas id="chart2" float="right" width="400" height="400"></canvas>
+<canvas id="chart1" float="left" width="100" height="100"></canvas>
 
-<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script>
+<!-- <canvas id="chart2" float="right" width="400" height="400"></canvas>
+<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script> -->
+
+<!-- <form action="featurex.py">
+  <fieldset>
+    Post Message:<br>
+    <input type="text" hint="Type your message here">
+    <input type="submit" value="Submit">
+  </fieldset>
+</form> -->
+
 </body>
 </html>
 

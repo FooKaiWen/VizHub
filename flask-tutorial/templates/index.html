@@ -1,0 +1,14 @@
+<html>
+    <head><title>
+        FLASK API
+    </title>
+<meta charset="utf-8">
+<meta name="viewport" conttent="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <form action="/predict" method="POST" >
+        <input placeholder="Enter message..." type="text" name="message">
+        <input type="submit" value="Predict"> {% if message %} {{ prediction }} {% endif %}
+   </form>
+</body>
