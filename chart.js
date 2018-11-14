@@ -1,45 +1,50 @@
 var linechart;
 function plot(chartid,newdata,newlabel){
-
-var ctx = document.getElementById(chartid).getContext('2d');
-linechart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: newlabel,
-        datasets: [{
-            label: 'Number of Likes',
-            data: newdata,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 0.5
-        }]
-    },
-    options: {
-    responsive: true,
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
+    var checkbox = document.getElementById("togBtn");
+    if(checkbox.checked){
+        var ctx = document.getElementById(chartid).getContext('2d');
+        linechart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: newlabel,
+                datasets: [{
+                    label: 'Number of Likes',
+                    data: newdata,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 0.5
+                }]
+            },
+            options: {
+            responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
                 }
-            }]
-        }
+            }
+        });
+    } else if (!checkbox.checked) {
+        linechart.destroy();
     }
-});
 }
+
 
 function plotReaction(chartid,newLikes,newLove,newHaha,newWow,newSad,newAngry){
 

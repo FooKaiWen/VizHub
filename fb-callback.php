@@ -1,59 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>VizHub</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="design.css">
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="chart.js"></script>
- 
-
-
-
-</head>
-<body>
-
- <script>
-      function copyText() {
-        var copyText = document.getElementById("message");
-        copyText.select();
-        document.execCommand("copy");
-        alert("Copied the text: " + copyText.value);
-      }
-  </script>
-
-<div class="alert alert-dismissible alert-success">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Well done!</strong> You successfully logged in! 👍</a>.
-</div>
-
 <?php
-require_once  'Facebook/autoload.php';
-require_once  "vendor/autoload.php";
+  require_once  'Facebook/autoload.php';
+  require_once  "vendor/autoload.php";
 
-if(!session_id()) {
+
+  if(!session_id()) {
     session_start();
-}
+  }
 
 $dbhost ='localhost';
 $dbport ='27017';
 
 $client = new MongoDB\Client;
 
-$temp = $client->selectDatabase('test');
+// $client = new MongoDB\Client(
+//   'mongodb://kay:myRealPassword@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin&serverSelectionTryOnce=false&serverSelectionTimeoutMS=15000');
+
+$temp = $client->selectDatabase('fb');
 $newdb = $temp->drop();
-$newdb = $client->selectDatabase('test');
-$col = $newdb->selectCollection('user');
-$collection = $newdb->selectCollection('post');
-$location_col = $newdb->selectCollection('location');
-$place = $newdb->selectCollection('place');
+$newdb = $client->selectDatabase('fb');
 
+$usercol = $newdb->selectCollection('user');
+$postcol = $newdb->selectCollection('post');
+$locationcol = $newdb->selectCollection('location');
 
-// $insertManyResult = $col->insertMany([
+$placecol = $newdb->selectCollection('place');
+
+$atcol = $newdb->selectCollection('accesstoken');
+$userprofcol = $newdb->selectCollection('userprofile');
+$userdetailcol = $newdb->selectCollection('userdetail');
+// $insertManyResult = $usercol->insertMany([
 //     [
 //         'username' => 'admin',
 //         'email' => 'admin@example.com',
@@ -70,7 +45,7 @@ $place = $newdb->selectCollection('place');
 
 // var_dump($insertManyResult->getInsertedIds());
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
-
+$query = new MongoDB\Driver\Query([]); 
 // // $con = new MongoDB\Client;
 // // var_dump($con);
 
@@ -81,12 +56,12 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 // echo "connected";
 
 $fb = new Facebook\Facebook([
-  'app_id' => '', // Replace {app-id} with your app id
-  'app_secret' => '',
+  'app_id' => '267157010556839', // Replace {app-id} with your app id
+  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
   'default_graph_version' => 'v3.1',
 
     ]);
-  
+ 
 $helper = $fb->getRedirectLoginHelper();
   
 if(isset($_GET['state'])){
@@ -94,7 +69,29 @@ if(isset($_GET['state'])){
 }
 
 try {
+  // if(!isset($accesstoken))
   $accessToken = $helper->getAccessToken();
+  $atcol->insertOne(
+    ['_id'=>'fbaccesstoken',
+      'token'=>"$accessToken",
+    ]
+  );
+  // $accessTokenQuery = $connection->executeQuery('test.accesstoken', $query);
+  // foreach($accessTokenQuery as $at){
+  //     print_r($at);
+  //     echo "1";
+  //     $currtoken = $at->token;
+  //     if($currtoken == " "){
+  //       echo "2";
+  //       $atcol->updateOne(
+  //         [ '_id' => 'fbaccesstoken' ],
+  //         [ '$set' => ['token'=>"$accessToken"]]
+  //       );
+  //     } else {
+  //       $accessToken = $currtoken;
+  //     }
+  // }
+  
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -153,7 +150,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(10){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(15){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -165,8 +162,8 @@ try {
 }
 
 $graphNode = $posts_request->getGraphNode();
-$insertManyResult = $col->insertOne(json_decode($graphNode));
-$cursor = $col->distinct("posts.id");
+$insertManyResult = $usercol->insertOne(json_decode($graphNode));
+$cursor = $usercol->distinct("posts.id");
 
 
 foreach ($cursor as $doc) {
@@ -182,12 +179,10 @@ foreach ($cursor as $doc) {
     exit;
 }
   $ReactionNode = $reactions_request->getDecodedBody();
-  $insertManyResult = $collection->insertOne($ReactionNode);
+  $insertManyResult = $postcol->insertOne($ReactionNode);
 }
-
-$query = new MongoDB\Driver\Query([]); 
      
-$rows = $connection->executeQuery('test.post', $query);
+$rows = $connection->executeQuery('fb.post', $query);
 
 
 $likearray = array();
@@ -203,7 +198,7 @@ foreach ($rows as $row) {
   if(!isset($row->message)){
   // $msg = $row->message;  
    $curr_id = $row->id;
-   $collection->updateOne(
+   $postcol->updateOne(
     [ 'id' => "$curr_id" ],
     [ '$set' => [ 'message' => " " ]]);
   }
@@ -241,9 +236,9 @@ try {
 }
 
 $graphNode = $location_request->getGraphNode();
-$insertManyResult = $location_col->insertOne(json_decode($graphNode));
+$insertManyResult = $locationcol->insertOne(json_decode($graphNode));
 
-$tagged = $location_col->distinct("tagged_places.id");
+$tagged = $locationcol->distinct("tagged_places.id");
 foreach ($tagged as $doc) {
   try {
     $place_request = $fb->get("/$doc?fields=place",$accessToken);
@@ -257,18 +252,18 @@ foreach ($tagged as $doc) {
     exit;
 }
   $PlaceNode = $place_request->getDecodedBody();
-  $insertManyResult = $place->insertOne($PlaceNode);
+  $insertManyResult = $placecol->insertOne($PlaceNode);
 }
 
 
 
-$tests = $connection->executeQuery('test.place', $query);
+$tagplaces = $connection->executeQuery('fb.place', $query);
 //Array for to put on table for visualization
 $big = array();
-foreach($tests as $test){
-  $lat = $test->place->location->latitude;
-  $long = $test->place->location->longitude;
-  $place_name = $test->place->name;
+foreach($tagplaces as $tagplace){
+  $lat = $tagplace->place->location->latitude;
+  $long = $tagplace->place->location->longitude;
+  $place_name = $tagplace->place->name;
   $temp_Holder = array ($lat,$long,$place_name);
   array_push($big,$temp_Holder);
 }
@@ -317,7 +312,7 @@ $_SESSION["location"]=$big;
 
 // foreach ($cursor as $doc) {
 
-//   $likes= $col->find(
+//   $likes= $usercol->find(
 //     ['id' => "$doc"],
 //     ['projection' => ['love.summary.total_count' => 1, '_id' => 0]]
 //   );
@@ -332,7 +327,7 @@ $_SESSION["location"]=$big;
 // }
 
 
-// $cursor = $col->distinct("like.summary.total_count");
+// $cursor = $usercol->distinct("like.summary.total_count");
 // foreach ($cursor as $doc) {
 //   echo "$doc\n";
 // }
@@ -342,7 +337,7 @@ $_SESSION["location"]=$big;
 // printf("Inserted %d document(s)\n", $insertManyResult->getInsertedCount());
 
 
-// $insertManyResult = $col->insertOne(json_decode($graphNode));
+// $insertManyResult = $usercol->insertOne(json_decode($graphNode));
 
 
 // printf("Inserted %d document(s)\n", $insertManyResult->getInsertedCount());
@@ -383,67 +378,24 @@ $_SESSION["location"]=$big;
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
   }
-  $graphNode = $pictureNode->getGraphNode();
-  $url = $graphNode->getField('url');
-  $userDetail = $userDetailNode->getGraphNode();
-  $name = $userDetail->getField('name');
-  $id = $userDetail->getField('id');
+
+  $graphNode = $pictureNode->getDecodedBody();
+  $userDetail = $userDetailNode->getDecodedBody();
+  $userprofcol->insertOne($graphNode);
+  $userdetailcol->insertOne($userDetail);
+
+  Header("Location: http://localhost/VizHub/user.php");
 ?>
 
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <img src="<?php echo $url; ?>" alt="Profile Picture">
-    <h2 id="detail-name">Name: <?php echo $name; ?><br/></h2>
-    <h2 id="detail-id">ID: <?php echo $id; ?></h2>
-    <!-- <form method="post" action="#"> -->
-        <!-- <input type="submit" name="Extract Data" value="Extract Data" class="extractionButton"> -->
-     <!-- </form> -->
-     <button class="extractionButton">Extract Data</button>
-  </div>
-</div>
-
-
-
-<div style="width: 50%; float:left; height:30px;">
-  <p>Click the button below to view the number of likes of your last 10 recent posts!</p>
-</div>
-<div style="width: 50%; float:right; height:30px;">
-  <p>Click the button below to view your last 10 tagged places in Google Maps!</p>
-</div>
-
-<form action="engagementChart.php" target="_blank">
-  <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
-</form>
-<form action="MapChart.php" target="_blank">
-<button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
-</form>
-
-
-<div class="container">
-  <div class="form-group" >
-    <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
-    <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
-      <div style ="text-align:center;">  
-    <button class ="copyText" onclick="copyText()">Copy text</button>
-    <button class ="predict" onclick="">Predict likes</button>
-      </div>
-  </div>
-</div>
-
-<canvas id="chart1" float="left" width="100" height="100"></canvas>
-
-<!-- <canvas id="chart2" float="right" width="400" height="400"></canvas>
-<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script> -->
-
-<!-- <form action="featurex.py">
-  <fieldset>
-    Post Message:<br>
-    <input type="text" hint="Type your message here">
-    <input type="submit" value="Submit">
-  </fieldset>
-</form> -->
-
-</body>
-</html>
+<?php
+if(isset($_REQUEST['submit_btn']))
+{
+   echo "<div>";
+   $name = $_POST["names"];
+   echo "</br>";
+   echo "ANSWER:</br></br>", $name;
+   echo "</div>";
+}
+?>
 
 
