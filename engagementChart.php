@@ -26,22 +26,19 @@ $timearray = $_SESSION['time'];
 
 <p>Toggle for graph!</p>
 <label class="switch">
-    <input type="checkbox" id="togBtn" onclick='plot("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)'>
+    <input type="checkbox" id="togLBtn" onclick='plot("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)'>
     <div class="slider round">
         <span class="on">Like</span><span class="off">Like</span>
     </div>
 </label>
+
 <div style="height: 500px;width: 50%;background-color: azure;float:right;">
 <canvas id="chart"float="right"></canvas>
 </div>
-<!-- <canvas id="chart1" float="left" width="400" height="400"></canvas> -->
-
-
-<!-- <script>plot("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script> -->
 
 <p> </p>
 <label class="switch">
-    <input type="checkbox" id="togBtn" onclick='plotReaction("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray) ?>)'>
+    <input type="checkbox" id="togRBtn" onclick='plotReaction("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray) ?>)'>
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
     </div>

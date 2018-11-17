@@ -46,36 +46,14 @@ for i in range(dataset.shape[0]): # This is where messages are cleaned and stemm
         # print(message_text)
         data.append(message_text)
 
-from sklearn.feature_extraction.text import CountVectorizer #This method counts how many times a word is used.
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn import linear_model # Linear regression is used
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-import numpy as np
+# from sklearn.feature_extraction.text import CountVectorizer #This method counts how many times a word is used.
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.model_selection import train_test_split
+# from sklearn import linear_model # Linear regression is used
+# from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+# import numpy as np
 
-matrix = TfidfVectorizer(
-    min_df=1,  # min count for relevant vocabulary
-    max_features=4000,  # maximum number of features
-    strip_accents='unicode',  # replace all accented unicode char 
-    # by their corresponding  ASCII char
-    analyzer='word',  # features made of words
-    ngram_range=(1, 1),  # features made of a single tokens
-    use_idf=True,  # enable inverse-document-frequency reweighting
-    smooth_idf=True,  # prevents zero division for unseen words
-    sublinear_tf=False)
-x = matrix.fit_transform(data)
-
-from scipy import sparse
-from scipy.stats import uniform
-import numpy as np
-from sklearn.decomposition import TruncatedSVD
-
-data_csr = sparse.csr_matrix(x).toarray()
-# # print(data_csr)
-# tsvd = TruncatedSVD(n_components=1998)
-# X_sparse_tsvd = tsvd.fit(data_csr).transform(data_csr)
-
-# tfidf_vectorizer = TfidfVectorizer(
+# matrix = TfidfVectorizer(
 #     min_df=1,  # min count for relevant vocabulary
 #     max_features=4000,  # maximum number of features
 #     strip_accents='unicode',  # replace all accented unicode char 
@@ -85,18 +63,40 @@ data_csr = sparse.csr_matrix(x).toarray()
 #     use_idf=True,  # enable inverse-document-frequency reweighting
 #     smooth_idf=True,  # prevents zero division for unseen words
 #     sublinear_tf=False)
-# tfidf_df = tfidf_vectorizer.fit_transform(X_sparse_tsvd)
+# x = matrix.fit_transform(data)
 
-# tfidf_text = tfidf_transformer.transform(X_sparse_tsvd).toarray()
+# from scipy import sparse
+# from scipy.stats import uniform
+# import numpy as np
+# from sklearn.decomposition import TruncatedSVD
 
-# print(matrix.get_feature_names())
+# data_csr = sparse.csr_matrix(x).toarray()
+# # # print(data_csr)
+# # tsvd = TruncatedSVD(n_components=1998)
+# # X_sparse_tsvd = tsvd.fit(data_csr).transform(data_csr)
+
+# # tfidf_vectorizer = TfidfVectorizer(
+# #     min_df=1,  # min count for relevant vocabulary
+# #     max_features=4000,  # maximum number of features
+# #     strip_accents='unicode',  # replace all accented unicode char 
+# #     # by their corresponding  ASCII char
+# #     analyzer='word',  # features made of words
+# #     ngram_range=(1, 1),  # features made of a single tokens
+# #     use_idf=True,  # enable inverse-document-frequency reweighting
+# #     smooth_idf=True,  # prevents zero division for unseen words
+# #     sublinear_tf=False)
+# # tfidf_df = tfidf_vectorizer.fit_transform(X_sparse_tsvd)
+
+# # tfidf_text = tfidf_transformer.transform(X_sparse_tsvd).toarray()
+
+# # print(matrix.get_feature_names())
 import csv
 
 myFile = open('savefile.csv', 'w')
 with myFile:
-    # writer = csv.writer(myFile)
-    # writer.write(matrix.get_feature_names())
-    # writer.writerows(x)
-    writer = csv.DictWriter(myFile,fieldnames=matrix.get_feature_names())
-    writer.writerows(x)
-print("Writing complete")
+    writer = csv.writer(myFile)
+    writer.write(message_text)
+#     # writer.writerows(x)
+#     writer = csv.DictWriter(myFile,fieldnames=matrix.get_feature_names())
+#     writer.writerows(x)
+# print("Writing complete")
