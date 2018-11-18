@@ -1,12 +1,21 @@
 import pymongo
+import re
+from sklearn.metrics import mean_squared_error
+import numpy as np
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["fb"]
 mycol = mydb["predictMessage"]
 
-x = mycol.find_one()
-print(x['pmessage'])
+getMessage = mycol.find_one()
+message = getMessage['pmessage']
 
+message = re.sub('[^A-Za-z]',' ',message)
+message = message.lower()
+numWord = len(message.split())
+
+
+mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesNum":"123"}})
 # import pandas as pd
 # import re
 # import nltk

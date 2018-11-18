@@ -1,3 +1,8 @@
+function selectValue(){
+    var sv = document.getElementById("timeSelect").value;
+    return sv;
+}
+
 var likechart, reactchart;
 function plot(chartid,newdata,newlabel){
     var checkbox = document.getElementById("togLBtn");

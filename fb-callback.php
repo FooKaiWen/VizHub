@@ -156,16 +156,7 @@ foreach ($cursor as $doc) {
      
 $rows = $connection->executeQuery('fb.post', $query);
 
-$likearray = array();
-$lovearray = array();
-$hahaarray = array();
-$wowarray = array();
-$sadarray = array();
-$angryarray = array();
-$timearray = array();
-
 foreach ($rows as $row) {
-  $likearray [] = [];
   if(!isset($row->message)){
   // $msg = $row->message;  
    $curr_id = $row->id;
@@ -173,25 +164,7 @@ foreach ($rows as $row) {
     [ 'id' => "$curr_id" ],
     [ '$set' => [ 'message' => " " ]]);
   }
-  // echo $row->message;
-  $likearray [] = $row->like->summary->total_count;
-  $lovearray [] = $row->love->summary->total_count;
-  $hahaarray [] = $row->haha->summary->total_count;
-  $wowarray [] = $row->wow->summary->total_count;
-  $sadarray [] = $row->sad->summary->total_count;
-  $angryarray [] = $row->angry->summary->total_count;
-  $timearray [] = $row->created_time;
 }
-// $likearray [] = [1,2,3,4,5,6];
-// print_r($likearray);
-$_SESSION["likes"] = $likearray;
-$_SESSION["love"] = $lovearray;
-$_SESSION["haha"] = $hahaarray;
-$_SESSION["wow"] = $wowarray;
-$_SESSION["sad"] = $sadarray;
-$_SESSION["angry"] = $angryarray;
-$_SESSION["time"] = $timearray;
-
 
 //Get tagged place
 try {
