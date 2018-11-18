@@ -103,7 +103,9 @@ if(isset($_REQUEST['submit_btn']))
   $messagecol->insertOne(
     [
       // '_id'=>'message',
-    'pmessage'=>"$message"]); 
+    'pmessage'=>"$message"]);
+  shell_exec("python readtext.py");   
+  echo '<p>' . $messagecol->findOne()->likesNum . '</p>';  
 }
 ?>
 
