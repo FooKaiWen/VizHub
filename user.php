@@ -9,13 +9,13 @@ $client = new MongoDB\Client;
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]);
 
-$userprofdatas = $connection->executeQuery('test.userprofile', $query);
+$userprofdatas = $connection->executeQuery('fb.userprofile', $query);
 
 foreach($userprofdatas as $userprofdata){
 $url = $userprofdata->data->url;
 }
 
-$userdatas = $connection->executeQuery('test.userdetail', $query);
+$userdatas = $connection->executeQuery('fb.userdetail', $query);
 
 foreach($userdatas as $userdata){
 $name = $userdata->name;
