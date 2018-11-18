@@ -22,7 +22,7 @@ $name = $userdata->name;
 $id = $userdata->id;
 }
 
-$newdb = $client->selectDatabase('test');
+$newdb = $client->selectDatabase('fb');
 $temp = $newdb->selectCollection('predictMessage');
 $temp->drop();
 $messagecol = $newdb->selectCollection('predictMessage');
@@ -99,10 +99,11 @@ $messagecol = $newdb->selectCollection('predictMessage');
 <?php
 if(isset($_REQUEST['submit_btn']))
 {
-  $name = $_POST["predictM"];
+  $message = $_POST["predictM"];
   $messagecol->insertOne(
-    ['_id'=>'message',
-    'pmessage'=>"$name",]); 
+    [
+      // '_id'=>'message',
+    'pmessage'=>"$message"]); 
 }
 ?>
 

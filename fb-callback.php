@@ -40,20 +40,8 @@ $userdetailcol = $newdb->selectCollection('userdetail');
 //         'name' => 'Test User',
 //     ],
 // ]);
-
-// printf("Inserted %d document(s)\n", $insertManyResult->getInsertedCount());
-
-// var_dump($insertManyResult->getInsertedIds());
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]); 
-// // $con = new MongoDB\Client;
-// // var_dump($con);
-
-// $db = $connection->test;
-
-// // $db = $conn->admin;
-
-// echo "connected";
 
 $fb = new Facebook\Facebook([
   'app_id' => '267157010556839', // Replace {app-id} with your app id
@@ -69,28 +57,12 @@ if(isset($_GET['state'])){
 }
 
 try {
-  // if(!isset($accesstoken))
   $accessToken = $helper->getAccessToken();
   $atcol->insertOne(
     ['_id'=>'fbaccesstoken',
       'token'=>"$accessToken",
     ]
   );
-  // $accessTokenQuery = $connection->executeQuery('test.accesstoken', $query);
-  // foreach($accessTokenQuery as $at){
-  //     print_r($at);
-  //     echo "1";
-  //     $currtoken = $at->token;
-  //     if($currtoken == " "){
-  //       echo "2";
-  //       $atcol->updateOne(
-  //         [ '_id' => 'fbaccesstoken' ],
-  //         [ '$set' => ['token'=>"$accessToken"]]
-  //       );
-  //     } else {
-  //       $accessToken = $currtoken;
-  //     }
-  // }
   
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
@@ -183,7 +155,6 @@ foreach ($cursor as $doc) {
 }
      
 $rows = $connection->executeQuery('fb.post', $query);
-
 
 $likearray = array();
 $lovearray = array();
@@ -385,17 +356,6 @@ $_SESSION["location"]=$big;
   $userdetailcol->insertOne($userDetail);
 
   Header("Location: http://localhost/VizHub/user.php");
-?>
-
-<?php
-if(isset($_REQUEST['submit_btn']))
-{
-   echo "<div>";
-   $name = $_POST["names"];
-   echo "</br>";
-   echo "ANSWER:</br></br>", $name;
-   echo "</div>";
-}
 ?>
 
 
