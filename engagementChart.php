@@ -41,13 +41,15 @@ $likearray = array();
 $timearray = array();
 
 foreach ($likedata as $row) {
-    $likearray [] = [];
+    // $likearray [] = [];
     // echo $row->message;
     $likearray [] = $row->like->summary->total_count;
+    print($row->like->summary->total_count);
+    print(" ");
     $timearray [] = $row->created_time;
 }
 
-$query = new MongoDB\Driver\Query(['created_time'=>'2017-02-10T14:25:34+0000']);
+$query = new MongoDB\Driver\Query(['created_time'=>'2018-04-23T10:32:55+0000']);
 $reactdata = $connection->executeQuery('fb.post', $query);
 
 foreach($reactdata as $row){

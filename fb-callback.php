@@ -44,8 +44,8 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]); 
 
 $fb = new Facebook\Facebook([
-  'app_id' => '267157010556839', // Replace {app-id} with your app id
-  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
+  'app_id' => '', // Replace {app-id} with your app id
+  'app_secret' => '',
   'default_graph_version' => 'v3.1',
 
     ]);
@@ -57,7 +57,8 @@ if(isset($_GET['state'])){
 }
 
 try {
-  $accessToken = $helper->getAccessToken();
+  $accessToken = "EAAEEJCuCtCcBAOBB6fbWYF0x5r5iCNLQB0f6nqXCsbwaqBnT8RQm9rOC1LRzi6UtWNsmFbeUIUuGbcwXxApt9hSA5AU8n68c27ZCJ3OWDtZBGwaYqwCIA3jIozRQ4mIeicMUNT1WntswKe6Xinzzxlv1TwLKiP4KgiPDATDdyHThJZAHfw3YocZBnksCSIcZD";
+  // $helper->getAccessToken();
   $atcol->insertOne(
     ['_id'=>'fbaccesstoken',
       'token'=>"$accessToken",
@@ -106,17 +107,17 @@ $tokenMetadata = $oAuth2Client->debugToken($accessToken);
   //$tokenMetadata->validateUserId('123');
 $tokenMetadata->validateExpiration();
   
-if (! $accessToken->isLongLived()) {
-  // Exchanges a short-lived access token for a long-lived one
-  try {
-    $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-  } catch (Facebook\Exceptions\FacebookSDKException $e) {
-    echo "<p>Error getting long-lived access token: " . $e->getMessage() . "</p>\n\n";
-    exit;
-  }
-  //echo '<h3>Long-lived</h3>';
-  //var_dump($accessToken->getValue());
-}
+// if (! $accessToken->isLongLived()) {
+//   // Exchanges a short-lived access token for a long-lived one
+//   try {
+//     $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+//   } catch (Facebook\Exceptions\FacebookSDKException $e) {
+//     echo "<p>Error getting long-lived access token: " . $e->getMessage() . "</p>\n\n";
+//     exit;
+//   }
+//   //echo '<h3>Long-lived</h3>';
+//   //var_dump($accessToken->getValue());
+// }
   
 $_SESSION['fb_access_token'] = (string) $accessToken;
 
