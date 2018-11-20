@@ -59,7 +59,7 @@ feature['pron_count'] = df['message'].apply(lambda x: check_pos_tag(x, 'pron'))
 tfidf_vect = TfidfVectorizer(max_features = 1000)
 
 feature1 = pd.DataFrame()
-feature1['text'] = tfidf_vect.fit_transform(df['message']) 
+# feature1['text'] = tfidf_vect.fit_transform(df['message']) 
 feature1['noun_count'] = feature['noun_count']
 feature1['word_density'] = feature['word_density']
 
@@ -104,7 +104,7 @@ import scipy as sp
 y = dataset['likes']
 x_train, x_test, y_train, y_test = train_test_split(feature,y,test_size=0.3,train_size=0.7,random_state=0)
 
-print("COUNT_VECTORIZER")
+print("Feature")
 print("----------------")
 from sklearn.linear_model import Ridge
 
@@ -174,7 +174,7 @@ print("==================================================================")
 
 x_train, x_test, y_train, y_test = train_test_split(feature1,y,test_size=0.3,train_size=0.7,random_state=0)
 
-print("TFIDF_VECTORIZER")
+print("Feature 1")
 print("----------------")
 from sklearn.linear_model import Ridge
 
