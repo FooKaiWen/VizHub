@@ -44,10 +44,9 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]); 
 
 $fb = new Facebook\Facebook([
-  'app_id' => '', // Replace {app-id} with your app id
-  'app_secret' => '',
-  'default_graph_version' => 'v3.1',
-
+  'app_id' => '267157010556839', // Replace {app-id} with your app id
+  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
+  'default_graph_version' => 'v3.1'
     ]);
  
 $helper = $fb->getRedirectLoginHelper();
@@ -57,13 +56,12 @@ if(isset($_GET['state'])){
 }
 
 try {
-  $accessToken = "EAAEEJCuCtCcBAOBB6fbWYF0x5r5iCNLQB0f6nqXCsbwaqBnT8RQm9rOC1LRzi6UtWNsmFbeUIUuGbcwXxApt9hSA5AU8n68c27ZCJ3OWDtZBGwaYqwCIA3jIozRQ4mIeicMUNT1WntswKe6Xinzzxlv1TwLKiP4KgiPDATDdyHThJZAHfw3YocZBnksCSIcZD";
-  // $helper->getAccessToken();
-  $atcol->insertOne(
-    ['_id'=>'fbaccesstoken',
-      'token'=>"$accessToken",
-    ]
-  );
+  $accessToken = $helper->getAccessToken();
+  // $atcol->insertOne(
+  //   ['_id'=>'fbaccesstoken',
+  //     'token'=>"$accessToken",
+  //   ]
+  // );
   
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error

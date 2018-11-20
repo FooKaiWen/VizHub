@@ -6,7 +6,7 @@ from nltk.corpus import stopwords # nltk.download('stopwords')
 from nltk.stem.porter import PorterStemmer
 from autocorrect import spell #spell correction
 
-dataset = pd.read_csv('test.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('5000.csv',encoding='ISO-8859-1')
 dataset2 = pd.read_csv('savefile.csv',encoding='ISO-8859-1')
 
 stemmer = PorterStemmer()
@@ -22,8 +22,6 @@ def stem(word):
 for i in range(dataset.shape[0]): # This is where messages are cleaned and stemmed to make them uniform.
     if(pd.notna(dataset.iloc[i,1])):
         message = dataset.iloc[i,1]
-        numWord = len(message.split())
-        dataset2.iloc[i,2] = numWord
         # print ("Ori Message")
         # print (message)
         #remove non alphabetic characters
@@ -48,7 +46,7 @@ for i in range(dataset.shape[0]): # This is where messages are cleaned and stemm
         # print("Stemmed Message")
         # print(message_text)
         data.append(message_text)
-        # dataset2.iloc[i,1] = message_text
+        dataset2.iloc[i,1] = message_text
 
 dataset2.to_csv('savefile.csv', encoding='utf-8', index=False)
 
