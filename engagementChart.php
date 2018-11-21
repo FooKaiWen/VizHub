@@ -49,55 +49,66 @@ foreach ($likedata as $row) {
     $timearray [] = $row->created_time;
 }
 
-$query = new MongoDB\Driver\Query(['created_time'=>'2018-04-23T10:32:55+0000']);
+$query = new MongoDB\Driver\Query([]);
 $reactdata = $connection->executeQuery('fb.post', $query);
 
+$lovearray = array();
+$hahaarray = array();
+$wowarray = array();
+$sadarray = array();
+$angryarray = array();
+
 foreach($reactdata as $row){
-    $lovearray = $row->love->summary->total_count;
-    $hahaarray = $row->haha->summary->total_count;
-    $wowarray = $row->wow->summary->total_count;
-    $sadarray = $row->sad->summary->total_count;
-    $angryarray = $row->angry->summary->total_count;
+    $lovearray [] = $row->love->summary->total_count;
+    $hahaarray [] = $row->haha->summary->total_count;
+    $wowarray [] = $row->wow->summary->total_count;
+    $sadarray [] = $row->sad->summary->total_count;
+    $angryarray [] = $row->angry->summary->total_count;
 }
+
 ?>
 
-<div style="height: 500px;width: 50%;background-color: azure;float:right;">
-<canvas id="chart"float="right"></canvas>
+<div style="height: 500px; width: 70%;background-color: #F5DEB3 ;float:right;">
+<canvas id="chart" float="right" width="200" height="80"></canvas>
 </div>
 
 <p>Toggle for graph!</p>
 <label class="switch">
-    <input type="checkbox" id="togLBtn" onclick='plot("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)'>
+    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
     <div class="slider round">
-        <span class="on">Like</span><span class="off">Like</span>
+        <span class="on">Reaction</span><span class="off">Reaction</span>
     </div>
 </label>
 
-<div style="width:25%;">
+<!-- <div style="width:25%;">
     <select>
     <option value="5">5</option>
     <option value="10">10</option>
     <option value="15">15</option>
     <option value="20">20</option>
     </select>
-</div>
+</div> -->
 
 <label class="switch">
-    <input type="checkbox" id="togRBtn" onclick='plotReaction("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray) ?>)'>
+    <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>)'>
     <div class="slider round">
-        <span class="on">Reaction</span><span class="off">Reaction</span>
+        <span class="on">Total Reaction </span><span class="off">Total Reaction</span>
     </div>
 </label>
 
 <div style="width:25%;">
+<label>Time Selection: </label>
+
 <?php
-echo '<select id="timeSelect">';
+echo '<select id="timeSelect" onchange=  style=" height: 25px; width: 100px">';
+
 foreach($timearray as $time){
     echo '<option value="' . htmlspecialchars($time) . '">'
         . htmlspecialchars($time) . '</option>';
 }
 echo '</select>';
 ?>
+
 </div>
 
 <p>We are still improving our visualization functionality!</p>
