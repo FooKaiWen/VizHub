@@ -52,6 +52,8 @@ foreach ($likedata as $row) {
 $query = new MongoDB\Driver\Query(['created_time'=>'2018-04-23T10:32:55+0000']);
 $reactdata = $connection->executeQuery('fb.post', $query);
 
+
+
 foreach($reactdata as $row){
     $lovearray = $row->love->summary->total_count;
     $hahaarray = $row->haha->summary->total_count;
@@ -59,6 +61,17 @@ foreach($reactdata as $row){
     $sadarray = $row->sad->summary->total_count;
     $angryarray = $row->angry->summary->total_count;
 }
+
+$user_details = $connection->executeQuery('fb.userdetail', $query);
+
+foreach($user_details as $row){
+
+    $num_friends = $row->friends->summary->total_count;    
+}
+
+
+
+
 ?>
 
 <div style="height: 500px;width: 50%;background-color: azure;float:right;">

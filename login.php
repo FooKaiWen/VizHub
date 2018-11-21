@@ -26,7 +26,7 @@ $fb = new Facebook\Facebook([
 
 $helper = $fb->getRedirectLoginHelper();
 
-$permissions = ['email']; // Optional permissions
+$permissions = ['email', 'user_friends']; // Optional permissions
 $loginUrl = $helper->getLoginUrl('https://localhost/VizHub/fb-callback.php', $permissions);
 
   if (isset($_POST['logInBtn']))

@@ -313,7 +313,7 @@ $_SESSION["location"]=$big;
   try {
     // Returns a `FacebookFacebookResponse` object
     $pictureNode = $fb->get("/me/picture?type=large&redirect=false",$accessToken);
-    $userDetailNode = $fb->get("/me?fields=id,name",$accessToken);
+    $userDetailNode = $fb->get("/me?fields=id,name,friends",$accessToken);
   } catch(FacebookExceptionsFacebookResponseException $e) {
     echo 'Graph returned an error: ' . $e->getMessage();
     exit;
