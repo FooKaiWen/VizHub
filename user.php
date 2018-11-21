@@ -104,8 +104,8 @@ if(isset($_REQUEST['submit_btn']))
     [
       // '_id'=>'message',
     'pmessage'=>"$message"]);
-  shell_exec("python readtext.py");   
-  echo '<p>' . $messagecol->findOne()->likesNum . '</p>';  
+  // shell_exec("python readtext.py");   
+  // echo '<p>' . $messagecol->findOne()->likesNum . '</p>';  
 }
 ?>
 

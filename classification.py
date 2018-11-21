@@ -1,3 +1,71 @@
+import pandas as pd
+oriset = pd.read_csv('5000.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('savefile.csv',encoding='ISO-8859-1')
+for i in range(oriset.shape[0]):
+    if(pd.notna(oriset.iloc[i,0])):
+        num = oriset.iloc[i,0]
+        # print("start")
+        # print(num)
+        label = num/1000
+        label = int(label)
+        # if(label < 50):
+        #     label = 10
+        # elif(label < 500):
+        #     label = 50
+        # elif(label < 100):
+        #     label = 10  
+        # elif(label < 1500):
+        #     label = 15  
+        # elif(label < 200):
+        #     label = 20  
+        # elif(label < 2500):
+        #     label = 25
+        # elif(label < 300):
+        #     label = 30  
+        # elif(label < 3500):
+        #     label = 35  
+        # elif(label < 400):
+        #     label = 40
+        # elif(label < 4500):
+        #     label = 45  
+        # elif(label < 500):
+        #     label = 50  
+        # elif(label < 5500):
+        #     label = 55
+        # elif(label < 6000):
+        #     label = 60  
+        # elif(label < 6500):
+        #     label = 65  
+        # elif(label < 7000):
+        #     label = 70
+        # elif(label < 7500):
+        #     label = 75  
+        # elif(label < 8000):
+        #     label = 35  
+        # elif(label < 8500):
+        #     label = 80  
+        # elif(label < 9000):
+        #     label = 90  
+        # elif(label < 9500):
+        #     label = 95  
+        # elif(label < 10000):
+        #     label = 100  
+        # elif(label < 10500):
+        #     label = 105  
+        # elif(label < 11000):
+        #     label = 110  
+        # elif(label < 11500):
+        #     label = 115  
+        # elif(label < 12000):
+        #     label = 120
+        # else:
+        #     label = 99           
+        # print("here1: ")
+        # print(label)
+        dataset.iloc[i,0] = label
+
+dataset.to_csv('savefile.csv', encoding='utf-8', index=False)
+
 from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn import decomposition, ensemble
@@ -6,16 +74,13 @@ import pandas, numpy, textblob, string
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-def train_model(classifier, feature_vector_train, label, feature_vector_valid, is_neural_net=False):
+def train_model(classifier, feature_vector_train, label, feature_vector_valid):
     # fit the training dataset on the classifier
     classifier.fit(feature_vector_train, label)
-    
+    # print(feature_vector_train.shape)
     # predict the labels on validation dataset
     predictions = classifier.predict(feature_vector_valid)
-    
-    if is_neural_net:
-        predictions = predictions.argmax(axis=-1)
-    
+    # return predictions
     return metrics.accuracy_score(predictions, valid_y)
 
 dataset = pandas.read_csv('savefile.csv',encoding='ISO-8859-1')
@@ -23,11 +88,7 @@ oriset = pandas.read_csv('5000.csv',encoding='ISO-8859-1')
 
 train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
 
-encoder = preprocessing.LabelEncoder()
-train_y = encoder.fit_transform(train_y)
-valid_y = encoder.fit_transform(valid_y)
-
-count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
+count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=5000)
 count_vect.fit(dataset['message'])
 
 # transform the training and validation data using count vectorizer object
@@ -37,6 +98,24 @@ xvalid_count =  count_vect.transform(valid_x)
 # Naive Bayes on Count Vectors
 accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count)
 print("NB, Count Vectors: ", accuracy)
+
+import numpy as np
+test = ['avion florida orphan impasse plea family love gotten wish time christmas']
+test_count = count_vect.transform(test)
+# print(test_count)
+# print(test_count.shape)
+# test = [1,2,3]
+# print(len(test))
+A = np.array([test_count])
+N = A.size
+# B = np.pad(A, ((0,N),(0,10)), mode='constant')
+# print(B)
+# arr = [0]*7290
+# arr[0] = test
+# arr = np.reshape(arr,(1,-1))
+# accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, test_count)
+# print("NB, Count Vectors: ", accuracy)
+
 
 # Linear Classifier on Count Vectors
 accuracy = train_model(linear_model.LogisticRegression(), xtrain_count, train_y, xvalid_count)
@@ -110,11 +189,11 @@ print("LR, CharLevel Vectors: ", accuracy)
 
 # RF on Character Level TF IDF Vectors
 accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
-print("RF, N-Gram Vectors: ", accuracy)
+print("RF, CharLevel Vectors: ", accuracy)
 
 # SVM on Character Level TF IDF Vectors
 accuracy = train_model(svm.SVC(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
-print("SVM, N-Gram Vectors: ", accuracy)
+print("SVM, CharLevel Vectors: ", accuracy)
 
 # # Extereme Gradient Boosting on Count Vectors
 # accuracy = train_model(xgboost.XGBClassifier(), xtrain_count.tocsc(), train_y, xvalid_count.tocsc())
@@ -146,42 +225,7 @@ print("SVM, N-Gram Vectors: ", accuracy)
 # accuracy = train_model(classifier, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, is_neural_net=True)
 # print("NN, Ngram Level TF IDF Vectors",  accuracy)
 
-import pandas as pd
-oriset = pd.read_csv('test.csv',encoding='ISO-8859-1')
-dataset = pd.read_csv('savefile.csv',encoding='ISO-8859-1')
-for i in range(oriset.shape[0]):
-    if(pd.notna(oriset.iloc[i,0])):
-        num = oriset.iloc[i,0]
-        # print("start")
-        # print(num)
-        label = num/100
-        label = int(label)
-        if(label < 10):
-            label = 1
-        elif(label < 50):
-            label = 5
-        elif(label < 100):
-            label = 10  
-        elif(label < 150):
-            label = 15  
-        elif(label < 200):
-            label = 20  
-        elif(label < 250):
-            label = 25
-        elif(label < 300):
-            label = 30  
-        elif(label < 350):
-            label = 35  
-        elif(label < 400):
-            label = 40        
-        print("here1: ")
-        print(label)
-        if(label < 1):
-            dataset.iloc[i,0] = 0
-        else:
-            dataset.iloc[i,0] = label
 
-dataset.to_csv('savefile.csv', encoding='utf-8', index=False)
 
 # label = oriset2['likes']
 # text = oriset2['message']
