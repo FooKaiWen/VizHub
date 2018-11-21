@@ -2,6 +2,17 @@ import pymongo
 import re
 from sklearn.metrics import mean_squared_error
 import numpy as np
+import nltk
+from nltk.tokenize import word_tokenize as wt
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from autocorrect import spell
+
+def stem(word):
+    for suffix in ['ing', 'ly', 'ed', 'ious', 'ies', 'ive', 'es', 's', 'ment']:
+        if word.endswith(suffix):
+            return word[:-len(suffix)]
+    return word
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["fb"]
@@ -12,10 +23,21 @@ message = getMessage['pmessage']
 
 message = re.sub('[^A-Za-z]',' ',message)
 message = message.lower()
-numWord = len(message.split())
+tokenized_message = wt(message)
+message_processed = []
+data = []
+stemmer = PorterStemmer()
+for word in tokenized_message:
+    stem(word)
+    if word not in set(stopwords.words('english')):
+        message_processed.append(spell(stemmer.stem(word)))
+        
+message_text = " ".join(message_processed)
+print(message_text)
+data.append(message_text)
+print(data)
 
-
-mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesNum":"123"}})
+# mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesNum":"123"}})
 # import pandas as pd
 # import re
 # import nltk

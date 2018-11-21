@@ -66,6 +66,7 @@ foreach($reactdata as $row){
     $angryarray [] = $row->angry->summary->total_count;
 }
 
+
 ?>
 
 <div style="height: 500px; width: 70%;background-color: #F5DEB3 ;float:right;">
