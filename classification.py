@@ -8,14 +8,14 @@ for i in range(oriset.shape[0]):
         # print(num)
         label = num
         # label = int(label)
-        if(label < 5000):
-            label = 5000
-        # elif(label < 4000):
-        #     label = 4000
-        # elif(label < 6000):
-        #     label = 6000  
-        # elif(label < 8000):
-        #     label = 8000  
+        if(label < 2000):
+            label = 2000
+        elif(label < 4000):
+            label = 4000
+        elif(label < 6000):
+            label = 6000  
+        elif(label < 8000):
+            label = 8000  
         # elif(label < 7500):
         #     label = 7500  
         elif(label < 10000):
@@ -80,13 +80,13 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid):
     # print(feature_vector_train.shape)
     # predict the labels on validation dataset
     predictions = classifier.predict(feature_vector_valid)
-#     print(predictions)
-    return metrics.accuracy_score(predictions, valid_y)
+    return predictions
+    # return metrics.accuracy_score(predictions, valid_y)
 
 dataset = pandas.read_csv('savefile.csv',encoding='ISO-8859-1')
 oriset = pandas.read_csv('5000.csv',encoding='ISO-8859-1')
 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['two_thousand_likes'])
 
 count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
 count_vect.fit(dataset['message'])
@@ -113,27 +113,27 @@ N = A.size
 # arr = np.reshape(arr,(1,-1))
 
 # Naive Bayes on Count Vectors
-accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count)
+accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, test_count)
 print("NB, Count Vectors: ", accuracy)
 
 
 # Linear Classifier on Count Vectors
-accuracy = train_model(linear_model.LogisticRegression(), xtrain_count, train_y, xvalid_count)
+accuracy = train_model(linear_model.LogisticRegression(), xtrain_count, train_y, test_count)
 print("LR, Count Vectors: ", accuracy)
 
 # RF on Count Vectors
-accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_count, train_y, xvalid_count)
+accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_count, train_y, test_count)
 print("RF, Count Vectors: ", accuracy)
 
 # SVM on Count Vectors
-accuracy = train_model(svm.SVC(), xtrain_count, train_y, xvalid_count)
+accuracy = train_model(svm.SVC(), xtrain_count, train_y, test_count)
 print("SVM, Count Vectors: ", accuracy)
 
 # word level tf-idf
 tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=5000)
 tfidf_vect.fit(dataset['message'])
 xtrain_tfidf =  tfidf_vect.transform(train_x)
-xvalid_tfidf =  tfidf_vect.transform(valid_x)
+xvalid_tfidf =  tfidf_vect.transform(test)
 
 # Naive Bayes on Word Level TF IDF Vectors
 accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf)

@@ -84,8 +84,17 @@ $messagecol = $newdb->selectCollection('predictMessage');
 </form>
 
 <form method="POST" action="">
-  <div class="container">
+
+
+<div class="container">
     <div class="form-group" >
+      <div style="width:25%;">
+        <select name="selected">
+          <option value="2000" selected>Range of 2000</option>
+          <option value="2500">Range of 2500</option>
+          <option value="5000">Range of 5000</option>
+        </select>
+      </div>
       <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
         <div style ="text-align:center;">  
@@ -99,21 +108,20 @@ $messagecol = $newdb->selectCollection('predictMessage');
 <?php
 if(isset($_REQUEST['submit_btn']))
 {
+  $selection = $_POST["selected"];
   $message = $_POST["predictM"];
   $messagecol->insertOne(
     [
       // '_id'=>'message',
+    'selection'=>"$selection",
     'pmessage'=>"$message"]);
-  // shell_exec("python readtext.py");   
-  // echo '<p>' . $messagecol->findOne()->likesNum . '</p>';  
+  shell_exec("python readtext.py");
+  ini_set('max_execution_time', 300);
+  echo '<div style="float: center">The highest number of likes is ' .htmlspecialchars($messagecol->findOne()->likesRange).' </p>';
+  echo '</div>';   
+  echo '<p>' . $messagecol->findOne()->likesRange . '</p>';  
 }
 ?>
-
-<iframe style="display:none;" name="target"></iframe>
-<canvas id="chart1" float="left" width="100" height="100"></canvas>
-
-<!-- <canvas id="chart2" float="right" width="400" height="400"></canvas>
-<script>plot(<?php echo json_encode($likearray) ?>,<?php echo json_encode($timearray) ?>)</script> -->
 
 </body>
 </html>
