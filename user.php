@@ -62,10 +62,6 @@ $messagecol = $newdb->selectCollection('predictMessage');
     <img src="<?php echo $url; ?>" alt="Profile Picture">
     <h2 id="detail-name">Name: <?php echo $name; ?><br/></h2>
     <h2 id="detail-id">ID: <?php echo $id; ?></h2>
-    <!-- <form method="post" action="#"> -->
-        <!-- <input type="submit" name="Extract Data" value="Extract Data" class="extractionButton"> -->
-     <!-- </form> -->
-     <button class="extractionButton">Extract Data</button>
   </div>
 </div>
 
@@ -80,7 +76,7 @@ $messagecol = $newdb->selectCollection('predictMessage');
   <button style="width: 50%; float:left; height:150px; background:rgb(78, 210, 214); margin:0px">Engagement Visualization</button>
 </form>
 <form action="MapChart.php" target="_blank">
-<button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
+  <button style="width: 50%; float:right; height:150px; background:rgb(184, 184, 41); margin:0px">Location Vizualization</button>
 </form>
 
 <form method="POST" action="">
@@ -97,29 +93,43 @@ $messagecol = $newdb->selectCollection('predictMessage');
       </div>
       <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
-        <div style ="text-align:center;">  
-      <button class ="copyText" onclick="copyText()">Copy text</button>
-      <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
-        </div>
+      <div style ="text-align:center;">  
+        <button class ="copyText" onclick="copyText()">Copy text</button>
+        <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
+      </div>
     </div>
   </div>
 </form>
 
 <?php
-if(isset($_REQUEST['submit_btn']))
-{
+if(isset($_REQUEST['submit_btn'])){
+
   $selection = $_POST["selected"];
   $message = $_POST["predictM"];
+
   $messagecol->insertOne(
     [
       // '_id'=>'message',
     'selection'=>"$selection",
     'pmessage'=>"$message"]);
   shell_exec("python readtext.py");
-  ini_set('max_execution_time', 300);
-  echo '<div style="float: center">The highest number of likes is ' .htmlspecialchars($messagecol->findOne()->likesRange).' </p>';
+  $upperboundary = $messagecol->findOne()->likesRange;
+
+  if($selection==2000){
+    $lowerboundary = $upperboundary-2000;
+    $accuracy = 60.05;
+  } elseif($selection==2500){
+    $lowerboundary = $upperboundary-2500;
+    $accuracy = 60.37;
+  } elseif($selection==5000){
+    $lowerboundary = $upperboundary-5000;
+    $accuracy = 84.70;
+  }
+
+  echo '<div style="margin:auto; width:50%;border: 3px solid green;padding: 10px;">The range of the number of likes is ' .htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary);
+  echo ' with an accuracy of '.htmlspecialchars($accuracy). '%';
   echo '</div>';   
-  echo '<p>' . $messagecol->findOne()->likesRange . '</p>';  
+
 }
 ?>
 
