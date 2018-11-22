@@ -67,7 +67,8 @@ $hahaarray = array();
 $wowarray = array();
 $sadarray = array();
 $angryarray = array();
-
+$num_comment = array();
+$num_share = array();
 
 foreach($reactdata as $row){
     $lovearray [] = $row->love->summary->total_count;
@@ -75,6 +76,15 @@ foreach($reactdata as $row){
     $wowarray [] = $row->wow->summary->total_count;
     $sadarray [] = $row->sad->summary->total_count;
     $angryarray [] = $row->angry->summary->total_count;
+    $num_comment [] = $row->comments->summary->total_count;
+
+    if(!isset($row->shares)){
+            $num_share [] = 0;
+        }
+        else 
+        {
+            $num_share [] = $row->shares->count;
+        }
 }
 
 $user_details = $connection->executeQuery('fb.userdetail', $query);

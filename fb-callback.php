@@ -121,7 +121,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(15){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(15){id,shares}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -134,12 +134,17 @@ try {
 
 $graphNode = $posts_request->getGraphNode();
 $insertManyResult = $usercol->insertOne(json_decode($graphNode));
+
+
 $cursor = $usercol->distinct("posts.id");
+
+
+
 
 
 foreach ($cursor as $doc) {
   try {
-    $reactions_request = $fb->get("/$doc?fields=created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry)",$accessToken);
+    $reactions_request = $fb->get("/$doc?fields=created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -153,6 +158,21 @@ foreach ($cursor as $doc) {
   $insertManyResult = $postcol->insertOne($ReactionNode);
 }
      
+
+
+
+
+// foreach ($share as $row) {
+//   if(!isset($row->posts->shares)){
+//   // $msg = $row->message;  
+//    $curr_id = $row->posts->id;
+//    $postcol->updateOne(
+//     [ 'id' => "$curr_id" ],
+//     [ '$set' => [ 'shares' => " " ]]);
+//   }
+// }
+
+
 $rows = $connection->executeQuery('fb.post', $query);
 
 foreach ($rows as $row) {
@@ -313,7 +333,7 @@ $_SESSION["location"]=$big;
   try {
     // Returns a `FacebookFacebookResponse` object
     $pictureNode = $fb->get("/me/picture?type=large&redirect=false",$accessToken);
-    $userDetailNode = $fb->get("/me?fields=id,name",$accessToken);
+    $userDetailNode = $fb->get("/me?fields=id,name,friends",$accessToken);
   } catch(FacebookExceptionsFacebookResponseException $e) {
     echo 'Graph returned an error: ' . $e->getMessage();
     exit;
