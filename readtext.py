@@ -8,6 +8,10 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from autocorrect import spell
 
+import pandas
+from sklearn import model_selection
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+
 def stem(word):
     for suffix in ['ing', 'ly', 'ed', 'ious', 'ies', 'ive', 'es', 's', 'ment']:
         if word.endswith(suffix):
@@ -20,7 +24,8 @@ mycol = mydb["predictMessage"]
 
 getMessage = mycol.find_one()
 message = getMessage['pmessage']
-
+selection = getMessage['selection']
+# message = "Roberts took the unusual step of devoting the majority of  his annual  report to the issue of judicial ethics."
 message = re.sub('[^A-Za-z]',' ',message)
 message = message.lower()
 tokenized_message = wt(message)
@@ -33,9 +38,34 @@ for word in tokenized_message:
         message_processed.append(spell(stemmer.stem(word)))
         
 message_text = " ".join(message_processed)
-print(message_text)
 data.append(message_text)
-print(data)
+
+def train_model(classifier, feature_vector_train, label, feature_vector_valid):
+    # fit the training dataset on the classifier
+    classifier.fit(feature_vector_train, label)
+    # predict the labels on validation dataset
+    prediction = classifier.predict(feature_vector_valid)
+    return prediction
+#     return metrics.accuracy_score(predictions, valid_y)
+
+dataset = pandas.read_csv('savefile.csv',encoding='ISO-8859-1')
+
+if(selection == "2000"): #0.60
+        train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['two_thousand_likes'])
+        tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
+        tfidf_vect_ngram_chars.fit(dataset['message'])
+        xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
+        xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x) 
+
+if(selection == "5000"): #0.84
+        train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['five_thousand_likes'])
+if(selection == "2500"): #0.60
+        train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['twentyfive_hundred_likes'])
+
+xtrain_count =  count_vect.transform(train_x)
+xvalid_count = count_vect.transform(data)
+accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
+
 
 # mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesNum":"123"}})
 # import pandas as pd

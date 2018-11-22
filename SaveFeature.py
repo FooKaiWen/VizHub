@@ -6,7 +6,7 @@ from nltk.corpus import stopwords # nltk.download('stopwords')
 from nltk.stem.porter import PorterStemmer
 from autocorrect import spell #spell correction
 
-dataset = pd.read_csv('5000.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('10k_5000.csv',encoding='ISO-8859-1')
 dataset2 = pd.read_csv('savefile.csv',encoding='ISO-8859-1')
 
 stemmer = PorterStemmer()
