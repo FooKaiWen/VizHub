@@ -10,6 +10,7 @@ from autocorrect import spell
 
 import pandas
 from sklearn import model_selection
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 def stem(word):
     for suffix in ['ing', 'ly', 'ed', 'ious', 'ies', 'ive', 'es', 's', 'ment']:
@@ -48,14 +49,23 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid):
 #     return metrics.accuracy_score(predictions, valid_y)
 
 dataset = pandas.read_csv('savefile.csv',encoding='ISO-8859-1')
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
 
-# if(selection == "2000"): #0.60
-        
-# if(selection == "5000"): #0.84
-#         loadedmodel = joblib.load('.joblib')
-# if(selection == "2500"): #0.60
-#         loadedmodel = joblib.load('.joblib')
+if(selection == "2000"): #0.60
+        train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['two_thousand_likes'])
+        tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
+        tfidf_vect_ngram_chars.fit(dataset['message'])
+        xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
+        xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x) 
+
+if(selection == "5000"): #0.84
+        train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['five_thousand_likes'])
+if(selection == "2500"): #0.60
+        train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['twentyfive_hundred_likes'])
+
+xtrain_count =  count_vect.transform(train_x)
+xvalid_count = count_vect.transform(data)
+accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
+
 
 # mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesNum":"123"}})
 # import pandas as pd

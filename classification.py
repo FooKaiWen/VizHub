@@ -8,18 +8,18 @@ for i in range(oriset.shape[0]):
         # print(num)
         label = num
         # label = int(label)
-        if(label < 2637):
-            label = 1
+        if(label < 5000):
+            label = 5000
         # elif(label < 4000):
-        #     label = 50
+        #     label = 4000
         # elif(label < 6000):
-        #     label = 10  
-        elif(label < 5274):
-            label = 15  
-        elif(label < 7911):
-            label = 20  
-        # elif(label < 2500):
-        #     label = 25
+        #     label = 6000  
+        # elif(label < 8000):
+        #     label = 8000  
+        # elif(label < 7500):
+        #     label = 7500  
+        elif(label < 10000):
+            label = 10000
         # elif(label < 300):
         #     label = 30  
         # elif(label < 3500):
@@ -59,12 +59,12 @@ for i in range(oriset.shape[0]):
         # elif(label < 12000):
         #     label = 120
         else:
-            label = 99           
+            label = 9999           
         # print("here1: ")
         # print(label)
         dataset.iloc[i,0] = label
 
-# dataset.to_csv('savefile.csv', encoding='utf-8', index=False)
+dataset.to_csv('savefile.csv', encoding='utf-8', index=False)
 
 from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
