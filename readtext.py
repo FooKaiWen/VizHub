@@ -41,7 +41,7 @@ for word in tokenized_message:
 message_text = " ".join(message_processed)
 data = [message_text]
 print("here1")
-dataset = pandas.read_csv('dataset.csv',encoding='ISO-8859-1')
+dataset = pandas.read_csv('.csv',encoding='ISO-8859-1')
 
 if(selection == "2000"): #0.60
         train_x, test_x, train_y, test_y = model_selection.train_test_split(dataset['message'], dataset['two_thousand_likes'])
