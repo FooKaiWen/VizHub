@@ -114,20 +114,17 @@ if(isset($_REQUEST['submit_btn'])){
     'pmessage'=>"$message"]);
   shell_exec("python readtext.py");
   $upperboundary = $messagecol->findOne()->likesRange;
-
+  $accuracy = $messagecol->findOne()->accuracy;
   if($selection==2000){
     $lowerboundary = $upperboundary-2000;
-    $accuracy = 60.05;
   } elseif($selection==2500){
     $lowerboundary = $upperboundary-2500;
-    $accuracy = 60.37;
   } elseif($selection==5000){
     $lowerboundary = $upperboundary-5000;
-    $accuracy = 84.70;
   }
 
   echo '<div style="margin:auto; width:50%;border: 3px solid green;padding: 10px;">The range of the number of likes is ' .htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary);
-  echo ' with an accuracy of '.htmlspecialchars($accuracy). '%';
+  echo ' with an accuracy of '.htmlspecialchars(number_format((float)$accuracy,2,'.','')). '%';
   echo '</div>';   
 
 }

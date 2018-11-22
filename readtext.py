@@ -7,7 +7,7 @@ from nltk.stem.porter import PorterStemmer
 from autocorrect import spell
 import numpy as np
 import pandas
-from sklearn import model_selection, linear_model
+from sklearn import model_selection, linear_model, metrics
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 import warnings
@@ -41,7 +41,6 @@ for word in tokenized_message:
 message_text = " ".join(message_processed)
 data = [message_text]
 print("here1")
-
 dataset = pandas.read_csv('dataset.csv',encoding='ISO-8859-1')
 
 if(selection == "2000"): #0.60
@@ -54,15 +53,24 @@ elif(selection == "2500"): #0.60
 
 tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
 tfidf_vect_ngram_chars.fit(dataset['message'])
-xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
+xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x)
+xtest_tfidf_ngram_chars = tfidf_vect_ngram_chars.transform(test_x)
+lrmodel = linear_model.LogisticRegression()
+lrmodel.fit(xtrain_tfidf_ngram_chars,train_y)
+prediction = lrmodel.predict(xtest_tfidf_ngram_chars)
+accuracy = metrics.accuracy_score(prediction, test_y)
+
+mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"accuracy":accuracy*100}})
+
 xtest_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(data) 
 lrmodel = linear_model.LogisticRegression()
 lrmodel.fit(xtrain_tfidf_ngram_chars,train_y)
 prediction = lrmodel.predict(xtest_tfidf_ngram_chars)
+print(prediction)
 for x in np.nditer(prediction):
         value = x
 
-mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesRange":int(value)}})
+mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesRange":int(prediction)}})
 
 
 #         from sklearn.externals import joblib
