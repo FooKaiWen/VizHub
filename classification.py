@@ -1,23 +1,23 @@
 import pandas as pd
-oriset = pd.read_csv('5000.csv',encoding='ISO-8859-1')
+oriset = pd.read_csv('10k_5000.csv',encoding='ISO-8859-1')
 dataset = pd.read_csv('savefile.csv',encoding='ISO-8859-1')
 for i in range(oriset.shape[0]):
     if(pd.notna(oriset.iloc[i,0])):
         num = oriset.iloc[i,0]
         # print("start")
         # print(num)
-        label = num/1000
-        label = int(label)
-        # if(label < 50):
-        #     label = 10
-        # elif(label < 500):
+        label = num
+        # label = int(label)
+        if(label < 2637):
+            label = 1
+        # elif(label < 4000):
         #     label = 50
-        # elif(label < 100):
+        # elif(label < 6000):
         #     label = 10  
-        # elif(label < 1500):
-        #     label = 15  
-        # elif(label < 200):
-        #     label = 20  
+        elif(label < 5274):
+            label = 15  
+        elif(label < 7911):
+            label = 20  
         # elif(label < 2500):
         #     label = 25
         # elif(label < 300):
@@ -58,13 +58,13 @@ for i in range(oriset.shape[0]):
         #     label = 115  
         # elif(label < 12000):
         #     label = 120
-        # else:
-        #     label = 99           
+        else:
+            label = 99           
         # print("here1: ")
         # print(label)
         dataset.iloc[i,0] = label
 
-dataset.to_csv('savefile.csv', encoding='utf-8', index=False)
+# dataset.to_csv('savefile.csv', encoding='utf-8', index=False)
 
 from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
@@ -80,7 +80,7 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid):
     # print(feature_vector_train.shape)
     # predict the labels on validation dataset
     predictions = classifier.predict(feature_vector_valid)
-    # return predictions
+#     print(predictions)
     return metrics.accuracy_score(predictions, valid_y)
 
 dataset = pandas.read_csv('savefile.csv',encoding='ISO-8859-1')
@@ -88,19 +88,17 @@ oriset = pandas.read_csv('5000.csv',encoding='ISO-8859-1')
 
 train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
 
-count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=5000)
+count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
 count_vect.fit(dataset['message'])
 
 # transform the training and validation data using count vectorizer object
 xtrain_count =  count_vect.transform(train_x)
 xvalid_count =  count_vect.transform(valid_x)
 
-# Naive Bayes on Count Vectors
-accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count)
-print("NB, Count Vectors: ", accuracy)
+
 
 import numpy as np
-test = ['avion florida orphan impasse plea family love gotten wish time christmas']
+test = ['new chief staff']
 test_count = count_vect.transform(test)
 # print(test_count)
 # print(test_count.shape)
@@ -113,8 +111,10 @@ N = A.size
 # arr = [0]*7290
 # arr[0] = test
 # arr = np.reshape(arr,(1,-1))
-# accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, test_count)
-# print("NB, Count Vectors: ", accuracy)
+
+# Naive Bayes on Count Vectors
+accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count)
+print("NB, Count Vectors: ", accuracy)
 
 
 # Linear Classifier on Count Vectors

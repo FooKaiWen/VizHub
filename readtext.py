@@ -8,6 +8,9 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from autocorrect import spell
 
+import pandas
+from sklearn import model_selection
+
 def stem(word):
     for suffix in ['ing', 'ly', 'ed', 'ious', 'ies', 'ive', 'es', 's', 'ment']:
         if word.endswith(suffix):
@@ -20,7 +23,8 @@ mycol = mydb["predictMessage"]
 
 getMessage = mycol.find_one()
 message = getMessage['pmessage']
-
+selection = getMessage['selection']
+# message = "Roberts took the unusual step of devoting the majority of  his annual  report to the issue of judicial ethics."
 message = re.sub('[^A-Za-z]',' ',message)
 message = message.lower()
 tokenized_message = wt(message)
@@ -33,9 +37,25 @@ for word in tokenized_message:
         message_processed.append(spell(stemmer.stem(word)))
         
 message_text = " ".join(message_processed)
-print(message_text)
 data.append(message_text)
-print(data)
+
+def train_model(classifier, feature_vector_train, label, feature_vector_valid):
+    # fit the training dataset on the classifier
+    classifier.fit(feature_vector_train, label)
+    # predict the labels on validation dataset
+    prediction = classifier.predict(feature_vector_valid)
+    return prediction
+#     return metrics.accuracy_score(predictions, valid_y)
+
+dataset = pandas.read_csv('savefile.csv',encoding='ISO-8859-1')
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
+
+# if(selection == "2000"): #0.60
+        
+# if(selection == "5000"): #0.84
+#         loadedmodel = joblib.load('.joblib')
+# if(selection == "2500"): #0.60
+#         loadedmodel = joblib.load('.joblib')
 
 # mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesNum":"123"}})
 # import pandas as pd
