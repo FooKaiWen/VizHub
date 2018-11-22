@@ -140,6 +140,7 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
 }
 
 var allFriendChart;
+var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
     var  totNum = [];
     var checkbox = document.getElementById("togFriBtn");
@@ -172,8 +173,8 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                         label: 'Number of react',
                         fill: true,
                         data: totNum,
-                        backgroundColor: 'rgba(192,192,192,1)',
-                        borderColor: 'rgba(192,182,192,5)',
+                        backgroundColor: 'rgba(85,107,47,1)',
+                        borderColor: 'rgba(85,107,47,5)',
                         borderWidth: 3
                     }]
             },
@@ -195,6 +196,10 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
 
     }
 
+}
+
+function friendNumber(){
+    return friendNum;
 }
 
 

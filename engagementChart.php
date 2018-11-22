@@ -86,16 +86,12 @@ foreach($user_details as $row){
 
 ?>
 
-<p>Toggle for graph!</p>
-<div style ="height 50px; width:70%; backgrounf-color:white; float:right; border:5px solid gray">
-<p >Try CLICK on Parameter.</p>
-</div> 
+<h3>Toggle for graph!</h3>
+<div class="triggerMessage" >Try CLICK on Parameter: Likes, Love, Haha, Wow, Sad, Angry.</div> 
 
-<div style="height: 500px; width: 70%;background-color: #F5DEB3 ;float:right;">
+<div class ="plot">
 <canvas id="chart" float="right" width="200" height="80"></canvas>
 </div>
-
-
 
 <label class="switch">
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
@@ -106,8 +102,7 @@ foreach($user_details as $row){
 </label>
 
 <?php
-echo '<div style ="height 50px; width:60%; backgrounf-color:white; float:right;">';
-echo '<p >The highest number of likes is ' .htmlspecialchars($highestLikes).' </p>';
+echo '<div class ="informMessage">The highest number of likes is ' .htmlspecialchars($highestLikes).' </p>';
 echo '</div>';
 ?> 
 
@@ -135,16 +130,8 @@ echo '</div>';
     </div>
 </label>
 
-<label class ="message">
-    <p>asdads</p>
-</label>
 
-
-
-
-
-
-<div style="width:25%;">
+<!-- <div style="width:25%;">
 <label>Time Selection: </label>
 
 <?php
@@ -156,8 +143,7 @@ foreach($timearray as $time){
 }
 echo '</select>';
 ?>
-
-</div>
+</div> -->
 
 <p>We are still improving our visualization functionality!</p>
 
