@@ -1,6 +1,6 @@
 import pandas as pd
-oriset = pd.read_csv('10k_5000.csv',encoding='ISO-8859-1')
-dataset = pd.read_csv('dataset.csv',encoding='ISO-8859-1')
+oriset = pd.read_csv('.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('.csv',encoding='ISO-8859-1')
 # for i in range(oriset.shape[0]):
 #     if(pd.notna(oriset.iloc[i,0])):
 #         num = oriset.iloc[i,0]
@@ -136,13 +136,6 @@ print("NB, CharLevel Vectors: ", accuracy)
 # Linear Classifier on Character Level TF IDF Vectors
 accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
 print("LR, CharLevel Vectors: ", accuracy)
-# predictset = pd.read_csv('comparison2000.csv',encoding='ISO-8859-1')
-# i = 0
-# for x in np.nditer(accuracy):
-#         predictset.iloc[i,1] = x
-#         i = i + 1 
-
-# predictset.to_csv('comparison2000.csv', encoding='utf-8', index=False)
 
 # RF on Character Level TF IDF Vectors
 accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)

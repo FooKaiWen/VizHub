@@ -5,9 +5,21 @@ function selectValue() {
 
 var allReactChart;
 function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime) {
-    var checkbox = document.getElementById("togAllBtn")
+    var checkbox_All = document.getElementById("togAllBtn")
+    var checkbox_Tot = document.getElementById("togTotBtn");
+    var checkbox_Fri = document.getElementById("togFriBtn");
 
-    if (checkbox.checked) {
+    if (checkbox_All.checked) {
+
+        if(checkbox_Tot.checked){
+            totalChart.destroy();
+            checkbox_Tot.checked = false;
+        }
+        if(checkbox_Fri.checked){
+            allFriendChart.destroy();
+            checkbox_Fri.checked = false;
+        }
+        
         var ctx = document.getElementById(chartid).getContext('2d');
         allReactChart = new Chart(ctx, {
             type: 'line',
@@ -71,7 +83,7 @@ function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
         });
 
     }
-    else if (!checkbox.checked) {
+    else if (!checkbox_All.checked) {
         allReactChart.destroy();
 
     }
@@ -81,7 +93,10 @@ function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
 var totalChart;
 function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry) {
     var totLikes=0, totLove=0, totHaha=0, totWow=0, totSad=0, totAngry=0;
-    var checkbox = document.getElementById("togTotBtn");
+
+    var checkbox_All = document.getElementById("togAllBtn")
+    var checkbox_Tot = document.getElementById("togTotBtn");
+    var checkbox_Fri = document.getElementById("togFriBtn");
 
     for (var i = 0; i < 15; i++) {
         totLikes += newLikes[i];
@@ -94,7 +109,17 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
     console.log(totLikes);
     console.log(totLove);
 
-    if (checkbox.checked) {
+    if (checkbox_Tot.checked) {
+
+        if(checkbox_All.checked){
+            allReactChart.destroy();
+            checkbox_All.checked = false;
+        }
+        if(checkbox_Fri.checked){
+            allFriendChart.destroy();
+            checkbox_Fri.checked = false;
+        }
+        
         var ctx = document.getElementById(chartid).getContext('2d');
         totalChart = new Chart(ctx, {
             type: 'polarArea',
@@ -133,7 +158,7 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
             }
         });
     }
-    else if (!checkbox.checked) {
+    else if (!checkbox_Tot.checked) {
         totalChart.destroy();
     }
 
@@ -143,7 +168,10 @@ var allFriendChart;
 var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
     var  totNum = [];
-    var checkbox = document.getElementById("togFriBtn");
+
+    var checkbox_All = document.getElementById("togAllBtn")
+    var checkbox_Tot = document.getElementById("togTotBtn");
+    var checkbox_Fri = document.getElementById("togFriBtn");
 
     for (var i = 0; i < 15; i++) {
         totNum[i] = 0;
@@ -162,7 +190,17 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         console.log(totNum[i]);
     }
 
-    if (checkbox.checked) {
+    if (checkbox_Fri.checked) {
+
+        if(checkbox_All.checked){
+            allReactChart.destroy();
+            checkbox_All.checked = false;
+        }
+        if(checkbox_Tot.checked){
+            totalChart.destroy();
+            checkbox_Tot.checked = false;
+        }
+        
         var ctx = document.getElementById(chartid).getContext('2d');
         allFriendChart = new Chart(ctx, {
             type: 'line',
@@ -189,9 +227,8 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
             }
         });
        
-
     }
-    else if (!checkbox.checked) {
+    else if (!checkbox_Fri.checked) {
         allFriendChart.destroy();
 
     }

@@ -6,8 +6,8 @@ from nltk.corpus import stopwords # nltk.download('stopwords')
 from nltk.stem.porter import PorterStemmer
 from autocorrect import spell #spell correction
 
-dataset = pd.read_csv('merge.csv',encoding='ISO-8859-1')
-dataset2 = pd.read_csv('merge.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('.csv',encoding='ISO-8859-1')
+dataset2 = pd.read_csv('.csv',encoding='ISO-8859-1')
 
 stemmer = PorterStemmer()
 
