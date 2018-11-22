@@ -39,13 +39,23 @@ $likedata = $connection->executeQuery('fb.post', $query);
 
 $likearray = array();
 $timearray = array();
+$highestLikes = 0;
+$temporary = 0;
 
 foreach ($likedata as $row) {
     // $likearray [] = [];
     // echo $row->message;
     $likearray [] = $row->like->summary->total_count;
-    print($row->like->summary->total_count);
-    print(" ");
+    $temporary = $row->like->summary->total_count;
+
+    if( $temporary > $highestLikes)
+    {
+        $highestLikes = $temporary;
+    }
+    
+    // print($row->like->summary->total_count);
+    // print($highestLikes);
+    // print(" ");
     $timearray [] = $row->created_time;
 }
 
@@ -58,6 +68,7 @@ $wowarray = array();
 $sadarray = array();
 $angryarray = array();
 
+
 foreach($reactdata as $row){
     $lovearray [] = $row->love->summary->total_count;
     $hahaarray [] = $row->haha->summary->total_count;
@@ -66,20 +77,39 @@ foreach($reactdata as $row){
     $angryarray [] = $row->angry->summary->total_count;
 }
 
+$user_details = $connection->executeQuery('fb.userdetail', $query);
+
+foreach($user_details as $row){
+
+    $num_friends = $row->friends->summary->total_count;    
+}
 
 ?>
+
+<p>Toggle for graph!</p>
+<div style ="height 50px; width:70%; backgrounf-color:white; float:right; border:5px solid gray">
+<p >Try CLICK on Parameter.</p>
+</div> 
 
 <div style="height: 500px; width: 70%;background-color: #F5DEB3 ;float:right;">
 <canvas id="chart" float="right" width="200" height="80"></canvas>
 </div>
 
-<p>Toggle for graph!</p>
+
+
 <label class="switch">
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
+
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
     </div>
 </label>
+
+<?php
+echo '<div style ="height 50px; width:60%; backgrounf-color:white; float:right;">';
+echo '<p >The highest number of likes is ' .htmlspecialchars($highestLikes).' </p>';
+echo '</div>';
+?> 
 
 <!-- <div style="width:25%;">
     <select>
@@ -96,6 +126,23 @@ foreach($reactdata as $row){
         <span class="on">Total Reaction </span><span class="off">Total Reaction</span>
     </div>
 </label>
+
+<label class="switch">
+    <input type="checkbox" id="togFriBtn" onclick='plotFriend("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>,<?php echo json_encode($num_friends)?>)'>
+
+    <div class="slider round">
+        <span class="on">Friend</span><span class="off">Friend</span>
+    </div>
+</label>
+
+<label class ="message">
+    <p>asdads</p>
+</label>
+
+
+
+
+
 
 <div style="width:25%;">
 <label>Time Selection: </label>
