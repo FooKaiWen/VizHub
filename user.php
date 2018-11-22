@@ -84,16 +84,16 @@ $messagecol = $newdb->selectCollection('predictMessage');
 
 <div class="container">
     <div class="form-group" >
-      <div style="width:25%;">
+      <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
+      <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
+      <div style ="text-align:center;">  
+      <div style="margin-top :15px">
         <select name="selected">
           <option value="2000" selected>Range of 2000</option>
           <option value="2500">Range of 2500</option>
           <option value="5000">Range of 5000</option>
         </select>
       </div>
-      <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
-      <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
-      <div style ="text-align:center;">  
         <button class ="copyText" onclick="copyText()">Copy text</button>
         <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
       </div>
