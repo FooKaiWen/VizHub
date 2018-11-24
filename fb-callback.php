@@ -195,30 +195,6 @@ foreach ($tagged as $doc) {
 }
 
 
-
-$tagplaces = $connection->executeQuery('fb.place', $query);
-//Array for to put on table for visualization
-$big = array();
-foreach($tagplaces as $tagplace){
-
-  if(!isset($tagplace->place->location->city)){
-    $curr_id = $tagplace->id;
-    $placecol->updateOne(
-      ['id' => "$curr_id"],
-      ['$set' => ['place' => ['location' => ['city' => "-"]]]]
-    );
-  }
-
-  if(!isset($tagplace->place->location->country)){
-    $curr_id = $tagplace->id;
-    $placecol->updateOne(
-      ['id' => "$curr_id"],
-      ['$set' => ['place' => ['location' => ['country' => "-"]]]]
-    );
-  }
-
-}
-
 // $_SESSION["location"]=$big;
 // print_r($big);
 // foreach ($big as $b){

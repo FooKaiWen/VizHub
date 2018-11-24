@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
+
+ <title>VizHub</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" type="text/css" href="design.css">
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-    <style>
-       /* Set the size of the div element that contains the map */
-      #map {
-        height: 350px;  /* The height is 400 pixels */
-        width: 95%;  /* The width is the width of the web page */
-        border-style: solid;
-        border-color :black; 
-        border-radius: 25px;
-        border-width: 2px;
-        margin: auto;
-      
-       }
-    </style>
-    <?php
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="chart.js"></script> -->
+
+
+
+
+<?php
 
 require_once  "vendor/autoload.php";
 
@@ -40,151 +40,111 @@ $tagplaces = $connection->executeQuery('fb.place', $query);
 $big = array();
 
 foreach($tagplaces as $tagplace){
-  $lat [] = $tagplace->place->location->latitude;
-  $long []= $tagplace->place->location->longitude;
-  $place_name [] =$tagplace->place->name;
+  $lat = $tagplace->place->location->latitude;
+  $long = $tagplace->place->location->longitude;
+  $place_name = $tagplace->place->name;
   $p_id= $tagplace->place->id;
-  $time [] =$tagplace->created_time;
-  $city [] = $tagplace->place->location->city;
-  $country[] = $tagplace->place->location->country;
+  $count = $vals["$p_id"];
 
-  $count [] = $vals["$p_id"];
-  $count1 =$vals["$p_id"];
-    if ($count1 == $most){
-        $marker[] = "Most";
-    } elseif ($count1 == $least){
-        $marker[] = "Least";
-    }else{
-        $marker[] = "Average";
-    }
+  if ($count == $most){
+    $marker = "Most";
+  } elseif ($count == $least){
+    $marker = "Least";
+  }else{
+    $marker = "Average";
+  }
+
+  $temp_Holder = array ($lat,$long,$place_name,$marker);
+  array_push($big,$temp_Holder);
 
 }
-
-// if ($marker[sizeof($marker)-1] == "Most")
-// {
-//     $marker[sizeof($marker)-1] = "Most_Recent";
-// }
-// else{
-//     $marker[sizeof($marker)-1] = "Recent";
-// }
-
+// print_r($vals);
+// print_r ($big);
 ?>
 
- <script>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {
+      'packages': ['map'],
+      // Note: you will need to get a mapsApiKey for your project.
+      // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+      'mapsApiKey': ''
+      // 'mapsApiKey': 'AIzaSyDsBbRh_m8mtqypfsC0LDKZz8OHKqDlLXU' // I included my testing project API, by FKW
+    });
+    google.charts.setOnLoadCallback(drawMap);
 
-var latitude = <?php echo json_encode($lat);?>;
-var longitude = <?php echo json_encode($long);?>;
-var place_name = <?php echo json_encode($place_name);?>;
-var visit_count = <?php echo json_encode($count);?>;
-var visit_type = <?php echo json_encode($marker);?>;
-var visit_date = <?php echo json_encode($time);?>;
-var city = <?php echo json_encode($city);?>;
-var country = <?php echo json_encode($country);?>;
-var most = <?php echo $most;?>;
-var least = <?php echo $least;?>;
+    function drawMap () {
+      
+      var tempArray = <?php echo json_encode($big);?>;
+      var tempCount = <?php print_r (json_encode($vals));?>;
+      var most = <?php echo $most;?>;
+      var least = <?php echo $least;?>;
 
-var datevalue = new Array();
-var temp = new Array();
-for(var i =0;i<visit_date.length;i++){
-    visit_date[i] = visit_date[i].slice(0,10);
-    datevalue[i] = Date.parse(visit_date[i]);
-    temp[i] = Date.parse(visit_date[i]);
-}
-  temp.sort(function(a, b){return b-a});
-  recent = temp[0];
+      // var o = tempCount;
+      // var count = [];
+      // for(var i in o)
+      // {
+      //    count.push(o[i]);
+      // }
 
-for(var i =0;i<temp.length;i++){
-  if(datevalue[i] == recent)
-  {
-    visit_type[i] = "Recent";
-    if (visit_count[i] == most )
-      visit_type[i] = "Most_Recent";
-  }
-}
+      // function removeDuplicateUsingSet(arr){
+      //   let unique_array = Array.from(new Set(arr))
+      //   return unique_array
+      // }
+      
+      // count.sort(function(a, b){return b-a});
+      // count = removeDuplicateUsingSet(count);
+      
 
-console.log(visit_type);
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'Long');
+      data.addColumn('number', 'Lat');
+      data.addColumn('string', 'Name');
+      data.addColumn('string', 'Marker')
+  
+      data.addRows(tempArray);
+     
+      
+      var options = {
+        zoomLevel: 6,
+        showTooltip: true,
+        showInfoWindow: true,
+        useMapTypeControl: true,
+        icons: {
+           Most : {
+            normal:   'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|07E8BB|000000|D82C2C',
+            selected: 'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|294CE6|000000|31E425',
+          },
+           Average : {
+            normal:    'https://chart.googleapis.com/chart?chst=d_map_spin&chld=0.5|0|FCFC65|12|b|2',
+            selected:  'https://chart.googleapis.com/chart?chst=d_map_spin&chld=0.5|0|FCC300|12|b|2',
+          },
+          Least : {
+            normal:    'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|DF6458|000000',
+            selected:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|E32A0B|000000',
+          }
+        }
+      };
+      
+      var myLatlng = {lat: 5.285153, lng: 100.456238};
+      var map = new google.visualization.Map(document.getElementById('map_div'),{
+        center: myLatlng
+      });
 
-
-// Initialize and add the map
-function initMap() {
-
-var map = new google.maps.Map(
-  document.getElementById('map'), {zoom: 4, center: {lat: 5.285153, lng: 100.456238}});
-// The marker, positioned at Uluru
-
-var icons = {
-       Most : {
-        icon: 'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|07E8BB|000000|D82C2C'
-      },
-       Average : {
-        icon:  'https://chart.googleapis.com/chart?chst=d_map_spin&chld=0.5|0|FCFC65|12|b|2'
-      },
-      Least : {
-        icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|DF6458|000000'
-      },
-      Recent : {
-        icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|R|1758B6|000000'
-      },
-      Most_Recent : { 
-        icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|1758B6|000000|D82C2C'
-      }
-    };
-
-var infowindow = new google.maps.InfoWindow();
-
-for (var i= 0; i<=latitude.length; i++){
-    
-    var feature = {position: new google.maps.LatLng(latitude[i], longitude[i]), type: visit_type[i]}
-    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: place_name[i] });
-
-    google.maps.event.addListener(marker, 'click', (function (marker, i) {
-            return function () {
-                var contentString  = '<div id="content">'+
-  '<div id="siteNotice">'+
-  '</div>'+
-  '<h2 style = "color:black;" id="firstHeading" class="firstHeading">'+ place_name[i] + '</h2>' +
-  '<div id="bodyContent">'+
-  '<p style = "color:black;">City : ' + city[i] + '</p>' +
-  '<p style = "color:black;">Country : ' + country[i] + '</p>' +
-  '<p style = "color:black;">Number of Visit : ' + visit_count[i] + '</p>' +
-  '<p style = "color:black;">Date (Last Visit) : ' + visit_date[i] + '</p>' +
-  '</div>'+
-  '</div>';
-                infowindow.setContent(contentString);
-                infowindow.open(map, marker);
-            }
-        })(marker, i)); 
-
+      map.draw(data, options);
     }
-}
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsBbRh_m8mtqypfsC0LDKZz8OHKqDlLXU&callback=initMap">
-</script>
+  </script>
 
-  </head>
-  <body >
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
-    
-        
-       
-
-<div class="jumbotron jumbotron-fluid " style ="max-width: 100%; height:550px;  border-radius: 25px; border-width: 1px; border-style: solid;border-color :black; " >
-    <div id="map"></div>
-    
-    <div class = "container"  style="margin:auto; margin-top:15px;">
-    
-      <img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||07E8BB|000000|D82C2C" alt="Most Visited Place">
-
-    </div>
-
+</head>
+<body>
+  <p>We put markers on where you have tagged in Facebook and now you know it.</p>
+  <p>Scroll to look for the markers!</p>
+  <div id="map_div" style="height: 500px; width: 100%"></div>
+  <div>
+    <p>We are still improving our visualization functionality!</p>
 </div>
-
-
-
-   
-
-  </body>
+</body>
 </html>
+
+    
