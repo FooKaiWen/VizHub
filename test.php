@@ -37,26 +37,33 @@ foreach($tagplaces as $tagplace){
   $long []= $tagplace->place->location->longitude;
   $place_name [] =$tagplace->place->name;
   $p_id= $tagplace->place->id;
+  $time [] =$tagplace->created_time;
+
+
   $count [] = $vals["$p_id"];
-
-//   if ($count == $most){
-//     $marker = "Most";
-//   } elseif ($count == $least){
-//     $marker = "Least";
-//   }else{
-//     $marker = "Average";
-//   }
-
-//   $temp_Holder = array ($lat,$long,$place_name,$count);
-//   array_push($big,$temp_Holder);
+  $count1 =$vals["$p_id"];
+    if ($count1 == $most){
+        $marker[] = "Most";
+    } elseif ($count1 == $least){
+        $marker[] = "Least";
+    }else{
+        $marker[] = "Average";
+    }
 
 }
-// echo json_encode($lat);
-// echo json_encode($place_name);
+
+if ($marker[sizeof($marker)-1] == "Most")
+{
+    $marker[sizeof($marker)-1] = "Most_Recent";
+}
+else{
+    $marker[sizeof($marker)-1] = "Recent";
+}
+
 ?>
 
   </head>
-  <body onload="initMap()">
+  <body >
     <h3>My Google Maps Demo</h3>
     <!--The div element for the map -->
     <div id="map"></div>
@@ -67,10 +74,13 @@ foreach($tagplaces as $tagplace){
     var longitude = <?php echo json_encode($long);?>;
     var place_name = <?php echo json_encode($place_name);?>;
     var visit_count = <?php echo json_encode($count);?>;
-
-    // console.log(place_name);
-    // console.log(visit_count);
+    var visit_type = <?php echo json_encode($marker);?>;
+    var visit_date = <?php echo json_encode($time);?>;
     
+    var most = <?php echo $most;?>;
+    var least = <?php echo $least;?>;
+
+
 
 // Initialize and add the map
 function initMap() {
@@ -83,20 +93,31 @@ function initMap() {
   // The marker, positioned at Uluru
 
 
+   var icons = {
+           Most : {
+            icon: 'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|07E8BB|000000|D82C2C'
+          },
+           Average : {
+            icon:  'https://chart.googleapis.com/chart?chst=d_map_spin&chld=0.5|0|FCFC65|12|b|2'
+          },
+          Least : {
+            icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|DF6458|000000'
+          },
+          Recent : {
+            icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|1758B6|000000'
+          },
+          Most_Recent : { 
+            icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|1758B6|000000|D82C2C'
+          }
+        };
 
-//  var contentString  = '<div id="content">'+
-//       '<div id="siteNotice">'+
-//       '</div>'+
-//       '<h1 id="firstHeading" class="firstHeading">'+ place_name[i] + '</h1>' +
-//       '<div id="bodyContent">'+
-//       '<p>Number of Visit : ' + visit_count[i] + '</p>' +
-//       '</div>'+
-//       '</div>';
+
     var infowindow = new google.maps.InfoWindow();
 
     for (var i= 0; i<=latitude.length; i++){
         
-        var marker= new google.maps.Marker({position: {lat: latitude[i], lng: longitude[i]}, map: map , title: place_name[i] });
+        var feature = {position: new google.maps.LatLng(latitude[i], longitude[i]), type: visit_type[i]}
+        var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: place_name[i] });
         // content = place_name[i] + "\n" + " hi"
 
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
@@ -107,32 +128,23 @@ function initMap() {
       '<h2 id="firstHeading" class="firstHeading">'+ place_name[i] + '</h2>' +
       '<div id="bodyContent">'+
       '<p>Number of Visit : ' + visit_count[i] + '</p>' +
+      '<p>Date (Last Visit) : ' + visit_date[i] + '</p>' +
       '</div>'+
       '</div>';
                     infowindow.setContent(contentString);
                     infowindow.open(map, marker);
                 }
             })(marker, i)); 
+
+            
+
         }
 
-
-       
-    
-    // console.log(place_name);
-    // console.log(marker);
-    // marker[i].addListener('click', function() {infowindow.open(map, marker[i])});
-//    marker[0].addListener('click', function() {
-//     infowindow.open(map, marker[0]);
-//   });
-  
-//   marker[1].addListener('click', function() {
-//     infowindow1.open(map, marker[1]);
-//   });
+     
 
 
-
-//   var markerCluster = new MarkerClusterer(map, marker,
-//             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+  var markerCluster = new MarkerClusterer(map, marker,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
      
 
 }
