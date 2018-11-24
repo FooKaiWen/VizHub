@@ -187,7 +187,7 @@ foreach ($rows as $row) {
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(10)',$accessToken);
+  $location_request = $fb->get('/me?fields=tagged_places.limit(15)',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -204,7 +204,7 @@ $insertManyResult = $locationcol->insertOne(json_decode($graphNode));
 $tagged = $locationcol->distinct("tagged_places.id");
 foreach ($tagged as $doc) {
   try {
-    $place_request = $fb->get("/$doc?fields=place",$accessToken);
+    $place_request = $fb->get("/$doc?fields=place,created_time",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -220,18 +220,18 @@ foreach ($tagged as $doc) {
 
 
 
-$tagplaces = $connection->executeQuery('fb.place', $query);
-//Array for to put on table for visualization
-$big = array();
-foreach($tagplaces as $tagplace){
-  $lat = $tagplace->place->location->latitude;
-  $long = $tagplace->place->location->longitude;
-  $place_name = $tagplace->place->name;
-  $temp_Holder = array ($lat,$long,$place_name);
-  array_push($big,$temp_Holder);
-}
+// $tagplaces = $connection->executeQuery('fb.place', $query);
+// //Array for to put on table for visualization
+// $big = array();
+// foreach($tagplaces as $tagplace){
+//   $lat = $tagplace->place->location->latitude;
+//   $long = $tagplace->place->location->longitude;
+//   $place_name = $tagplace->place->name;
+//   $temp_Holder = array ($lat,$long,$place_name);
+//   array_push($big,$temp_Holder);
+// }
 
-$_SESSION["location"]=$big;
+// $_SESSION["location"]=$big;
 // print_r($big);
 // foreach ($big as $b){
 //   print("out");

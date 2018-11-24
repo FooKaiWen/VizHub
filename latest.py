@@ -4,7 +4,7 @@ import nltk
 from nltk.tokenize import word_tokenize  # nltk.download('punkt') #nltk.download('averaged_perceptron_tagger')
 from nltk.corpus import wordnet as wn # nltk.download('wordnet')
 
-dataset = pd.read_csv('test.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('250_5000.csv',encoding='ISO-8859-1')
 
 is_noun = lambda pos: pos[:2] == 'NN'
 
@@ -47,8 +47,8 @@ import scipy as sp
 
 y = dataset['likes']
 
-count_vect = CountVectorizer(max_features = 1000)
-tfidf_vect = TfidfVectorizer(max_features = 1000)
+count_vect = CountVectorizer(max_features = 1000, min_df = 3, max_df = 10)
+tfidf_vect = TfidfVectorizer(max_features = 1000, min_df = 3, max_df = 10)
 
 count = count_vect.fit_transform(data) 
 tfidf = tfidf_vect.fit_transform(data) 
@@ -65,15 +65,98 @@ print (tfidf.shape)
 # Icd n numerical analysis, a sparse matrix is a matrix in which most of the elements are zero. 
 
 # x = sp.sparse.hstack([tfidf,w_count])
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import RidgeCV
+from sklearn.compose import TransformedTargetRegressor
+from sklearn.preprocessing import QuantileTransformer, quantile_transform
 
-
+from sklearn import svm
 x_train, x_test, y_train, y_test = train_test_split(count,y,test_size=0.3,train_size=0.7,random_state=0)
+
+
+
+
+
+
+from sklearn import linear_model
+
 
 print("COUNT_VECTORIZER")
 print("----------------")
-from sklearn.linear_model import Ridge
 
-clf = Ridge(alpha=1.0, random_state=241)
+
+
+
+from sklearn.kernel_ridge import KernelRidge
+
+from sklearn.ensemble import GradientBoostingRegressor # Gradient Boosting Regressor is used
+
+model = TransformedTargetRegressor(regressor=GradientBoostingRegressor(),transformer=QuantileTransformer(output_distribution='normal'))
+model.fit(x_train,y_train) 
+y_pred = model.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x Gradient RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+print(model.predict(count_vect.transform(["could connect"])))
+
+
+clf = TransformedTargetRegressor(regressor=KernelRidge(alpha=1.0),transformer=QuantileTransformer(output_distribution='normal'))
+clf.fit(x_train,y_train) 
+y_pred = clf.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x Kernel RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+
+
+# clf = svm.SVR()
+clf = TransformedTargetRegressor(regressor=svm.SVR(),transformer=QuantileTransformer(output_distribution='normal'))
+clf.fit(x_train,y_train) 
+y_pred = clf.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x SVR RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+
+# reg = linear_model.Lasso(alpha = 1.0)
+reg = TransformedTargetRegressor(regressor=linear_model.Lasso(alpha = 1.0),transformer=QuantileTransformer(output_distribution='normal'))
+reg.fit(x_train, y_train)
+
+y_pred = reg.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x lasso RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+
+
+
+# clf = RidgeCV(alphas=1.0)
+clf =TransformedTargetRegressor(regressor=Ridge(alpha=1.0, random_state=241),transformer=QuantileTransformer(output_distribution='normal'))
 clf.fit(x_train,y_train)
 
 y_pred = clf.predict(x_test)
@@ -95,7 +178,8 @@ print("==================================================================")
 
 from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
 
-forest_reg = RandomForestRegressor(random_state=42)
+# forest_reg = RandomForestRegressor(random_state=42)
+forest_reg = TransformedTargetRegressor(regressor=RandomForestRegressor(random_state=42),transformer=QuantileTransformer(output_distribution='normal'))
 forest_reg.fit(x_train, y_train)
 likes_pred = forest_reg.predict(x_test)
 forest_mse = mean_squared_error(likes_pred, y_test)
@@ -110,7 +194,8 @@ print("==================================================================")
 
 from sklearn.linear_model import SGDRegressor
 
-sgd = SGDRegressor()
+# sgd = SGDRegressor()
+sgd = TransformedTargetRegressor(regressor=SGDRegressor(),transformer=QuantileTransformer(output_distribution='normal'))
 sgd.fit(x_train, y_train)
 likes_pred = sgd.predict(x_test)
 forest_mse = mean_squared_error(likes_pred, y_test)
@@ -121,21 +206,23 @@ print('x MAE: %.4f' % lin_mae)
 print('x variance score: %.2f' % r2_score(y_test, likes_pred))
 print()
 print("==================================================================")
+print(sgd.predict(count_vect.transform(["abc news full story cover Cheney weekend transplant"])))
 
 
+# from sklearn.linear_model import LogisticRegression
 
-from sklearn.linear_model import LogisticRegression
-
-lgr = LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial').fit(x_train, y_train)
-likes_pred = lgr.predict(x_test)
-forest_mse = mean_squared_error(likes_pred, y_test)
-forest_rmse = np.sqrt(forest_mse)
-print('Logistic RMSE: %.4f' % forest_rmse)
-lin_mae = mean_absolute_error(likes_pred, y_test)
-print('x MAE: %.4f' % lin_mae)
-print('x variance score: %.2f' % r2_score(y_test, likes_pred))
-print()
-print("==================================================================")
+# # lgr = LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial').fit(x_train, y_train)
+# lgr = TransformedTargetRegressor(regressor=LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial'),transformer=QuantileTransformer(output_distribution='normal'))
+# lgr.fit(x_train, y_train)
+# likes_pred = lgr.predict(x_test)
+# forest_mse = mean_squared_error(likes_pred, y_test)
+# forest_rmse = np.sqrt(forest_mse)
+# print('Logistic RMSE: %.4f' % forest_rmse)
+# lin_mae = mean_absolute_error(likes_pred, y_test)
+# print('x MAE: %.4f' % lin_mae)
+# print('x variance score: %.2f' % r2_score(y_test, likes_pred))
+# print()
+# print("==================================================================")
 
 x_train, x_test, y_train, y_test = train_test_split(tfidf,y,test_size=0.3,train_size=0.7,random_state=0)
 
@@ -143,7 +230,8 @@ print("TFIDF_VECTORIZER")
 print("----------------")
 from sklearn.linear_model import Ridge
 
-clf = Ridge(alpha=1.0, random_state=241)
+clf =TransformedTargetRegressor(regressor=Ridge(alpha=1.0, random_state=241),transformer=QuantileTransformer(output_distribution='normal'))
+# clf = Ridge(alpha=1.0, random_state=241)
 clf.fit(x_train,y_train)
 
 y_pred = clf.predict(x_test)
@@ -165,7 +253,8 @@ print("==================================================================")
 
 from sklearn.ensemble import RandomForestRegressor # Random Forest Regressor is used
 
-forest_reg = RandomForestRegressor(random_state=42)
+# forest_reg = RandomForestRegressor(random_state=42)
+forest_reg = TransformedTargetRegressor(regressor=RandomForestRegressor(random_state=42),transformer=QuantileTransformer(output_distribution='normal'))
 forest_reg.fit(x_train, y_train)
 likes_pred = forest_reg.predict(x_test)
 forest_mse = mean_squared_error(likes_pred, y_test)
@@ -180,7 +269,8 @@ print("==================================================================")
 
 from sklearn.linear_model import SGDRegressor
 
-sgd = SGDRegressor()
+# sgd = SGDRegressor()
+sgd = TransformedTargetRegressor(regressor=SGDRegressor(),transformer=QuantileTransformer(output_distribution='normal'))
 sgd.fit(x_train, y_train)
 likes_pred = sgd.predict(x_test)
 forest_mse = mean_squared_error(likes_pred, y_test)
@@ -192,20 +282,81 @@ print('x variance score: %.2f' % r2_score(y_test, likes_pred))
 print()
 print("==================================================================")
 
+reg = linear_model.Lasso(alpha = 1.0)
+reg.fit(x_train, y_train)
 
-
-from sklearn.linear_model import LogisticRegression
-
-lgr = LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial').fit(x_train, y_train)
-likes_pred = lgr.predict(x_test)
-forest_mse = mean_squared_error(likes_pred, y_test)
-forest_rmse = np.sqrt(forest_mse)
-print('Logistic RMSE: %.4f' % forest_rmse)
-lin_mae = mean_absolute_error(likes_pred, y_test)
+y_pred = reg.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x lasso RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
 print('x MAE: %.4f' % lin_mae)
-print('x variance score: %.2f' % r2_score(y_test, likes_pred))
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
 print()
 print("==================================================================")
+
+# clf = svm.SVR()
+clf = TransformedTargetRegressor(regressor=svm.SVR(),transformer=QuantileTransformer(output_distribution='normal'))
+clf.fit(x_train,y_train) 
+y_pred = clf.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x SVR RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+
+
+clf = TransformedTargetRegressor(regressor=KernelRidge(alpha=1.0),transformer=QuantileTransformer(output_distribution='normal'))
+clf.fit(x_train,y_train) 
+y_pred = clf.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x Kernel RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+
+model = TransformedTargetRegressor(regressor=GradientBoostingRegressor(),transformer=QuantileTransformer(output_distribution='normal'))
+
+model.fit(x_train,y_train) 
+y_pred = model.predict(x_test)
+mse = mean_squared_error(y_pred, y_test)
+# print("x MSE: %.2f" % mse)
+rmse = np.sqrt(mse)
+print('x Gradient RMSE: %.4f' % rmse)
+lin_mae = mean_absolute_error(y_pred, y_test)
+print('x MAE: %.4f' % lin_mae)
+# Explained variance score: 1 is perfect prediction
+print('x variance score: %.2f' % r2_score(y_test, y_pred))
+print()
+print("==================================================================")
+
+
+# from sklearn.linear_model import LogisticRegression
+
+# # lgr = LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial').fit(x_train, y_train)
+# lgr = TransformedTargetRegressor(regressor=LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial'),transformer=QuantileTransformer(output_distribution='normal'))
+# lgr.fit(x_train, y_train)
+# likes_pred = lgr.predict(x_test)
+# forest_mse = mean_squared_error(likes_pred, y_test)
+# forest_rmse = np.sqrt(forest_mse)
+# print('Logistic RMSE: %.4f' % forest_rmse)
+# lin_mae = mean_absolute_error(likes_pred, y_test)
+# print('x MAE: %.4f' % lin_mae)
+# print('x variance score: %.2f' % r2_score(y_test, likes_pred))
+# print()
+# print("==================================================================")
 
 
 # Plot outputs
