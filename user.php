@@ -87,13 +87,6 @@ $messagecol = $newdb->selectCollection('predictMessage');
       <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" placeholder="Type Your Message Here For Like Prediction . . . . . ."></textarea>
       <div style ="text-align:center;">  
-      <div style="margin-top :15px">
-        <select name="selected">
-          <option value="2000" selected>Range of 2000</option>
-          <option value="2500">Range of 2500</option>
-          <option value="5000">Range of 5000</option>
-        </select>
-      </div>
         <button class ="copyText" onclick="copyText()">Copy text</button>
         <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
       </div>
@@ -115,13 +108,6 @@ if(isset($_REQUEST['submit_btn'])){
   shell_exec("python readtext.py");
   $upperboundary = $messagecol->findOne()->likesRange;
   $accuracy = $messagecol->findOne()->accuracy;
-  if($selection==2000){
-    $lowerboundary = $upperboundary-2000;
-  } elseif($selection==2500){
-    $lowerboundary = $upperboundary-2500;
-  } elseif($selection==5000){
-    $lowerboundary = $upperboundary-5000;
-  }
 
   echo '<div style="margin:auto; width:50%;border: 3px solid green;padding: 10px;">The range of the number of likes is ' .htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary);
   echo ' with an accuracy of '.htmlspecialchars(number_format((float)$accuracy,2,'.','')). '%';

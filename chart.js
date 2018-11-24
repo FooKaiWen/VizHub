@@ -1,11 +1,65 @@
-function selectValue() {
-    var sv = document.getElementById("timeSelect").value;
-    return sv;
+var selected_value = 50;
+var selector = document.getElementById("selected");
+
+selector.addEventListener('change',function(){
+    if(selected_value != selector[selector.selectedIndex].value){
+        selected_value = selector[selector.selectedIndex].value
+    }
+});
+
+function hideselect(){
+    var selector = document.getElementById("selected");
+    var info = document.getElementById("info");
+    selector.style.display = 'none';
+    info.style.display = 'none';
 }
+
+function showselect(){
+    var selector = document.getElementById("selected");
+    var info = document.getElementById("info");
+    selector.style.display = 'initial';
+    info.style.display = 'inherit';
+}
+
+var checkbox_All = document.getElementById("togAllBtn");
+var checkbox_Tot = document.getElementById("togTotBtn");
+var checkbox_Fri = document.getElementById("togFriBtn");
+
+checkbox_All.addEventListener('change',function(){
+    if(this.checked){
+        showselect();
+    } else if(!this.checked){
+        hideselect();
+    }
+});
+
+checkbox_Tot.addEventListener('change',function(){
+    if(this.checked){
+        showselect();
+    } else if(!this.checked){
+        hideselect();
+    }
+});
+
+checkbox_Fri.addEventListener('change',function(){
+    if(this.checked){
+        showselect();
+    } else if(!this.checked){
+        hideselect();
+    }
+});
+
+Chart.defaults.global.defaultFontColor = 'white';
 
 var allReactChart;
 function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime) {
-    var checkbox_All = document.getElementById("togAllBtn")
+
+    var temp = [];
+    for(i=0;i<selected_value;i++){
+        temp[i] = newLikes[i];
+        console.log(temp[i]);
+    }
+    var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
     var checkbox_Fri = document.getElementById("togFriBtn");
 
@@ -87,14 +141,13 @@ function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
         allReactChart.destroy();
 
     }
-
 }
 
 var totalChart;
 function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry) {
     var totLikes=0, totLove=0, totHaha=0, totWow=0, totSad=0, totAngry=0;
 
-    var checkbox_All = document.getElementById("togAllBtn")
+    var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
     var checkbox_Fri = document.getElementById("togFriBtn");
 
@@ -169,11 +222,11 @@ var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
     var  totNum = [];
 
-    var checkbox_All = document.getElementById("togAllBtn")
+    var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
     var checkbox_Fri = document.getElementById("togFriBtn");
 
-    for (var i = 0; i < 15; i++) {
+    for (var i = 0; i < 28; i++) {
         totNum[i] = 0;
         totNum[i] += newLikes[i];
         totNum[i] += newLove[i];
@@ -182,10 +235,10 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         totNum[i] += newSad[i];
         totNum[i] += newAngry[i];
         totNum[i] /= newFriend;
-
-        if(totNum[i] < 0.2){
-            totNum[i] *= -1;
-        }
+        totNum[i] *= 100;
+        // if(totNum[i] < 5){
+        //     totNum[i] *= -1;
+        // }
         console.log(newLikes[i]);
         console.log(totNum[i]);
     }
@@ -220,7 +273,7 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            min:0.2,
                         }
                     }]
                 }
@@ -232,7 +285,6 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         allFriendChart.destroy();
 
     }
-
 }
 
 function friendNumber(){

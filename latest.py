@@ -4,7 +4,11 @@ import nltk
 from nltk.tokenize import word_tokenize  # nltk.download('punkt') #nltk.download('averaged_perceptron_tagger')
 from nltk.corpus import wordnet as wn # nltk.download('wordnet')
 
+<<<<<<< HEAD
 dataset = pd.read_csv('250_5000.csv',encoding='ISO-8859-1')
+=======
+dataset = pd.read_csv('.csv',encoding='ISO-8859-1')
+>>>>>>> 34c43f3e104a382171c88869249d7eef823dbe85
 
 is_noun = lambda pos: pos[:2] == 'NN'
 
@@ -30,7 +34,7 @@ for i in range(dataset.shape[0]): # This is where messages are cleaned and stemm
                     # general.append(hype[0].lemma_names()[0])
                   
         message_text = ' '.join(general) 
-        data.append (message_text)                     
+        data.append (message_text)                  
  
 # print (noun_count) 
 # print (data)        
