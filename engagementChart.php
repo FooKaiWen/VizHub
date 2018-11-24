@@ -83,7 +83,7 @@ foreach($reactdata as $row){
         }
         else 
         {
-            $num_share [] = $row->shares->count;
+            $num_share [] = $row->shares->count;           
         }
 }
 
@@ -104,7 +104,7 @@ foreach($user_details as $row){
 </div>
 
 <label class="switch">
-    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
+    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
 
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
@@ -117,18 +117,19 @@ echo '</div>';
 ?> 
 
 <!-- <div style="width:25%;">
-    <select>
+    <select id ="topReactId" name="topReactId" 
+    onchange="plotTop('chart','<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>')">
+    <option value="">Select One...</option>
     <option value="5">5</option>
     <option value="10">10</option>
     <option value="15">15</option>
-    <option value="20">20</option>
     </select>
 </div> -->
 
 <label class="switch">
-    <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>)'>
+    <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>)'> 
     <div class="slider round">
-        <span class="on">Total Reaction </span><span class="off">Total Reaction</span>
+        <span class="on">Other Reaction </span><span class="off">Other Reaction</span>
     </div>
 </label>
 
