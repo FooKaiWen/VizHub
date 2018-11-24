@@ -5,12 +5,14 @@
     <style>
        /* Set the size of the div element that contains the map */
       #map {
-        height: 400px;  /* The height is 400 pixels */
-        width: 100%;  /* The width is the width of the web page */
+        height: 350px;  /* The height is 400 pixels */
+        width: 95%;  /* The width is the width of the web page */
         border-style: solid;
         border-color :black; 
         border-radius: 25px;
-        border-width: 1px;
+        border-width: 2px;
+        margin: auto;
+      
        }
     </style>
     <?php
@@ -58,13 +60,13 @@ foreach($tagplaces as $tagplace){
 
 }
 
-if ($marker[sizeof($marker)-1] == "Most")
-{
-    $marker[sizeof($marker)-1] = "Most_Recent";
-}
-else{
-    $marker[sizeof($marker)-1] = "Recent";
-}
+// if ($marker[sizeof($marker)-1] == "Most")
+// {
+//     $marker[sizeof($marker)-1] = "Most_Recent";
+// }
+// else{
+//     $marker[sizeof($marker)-1] = "Recent";
+// }
 
 ?>
 
@@ -96,27 +98,12 @@ for(var i =0;i<temp.length;i++){
   if(datevalue[i] == recent)
   {
     visit_type[i] = "Recent";
+    if (visit_count[i] == most )
+      visit_type[i] = "Most_Recent";
   }
 }
 
 console.log(visit_type);
-
-// for(var i =0;i<visit_date.length;i++){
-    
-    
-//   recent = Date.parse(visit_date[i]);
-//   d2 = Date.parse(visit-date[i+1]);
-
-
-//   if (d1<d2){
-//   recent = d2;
-//   }else{
-//     recent = d1;
-//   }
-
-// }
-
-console.log(visit_date);
 
 
 // Initialize and add the map
@@ -137,7 +124,7 @@ var icons = {
         icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|DF6458|000000'
       },
       Recent : {
-        icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|'+least+'|1758B6|000000'
+        icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|R|1758B6|000000'
       },
       Most_Recent : { 
         icon:  'https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star|'+most+'|1758B6|000000|D82C2C'
@@ -184,11 +171,18 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsBbRh_m8mtqypfsC0LDKZz8O
         
        
 
-<div class="jumbotron jumbotron-fluid" style ="max-width: 100%;">
-  <div class="container" style ="max-width: 100%;" >
+<div class="jumbotron jumbotron-fluid " style ="max-width: 100%; height:550px;  border-radius: 25px; border-width: 1px; border-style: solid;border-color :black; " >
     <div id="map"></div>
-  </div>
+    
+    <div class = "container"  style="margin:auto; margin-top:15px;">
+    
+      <img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||07E8BB|000000|D82C2C" alt="Most Visited Place">
+
+    </div>
+
 </div>
+
+
 
    
 
