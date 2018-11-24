@@ -44,8 +44,8 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]); 
 
 $fb = new Facebook\Facebook([
-  'app_id' => '590344301384464', // Replace {app-id} with your app id
-  'app_secret' => '0e62c56caa857d32e479b8703a7501c4',
+  'app_id' => '267157010556839', // Replace {app-id} with your app id
+  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
   'default_graph_version' => 'v3.1',
 
     ]);
@@ -196,16 +196,28 @@ foreach ($tagged as $doc) {
 
 
 
-// $tagplaces = $connection->executeQuery('fb.place', $query);
-// //Array for to put on table for visualization
-// $big = array();
-// foreach($tagplaces as $tagplace){
-//   $lat = $tagplace->place->location->latitude;
-//   $long = $tagplace->place->location->longitude;
-//   $place_name = $tagplace->place->name;
-//   $temp_Holder = array ($lat,$long,$place_name);
-//   array_push($big,$temp_Holder);
-// }
+$tagplaces = $connection->executeQuery('fb.place', $query);
+//Array for to put on table for visualization
+$big = array();
+foreach($tagplaces as $tagplace){
+
+  if(!isset($tagplace->place->location->city)){
+    $curr_id = $tagplace->id;
+    $placecol->updateOne(
+      ['id' => "$curr_id"],
+      ['$set' => ['place' => ['location' => ['city' => "-"]]]]
+    );
+  }
+
+  if(!isset($tagplace->place->location->country)){
+    $curr_id = $tagplace->id;
+    $placecol->updateOne(
+      ['id' => "$curr_id"],
+      ['$set' => ['place' => ['location' => ['country' => "-"]]]]
+    );
+  }
+
+}
 
 // $_SESSION["location"]=$big;
 // print_r($big);

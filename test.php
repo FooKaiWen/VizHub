@@ -79,15 +79,45 @@ var visit_type = <?php echo json_encode($marker);?>;
 var visit_date = <?php echo json_encode($time);?>;
 var city = <?php echo json_encode($city);?>;
 var country = <?php echo json_encode($country);?>;
-
-
-for(var i =0;i<visit_date.length;i++){
-    visit_date[i] = visit_date[i].slice(0,10);
-}
-
-console.log(visit_date);
 var most = <?php echo $most;?>;
 var least = <?php echo $least;?>;
+
+var datevalue = new Array();
+var temp = new Array();
+for(var i =0;i<visit_date.length;i++){
+    visit_date[i] = visit_date[i].slice(0,10);
+    datevalue[i] = Date.parse(visit_date[i]);
+    temp[i] = Date.parse(visit_date[i]);
+}
+  temp.sort(function(a, b){return b-a});
+  recent = temp[0];
+
+for(var i =0;i<temp.length;i++){
+  if(datevalue[i] == recent)
+  {
+    visit_type[i] = "Recent";
+  }
+}
+
+console.log(visit_type);
+
+// for(var i =0;i<visit_date.length;i++){
+    
+    
+//   recent = Date.parse(visit_date[i]);
+//   d2 = Date.parse(visit-date[i+1]);
+
+
+//   if (d1<d2){
+//   recent = d2;
+//   }else{
+//     recent = d1;
+//   }
+
+// }
+
+console.log(visit_date);
+
 
 // Initialize and add the map
 function initMap() {
