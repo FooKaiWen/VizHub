@@ -52,7 +52,9 @@ checkbox_Fri.addEventListener('change',function(){
 Chart.defaults.global.defaultFontColor = 'white';
 
 var allReactChart;
-function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime) {
+function plotAll(chartid, newLikes, newComment, newShare, newTime) {
+    var checkbox = document.getElementById("togAllBtn")
+    console.log(newComment[2]);
 
     var temp = [];
     for(i=0;i<selected_value;i++){
@@ -83,36 +85,92 @@ function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
                     {
                         label: 'Likes',
                         fill: false,
+                        //lineTension: 0.5,
                         data: newLikes,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: 'rgba(100,149,237, 0.2)',
+                        borderColor: 'rgba(100,149,237, 1)',
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Comment',
+                        data: newComment,
+                        backgroundColor: 'rgba(255,140,0, 0.2)',
+                        borderColor: 'rgba(255,140,0, 1)',
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Share',
+                        data: newShare,
+                        backgroundColor: 'rgba(178,34,34, 0.8)',
+                        borderColor: 'rgba(178,34,34,1)',
+                        borderWidth: 3
+                    }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+    }
+    else if (!checkbox.checked) {
+        allReactChart.destroy();
+
+    }
+
+}
+
+var topChart;
+function plotTop(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime) {
+    var selectValue = document.getElementById("topReactId");
+    console.log(selectValue.value);
+
+    if (selectValue.value == 5) {
+        var ctx = document.getElementById(chartid).getContext('2d');
+        topChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: newTime,
+                datasets: [
+                    {
+                        label: 'Likes',
+                        fill: false,
+                        //lineTension: 0.5,
+                        data: newLikes,
+                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
                         borderColor: 'rgba(255,99,132,1)',
                         borderWidth: 3
                     },
                     {
                         label: 'Love',
                         data: newLove,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 3
                     },
                     {
                         label: 'Haha',
                         data: newHaha,
-                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        backgroundColor: 'rgba(255, 206, 86, 0.8)',
                         borderColor: 'rgba(255, 206, 86, 1)',
                         borderWidth: 3
                     },
                     {
                         label: 'Wow',
                         data: newWow,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.8)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 3
                     },
                     {
                         label: 'Sad',
                         data: newSad,
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.8)',
                         borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 3
 
@@ -120,7 +178,7 @@ function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
                     {
                         label: 'Angry',
                         data: newAngry,
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        backgroundColor: 'rgba(255, 159, 64, 0.8)',
                         borderColor: 'rgba(255, 159, 64, 1)',
                         borderWidth: 3
                     }]
@@ -144,23 +202,20 @@ function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
 }
 
 var totalChart;
-function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry) {
-    var totLikes=0, totLove=0, totHaha=0, totWow=0, totSad=0, totAngry=0;
+function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
+    // var totLikes=0, totLove=0, totHaha=0, totWow=0, totSad=0, totAngry=0;
+    console.log("he cb");
+    var checkbox = document.getElementById("togTotBtn");
+    
 
-    var checkbox_All = document.getElementById("togAllBtn");
-    var checkbox_Tot = document.getElementById("togTotBtn");
-    var checkbox_Fri = document.getElementById("togFriBtn");
-
-    for (var i = 0; i < 15; i++) {
-        totLikes += newLikes[i];
-        totLove += newLove[i];
-        totHaha += newHaha[i];
-        totWow += newWow[i];
-        totSad += newSad[i];
-        totAngry += newAngry[i];
-    }
-    console.log(totLikes);
-    console.log(totLove);
+    // for (var i = 0; i < 15; i++) {
+    //     totLikes += newLikes[i];
+    //     totLove += newLove[i];
+    //     totHaha += newHaha[i];
+    //     totWow += newWow[i];
+    //     totSad += newSad[i];
+    //     totAngry += newAngry[i];
+    // }
 
     if (checkbox_Tot.checked) {
 
@@ -175,38 +230,58 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
         
         var ctx = document.getElementById(chartid).getContext('2d');
         totalChart = new Chart(ctx, {
-            type: 'polarArea',
+            type: 'bar',
             data: {
-                labels: ["likes", "love", "haha", "wow", "sad", "angry"],
+                labels: newTime,
                 datasets: [{
-                    label: 'Total Number According',
-                    data: [totLikes, totLove, totHaha, totWow, totSad, totAngry],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 5
+                    label: 'Love',
+                    fill: true,
+                    backgroundColor: 'rgba(128,0,0, 0.8)',
+                    borderColor: 'rgba(128,0,0, 1)',
+                    data: newLove,
+                }, {
+
+                    label: 'Haha',
+                    backgroundColor: 'rgba(255,165,0, 0.8)',
+                    borderColor: 'rgba(255,165,0, 1)',
+                    data: newHaha,
+                    fill: true,
+
+                }, {
+
+                    label: 'Wow',
+                    backgroundColor: 'rgba(46,139,87, 0.8)',
+                    borderColor: 'rgba(46,139,87, 1)',
+                    data: newWow,
+                    fill: true,
+                }, {
+
+                    label: 'Sad',
+                    backgroundColor: 'rgba(153,50,204, 0.8)',
+                    borderColor: 'rgba(153,50,204, 0.8)',
+                    data: newSad,
+                    fill: true,
+                }, {
+
+                    label: 'Angry',
+                    backgroundColor: 'rgba(112,128,144, 0.8)',
+                    borderColor: 'rgba(112,128,144, 1.0)',
+                    data: newAngry,
+                    fill: true,
                 }]
             },
             options: {
                 scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+
                     yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                        stacked: true
+                    }],
+                    ticks: {
+                        beginAtZero: true
+                    }
                 }
             }
         });
@@ -220,7 +295,8 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
 var allFriendChart;
 var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
-    var  totNum = [];
+    var totNum = [];
+    var checkbox = document.getElementById("togFriBtn");
 
     var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
@@ -234,11 +310,11 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         totNum[i] += newWow[i];
         totNum[i] += newSad[i];
         totNum[i] += newAngry[i];
-        totNum[i] /= newFriend;
-        totNum[i] *= 100;
-        // if(totNum[i] < 5){
-        //     totNum[i] *= -1;
-        // }
+        totNum[i] /= newFriend; //
+
+        if (totNum[i] < 0.2) {
+            totNum[i] *= -1;
+        }
         console.log(newLikes[i]);
         console.log(totNum[i]);
     }
@@ -279,7 +355,8 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                 }
             }
         });
-       
+
+
     }
     else if (!checkbox_Fri.checked) {
         allFriendChart.destroy();
@@ -287,7 +364,7 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
     }
 }
 
-function friendNumber(){
+function friendNumber() {
     return friendNum;
 }
 
