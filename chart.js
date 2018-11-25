@@ -52,13 +52,9 @@ checkbox_Fri.addEventListener('change',function(){
 Chart.defaults.global.defaultFontColor = 'white';
 
 var allReactChart;
-<<<<<<< HEAD
 function plotAll(chartid, newLikes, newComment, newShare, newTime) {
     var checkbox = document.getElementById("togAllBtn")
     console.log(newComment[2]);
-=======
-function plotAll(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime) {
->>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
 
     var temp = [];
     for(i=0;i<selected_value;i++){
@@ -206,20 +202,11 @@ function plotTop(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, 
 }
 
 var totalChart;
-<<<<<<< HEAD
 function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
     // var totLikes=0, totLove=0, totHaha=0, totWow=0, totSad=0, totAngry=0;
     console.log("he cb");
     var checkbox = document.getElementById("togTotBtn");
     
-=======
-function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry) {
-    var totLikes=0, totLove=0, totHaha=0, totWow=0, totSad=0, totAngry=0;
-
-    var checkbox_All = document.getElementById("togAllBtn");
-    var checkbox_Tot = document.getElementById("togTotBtn");
-    var checkbox_Fri = document.getElementById("togFriBtn");
->>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
 
     // for (var i = 0; i < 15; i++) {
     //     totLikes += newLikes[i];
@@ -230,7 +217,7 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
     //     totAngry += newAngry[i];
     // }
 
-    if (checkbox.checked) {
+    if (checkbox_Tot.checked) {
 
         if(checkbox_All.checked){
             allReactChart.destroy();
@@ -308,12 +295,8 @@ function plotTotal(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry
 var allFriendChart;
 var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
-<<<<<<< HEAD
     var totNum = [];
     var checkbox = document.getElementById("togFriBtn");
-=======
-    var  totNum = [];
->>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
 
     var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
@@ -327,19 +310,11 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         totNum[i] += newWow[i];
         totNum[i] += newSad[i];
         totNum[i] += newAngry[i];
-<<<<<<< HEAD
         totNum[i] /= newFriend; //
 
         if (totNum[i] < 0.2) {
             totNum[i] *= -1;
         }
-=======
-        totNum[i] /= newFriend;
-        totNum[i] *= 100;
-        // if(totNum[i] < 5){
-        //     totNum[i] *= -1;
-        // }
->>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
         console.log(newLikes[i]);
         console.log(totNum[i]);
     }
@@ -380,12 +355,8 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                 }
             }
         });
-<<<<<<< HEAD
 
 
-=======
-       
->>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
     }
     else if (!checkbox_Fri.checked) {
         allFriendChart.destroy();

@@ -103,12 +103,8 @@ foreach($user_details as $row){
 </div>
 
 <label class="switch">
-<<<<<<< HEAD
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
 
-=======
-    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
->>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
     </div>
