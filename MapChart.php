@@ -82,7 +82,14 @@ foreach($tagplaces as $tagplace){
     $(window).on('load',function(){
         $('#myModal').modal('show');
     });
+    
 </script>
+
+<script type="text/javascript">
+    $("#markerSelection").click(function() {
+        $("#markerSelection").toggle();
+    });
+    </script>
 
  <script>
 
@@ -138,7 +145,19 @@ var most_recent_data = marker_type_count("Most_Recent",visit_type);
  }
 
 
-function drawMap(data) {
+function drawMap(data,selection) {
+
+var span_id = ["most","least","average","recent","recent_most","all"];
+
+for(var i =0; i<span_id.length;i++)
+{
+  if( span_id[i] == selection)
+  {
+    document.getElementById(span_id[i]).style.backgroundColor = " rgb(49, 58, 146) ";
+  }else{
+    document.getElementById(span_id[i]).style.backgroundColor = "";
+  }
+}
 
 var map = new google.maps.Map(
   document.getElementById('map'), {zoom: 2, center: {lat: 5.285153, lng: 100.456238}});
@@ -163,7 +182,7 @@ var icons = {
     };
 
 var infowindow = new google.maps.InfoWindow();
-console.log (data);
+
 for (var i= 0; i<=data.length; i++){
     // console.log(data[i]);
     var feature = {position: new google.maps.LatLng(latitude[data[i]], longitude[data[i]]), type: visit_type[data[i]]}
@@ -186,13 +205,26 @@ for (var i= 0; i<=data.length; i++){
                 infowindow.open(map, marker);
             }
         })(marker, i)); 
-
     }
+  
+
 }
 
 
 // Initialize and add the map
 function initMap() {
+
+var span_id = ["most","least","average","recent","recent_most","all"];
+
+for(var i =0; i<span_id.length;i++)
+{
+  if( span_id[i] == "all")
+  {
+    document.getElementById(span_id[i]).style.backgroundColor = " rgb(49, 58, 146) ";
+  }else{
+    document.getElementById(span_id[i]).style.backgroundColor = "";
+  }
+}
 
 var map = new google.maps.Map(
   document.getElementById('map'), {zoom: 2, center: {lat: 5.285153, lng: 100.456238}});
@@ -295,18 +327,18 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
       <div class="row">
 
         <div class="col-sm-3" style ="margin-left:100px; color:black;">
-          <p><span onclick = "drawMap(most_data)"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||07E8BB|000000|D82C2C"  alt="Most Visited Place"> Most Visited Places</span></p>
-          <p><span onclick = "drawMap(recent_data)"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|R|1758B6|000000"  alt="Recently Visited Place"> Recently Visited Place</span></p>
+          <p><span onclick = "drawMap(most_data,'most')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||07E8BB|000000|D82C2C"  alt="Most Visited Place"><span id="most" > Most Visited Places</span></span></p>
+          <p><span onclick = "drawMap(recent_data,'recent')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|R|1758B6|000000"  alt="Recently Visited Place"> <span id="recent" >Recently Visited Place</span></span></p>
         </div>
 
         <div class="col-sm-3" style ="margin-left:100px; color:black;">
-          <p><span onclick = "drawMap(average_data)"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FCFC65|000000|"  alt="Regular Visited Places"> Regular Visited Places</span></p>
-          <p><span onclick = "drawMap(most_recent_data)"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||1758B6|000000|D82C2C"  alt="Recently & Most Visited Place"> Recently & Most Visited Place</span></p>       
+          <p><span onclick = "drawMap(average_data,'average')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FCFC65|000000|"  alt="Regular Visited Places"> <span id="average" >Regular Visited Places</span></span></p>
+          <p><span onclick = "drawMap(most_recent_data,'recent_most')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||1758B6|000000|D82C2C"  alt="recent_most"><span id="recent_most" > Recently & Most Visited Place</span></span></p>       
         </div>
 
         <div class="col-sm-3" style ="margin-left:90px; color:black;">
-            <p><span onclick = "drawMap(least_data)" ><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||DF6458|000000" alt="Least Visited Places"> Least Visited Places</span></p>
-            <p><span onclick = "initMap()"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FFFFFF|000000"  alt="Display All"> Display All Visited Places</span></p>  
+            <p><span onclick = "drawMap(least_data,'least')" ><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||DF6458|000000" alt="Least Visited Places"><span id="least" > Least Visited Places</span></span></p>
+            <p><span onclick = "initMap()"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FFFFFF|000000"  alt="Display All"> <span id="all" >Display All Visited Places</span></span></p>  
       </div>
         </div>
 
@@ -317,8 +349,5 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
 
 </div>
 
-
-
-  
   </body>
 </html>
