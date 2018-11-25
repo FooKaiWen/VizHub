@@ -166,6 +166,10 @@ echo '<div class ="informMessage">';
 echo '<div id="info" style="display:none;"><p>The highest number of likes is ' .htmlspecialchars($highestLikes).' </p></div>';
 echo '</div>';
 ?> 
-<script type="text/javascript" src="chart.js"></script>
+<script>
+
+
+
+</script>
 </body>
 </html>
