@@ -9,7 +9,7 @@
   .switch input {display:none;}
 
   .triggerMessage{
-    height: 25px; 
+    height: 50px; 
     width: 970px;
     float: right;
     margin: 10px;
@@ -19,7 +19,7 @@
   }
 
   .informMessage{
-    height: 25px; 
+    height: 50px; 
     width: 970px;
     float: right;
     margin: 10px;

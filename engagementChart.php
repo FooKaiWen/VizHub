@@ -5,11 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="chart.css">
+  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
-  <script src ="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-  <script src="sketch.js"></script>  
-  <script type="text/javascript" src="chart.js"></script>
+  <script src ="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> 
 </head>
 <body>
 
@@ -42,12 +41,12 @@ $timearray = array();
 $highestLikes = 0;
 $temporary = 0;
 
-foreach ($likedata as $row) {
+foreach ($likedata as $row) {   
     // $likearray [] = [];
     // echo $row->message;
     $likearray [] = $row->like->summary->total_count;
     $temporary = $row->like->summary->total_count;
-
+    print($temporary . " ");
     if( $temporary > $highestLikes)
     {
         $highestLikes = $temporary;
@@ -100,21 +99,20 @@ foreach($user_details as $row){
 <div class="triggerMessage" >Try CLICK on Parameter: Likes, Love, Haha, Wow, Sad, Angry.</div> 
 
 <div class ="plot">
-<canvas id="chart" float="right" width="200" height="80"></canvas>
+    <canvas id="chart" float="right" width="200" height="80" background="white"></canvas>
 </div>
 
 <label class="switch">
+<<<<<<< HEAD
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
 
+=======
+    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
+>>>>>>> 28fb58b9ba33ae6d42ec70f5d81110df3900737a
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
     </div>
 </label>
-
-<?php
-echo '<div class ="informMessage">The highest number of likes is ' .htmlspecialchars($highestLikes).' </p>';
-echo '</div>';
-?> 
 
 <!-- <div style="width:25%;">
     <select id ="topReactId" name="topReactId" 
@@ -156,7 +154,22 @@ echo '</select>';
 ?>
 </div> -->
 
-<p>We are still improving our visualization functionality!</p>
+<div style="margin-left :15px">
+    <select id="selected" style="display:none;">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50" selected>50</option>
+    </select>
+</div>
 
+<p>We are still improving our visualization functionality!</p>
+<?php
+echo '<div class ="informMessage">';
+echo '<div id="info" style="display:none;"><p>The highest number of likes is ' .htmlspecialchars($highestLikes).' </p></div>';
+echo '</div>';
+?> 
+<script type="text/javascript" src="chart.js"></script>
 </body>
 </html>

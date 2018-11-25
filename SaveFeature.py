@@ -6,8 +6,8 @@ from nltk.corpus import stopwords # nltk.download('stopwords')
 from nltk.stem.porter import PorterStemmer
 from autocorrect import spell #spell correction
 
-dataset = pd.read_csv('10k_5000.csv',encoding='ISO-8859-1')
-dataset2 = pd.read_csv('dataset.csv',encoding='ISO-8859-1')
+dataset = pd.read_csv('250_5000.csv',encoding='ISO-8859-1')
+dataset2 = pd.read_csv('250_5000.csv',encoding='ISO-8859-1')
 
 stemmer = PorterStemmer()
 
@@ -46,9 +46,32 @@ for i in range(dataset.shape[0]): # This is where messages are cleaned and stemm
         # print("Stemmed Message")
         # print(message_text)
         data.append(message_text)
-        dataset2.iloc[i,1] = message_text
+        dataset2.iloc[i,2] = message_text
 
-dataset2.to_csv('dataset.csv', encoding='utf-8', index=False)
+dataset2.to_csv('250_5000.csv', encoding='utf-8', index=False)
+
+# for i in range(dataset.shape[0]):
+#     if(pd.notna(dataset.iloc[i,0])):
+#         num = dataset.iloc[i,0]
+#         # print("start")
+#         # print(num)
+#         label = num
+#         # label = int(label)
+#         if(label <= 5):
+#             label = 50
+#         elif(label <= 100):
+#             label = 100
+#         elif(label <= 150):
+#             label = 150  
+#         elif(label <= 200):
+#             label = 200  
+#         elif(label <= 250):
+#             label = 250
+#         else:
+#             label = 9999           
+#         dataset.iloc[i,1] = label
+
+# dataset.to_csv('250_5000.csv', encoding='utf-8', index=False)
 
 # dataset = pd.read_csv('savefile.csv',encoding='ISO-8859-1')
 

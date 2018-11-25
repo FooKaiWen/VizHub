@@ -12,11 +12,22 @@ $dbport ='27017';
 
 $client = new MongoDB\Client;
 
-// $client = new MongoDB\Client(
-//   'mongodb://kay:myRealPassword@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin&serverSelectionTryOnce=false&serverSelectionTimeoutMS=15000');
-
-$temp = $client->selectDatabase('fb');
-$newdb = $temp->drop();
+$tempdb = $client->selectDatabase('fb');
+$tempcol = $tempdb->selectCollection('user');
+$tempcol->drop();
+$tempcol = $tempdb->selectCollection('post');
+$tempcol->drop();
+$tempcol = $tempdb->selectCollection('location');
+$tempcol->drop();
+$tempcol = $tempdb->selectCollection('place');
+$tempcol->drop();
+$tempcol = $tempdb->selectCollection('accesstoken');
+$tempcol->drop();
+$tempcol = $tempdb->selectCollection('userprofile');
+$tempcol->drop();
+$tempcol = $tempdb->selectCollection('userdetail');
+$tempcol->drop();
+$tempdb->drop();
 $newdb = $client->selectDatabase('fb');
 
 $usercol = $newdb->selectCollection('user');
@@ -28,25 +39,15 @@ $placecol = $newdb->selectCollection('place');
 $atcol = $newdb->selectCollection('accesstoken');
 $userprofcol = $newdb->selectCollection('userprofile');
 $userdetailcol = $newdb->selectCollection('userdetail');
-// $insertManyResult = $usercol->insertMany([
-//     [
-//         'username' => 'admin',
-//         'email' => 'admin@example.com',
-//         'name' => 'Admin User',
-//     ],
-//     [
-//         'username' => 'test',
-//         'email' => 'test@example.com',
-//         'name' => 'Test User',
-//     ],
-// ]);
+
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]); 
 
 $fb = new Facebook\Facebook([
   'app_id' => '267157010556839', // Replace {app-id} with your app id
   'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
-  'default_graph_version' => 'v3.1'
+  'default_graph_version' => 'v3.1',
+
     ]);
  
 $helper = $fb->getRedirectLoginHelper();
@@ -57,11 +58,6 @@ if(isset($_GET['state'])){
 
 try {
   $accessToken = $helper->getAccessToken();
-  // $atcol->insertOne(
-  //   ['_id'=>'fbaccesstoken',
-  //     'token'=>"$accessToken",
-  //   ]
-  // );
   
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
@@ -87,22 +83,15 @@ if (! isset($accessToken)) {
   exit;
 }
   
-  // Logged in
-  //echo '<h3>Access Token</h3>';
-  //var_dump($accessToken->getValue());
-  
-  // The OAuth 2.0 client handler helps us manage access tokens
+// The OAuth 2.0 client handler helps us manage access tokens
 $oAuth2Client = $fb->getOAuth2Client();
-  
-  // Get the access token metadata from /debug_token
+// Get the access token metadata from /debug_token
 $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-  //echo '<h3>Metadata</h3>';
-  //var_dump($tokenMetadata);
   
-  // Validation (these will throw FacebookSDKException's when they fail)
-  // $tokenMetadata->validateAppId(''); // Replace {app-id} with your app id
-  // If you know the user ID this access token belongs to, you can validate it here
-  //$tokenMetadata->validateUserId('123');
+// Validation (these will throw FacebookSDKException's when they fail)
+// $tokenMetadata->validateAppId(''); // Replace {app-id} with your app id
+// If you know the user ID this access token belongs to, you can validate it here
+//$tokenMetadata->validateUserId('123');
 $tokenMetadata->validateExpiration();
   
 // if (! $accessToken->isLongLived()) {
@@ -121,7 +110,7 @@ $_SESSION['fb_access_token'] = (string) $accessToken;
 
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(15){id,shares}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(50){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -135,12 +124,7 @@ try {
 $graphNode = $posts_request->getGraphNode();
 $insertManyResult = $usercol->insertOne(json_decode($graphNode));
 
-
 $cursor = $usercol->distinct("posts.id");
-
-
-
-
 
 foreach ($cursor as $doc) {
   try {
@@ -158,21 +142,6 @@ foreach ($cursor as $doc) {
   $insertManyResult = $postcol->insertOne($ReactionNode);
 }
      
-
-
-
-
-// foreach ($share as $row) {
-//   if(!isset($row->posts->shares)){
-//   // $msg = $row->message;  
-//    $curr_id = $row->posts->id;
-//    $postcol->updateOne(
-//     [ 'id' => "$curr_id" ],
-//     [ '$set' => [ 'shares' => " " ]]);
-//   }
-// }
-
-
 $rows = $connection->executeQuery('fb.post', $query);
 
 foreach ($rows as $row) {
@@ -183,11 +152,18 @@ foreach ($rows as $row) {
     [ 'id' => "$curr_id" ],
     [ '$set' => [ 'message' => " " ]]);
   }
+  if(!isset($row->shares)){
+    $curr_id = $row->id;
+    $postcol->updateOne(
+      ['id' => "$curr_id"],
+      ['$set' => ['shares' => ['count' => 0 ]]]
+    );
+  }
 }
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(10)',$accessToken);
+  $location_request = $fb->get('/me?fields=tagged_places.limit(30)',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -204,7 +180,7 @@ $insertManyResult = $locationcol->insertOne(json_decode($graphNode));
 $tagged = $locationcol->distinct("tagged_places.id");
 foreach ($tagged as $doc) {
   try {
-    $place_request = $fb->get("/$doc?fields=place",$accessToken);
+    $place_request = $fb->get("/$doc?fields=place,created_time",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -219,19 +195,7 @@ foreach ($tagged as $doc) {
 }
 
 
-
-$tagplaces = $connection->executeQuery('fb.place', $query);
-//Array for to put on table for visualization
-$big = array();
-foreach($tagplaces as $tagplace){
-  $lat = $tagplace->place->location->latitude;
-  $long = $tagplace->place->location->longitude;
-  $place_name = $tagplace->place->name;
-  $temp_Holder = array ($lat,$long,$place_name);
-  array_push($big,$temp_Holder);
-}
-
-$_SESSION["location"]=$big;
+// $_SESSION["location"]=$big;
 // print_r($big);
 // foreach ($big as $b){
 //   print("out");
