@@ -159,15 +159,13 @@ echo '</select>';
 </div>
 
 <p>We are still improving our visualization functionality!</p>
+
 <?php
 echo '<div class ="informMessage">';
 echo '<div id="info" style="display:none;"><p>The highest number of likes is ' .htmlspecialchars($highestLikes).' </p></div>';
 echo '</div>';
 ?> 
-<script>
 
-
-
-</script>
+<script type="text/javascript" src="chart.js"></script>
 </body>
 </html>
