@@ -93,12 +93,6 @@ foreach($tagplaces as $tagplace){
     
 </script>
 
-<script type="text/javascript">
-    $("#markerSelection").click(function() {
-        $("#markerSelection").toggle();
-    });
-    </script>
-
  <script>
 
 
