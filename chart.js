@@ -108,6 +108,12 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
             },
             options: {
                 scales: {
+                    xAxes:[{
+                        gridLines:{color: 'rgba(0,0,0,1)',
+                        lineWidth: 0.5
+                    }
+                    }],
+
                     yAxes: [{
                         ticks: {
                             beginAtZero: true
@@ -297,6 +303,7 @@ var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
     var totNum = [];
     var checkbox = document.getElementById("togFriBtn");
+    console.log("hi");
 
     var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
@@ -340,8 +347,8 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                         label: 'Number of react',
                         fill: true,
                         data: totNum,
-                        backgroundColor: 'rgba(85,107,47,1)',
-                        borderColor: 'rgba(85,107,47,5)',
+                        backgroundColor: 'rgba(107,142,35,5)',
+                        borderColor: 'rgba(85,107,47,1)',
                         borderWidth: 3
                     }]
             },
@@ -349,7 +356,7 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                 scales: {
                     yAxes: [{
                         ticks: {
-                            min:0.2,
+                            beginAtZero:true,
                         }
                     }]
                 }
