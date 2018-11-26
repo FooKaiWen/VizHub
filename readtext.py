@@ -25,7 +25,6 @@ mycol = mydb["predictMessage"]
 
 getMessage = mycol.find_one()
 message = getMessage['pmessage']
-selection = getMessage['selection']
 
 message = re.sub('[^A-Za-z]',' ',message)
 message = message.lower()
@@ -40,16 +39,10 @@ for word in tokenized_message:
         
 message_text = " ".join(message_processed)
 data = [message_text]
-print("here1")
+
 dataset = pandas.read_csv('250_5000.csv',encoding='ISO-8859-1')
 
-if(selection == "2000"): #0.60
-        train_x, test_x, train_y, test_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
-elif(selection == "5000"): #0.84
-        train_x, test_x, train_y, test_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
-        print("here2")
-elif(selection == "2500"): #0.60
-        train_x, test_x, train_y, test_y = model_selection.train_test_split(dataset['message'], dataset['likes'])
+train_x, test_x, train_y, test_y = model_selection.train_test_split(dataset['message'], dataset['likes'], random_state=42)
 
 tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
 tfidf_vect_ngram_chars.fit(dataset['message'])

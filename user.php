@@ -97,13 +97,11 @@ $messagecol = $newdb->selectCollection('predictMessage');
 <?php
 if(isset($_REQUEST['submit_btn'])){
 
-  $selection = $_POST["selected"];
   $message = $_POST["predictM"];
 
   $messagecol->insertOne(
     [
       // '_id'=>'message',
-    'selection'=>"$selection",
     'pmessage'=>"$message"]);
   shell_exec("python readtext.py");
   $upperboundary = $messagecol->findOne()->likesRange;

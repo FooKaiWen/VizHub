@@ -97,9 +97,9 @@ foreach($tagplaces as $tagplace){
     $("#markerSelection").click(function() {
         $("#markerSelection").toggle();
     });
-    </script>
+</script>
 
- <script>
+<script>
 
 
 var latitude = <?php echo json_encode($lat);?>;
