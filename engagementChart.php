@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
   <script src ="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> 
+  
 </head>
 <body>
 
@@ -38,7 +39,6 @@ $likedata = $connection->executeQuery('fb.post', $query);
 
 $likearray = array();
 $timearray = array();
-$highestLikes = 0;
 $temporary = 0;
 
 foreach ($likedata as $row) {   
@@ -47,10 +47,6 @@ foreach ($likedata as $row) {
     $likearray [] = $row->like->summary->total_count;
     $temporary = $row->like->summary->total_count;
     print($temporary . " ");
-    if( $temporary > $highestLikes)
-    {
-        $highestLikes = $temporary;
-    }
     
     // print($row->like->summary->total_count);
     // print($highestLikes);
@@ -82,7 +78,7 @@ foreach($reactdata as $row){
         }
         else 
         {
-            $num_share [] = $row->shares->count;
+            $num_share [] = $row->shares->count;           
         }
 }
 
@@ -99,29 +95,41 @@ foreach($user_details as $row){
 <div class="triggerMessage" >Try CLICK on Parameter: Likes, Love, Haha, Wow, Sad, Angry.</div> 
 
 <div class ="plot">
-    <canvas id="chart" float="right" width="200" height="80" background="white"></canvas>
+    <canvas id="chart" float="right" width="300" height="150" ></canvas>
+</div>
+
+<div style="margin-left :15px">
+    <select id="selected">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50" selected>50</option>
+    </select>
 </div>
 
 <label class="switch">
-    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray) ?>)'>
+    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
+
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
     </div>
 </label>
 
 <!-- <div style="width:25%;">
-    <select>
+    <select id ="topReactId" name="topReactId" 
+    onchange="plotTop('chart','<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>')">
+    <option value="">Select One...</option>
     <option value="5">5</option>
     <option value="10">10</option>
     <option value="15">15</option>
-    <option value="20">20</option>
     </select>
 </div> -->
 
 <label class="switch">
-    <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>)'>
+    <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>)'> 
     <div class="slider round">
-        <span class="on">Total Reaction </span><span class="off">Total Reaction</span>
+        <span class="on">Other Reaction </span><span class="off">Other Reaction</span>
     </div>
 </label>
 
@@ -148,26 +156,23 @@ echo '</select>';
 ?>
 </div> -->
 
-<div style="margin-left :15px">
-    <select id="selected" style="display:none;">
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="30">30</option>
-        <option value="40">40</option>
-        <option value="50" selected>50</option>
-    </select>
+<p>We are still improving our visualization functionality!</p>
+
+
+<div class ="informMessage">
+<div id ="topInfo">
+<h2 id="top1"></h2>
+<h3 id="top2"></h3>
+<h4 id="top3"></h4>
+<h5 id="top4"></h5>
+<h6 id="top5"></h6>
+</div>
 </div>
 
-<p>We are still improving our visualization functionality!</p>
-<?php
-echo '<div class ="informMessage">';
-echo '<div id="info" style="display:none;"><p>The highest number of likes is ' .htmlspecialchars($highestLikes).' </p></div>';
-echo '</div>';
-?> 
-<script>
+<script type="text/javascript" src="chart.js">
+ 
 
 
-
-</script>
+<script type="text/javascript" src="chart.js"></script>
 </body>
 </html>

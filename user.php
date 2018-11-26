@@ -66,10 +66,10 @@ $messagecol = $newdb->selectCollection('predictMessage');
 </div>
 
 <div style="width: 50%; float:left; height:30px;">
-  <p>Click the button below to view the number of likes of your last 10 recent posts!</p>
+  <p>Click the button below to view the number of likes of your recent Facebook posts!</p>
 </div>
 <div style="width: 50%; float:right; height:30px;">
-  <p>Click the button below to view your last 10 tagged places in Google Maps!</p>
+  <p>Click the button below to view your Facebook tagged places in Google Maps!</p>
 </div>
 
 <form action="engagementChart.php" target="_blank">
@@ -97,13 +97,11 @@ $messagecol = $newdb->selectCollection('predictMessage');
 <?php
 if(isset($_REQUEST['submit_btn'])){
 
-  $selection = $_POST["selected"];
   $message = $_POST["predictM"];
 
   $messagecol->insertOne(
     [
       // '_id'=>'message',
-    'selection'=>"$selection",
     'pmessage'=>"$message"]);
   shell_exec("python readtext.py");
   $upperboundary = $messagecol->findOne()->likesRange;

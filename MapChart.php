@@ -20,7 +20,7 @@
        }
 
       .mark:hover{
-        background: yellow;
+        background: rgb(26, 62, 87); 
       }
 
       .mark{
@@ -93,7 +93,17 @@ foreach($tagplaces as $tagplace){
     
 </script>
 
+<<<<<<< HEAD
  <script>
+=======
+<script type="text/javascript">
+    $("#markerSelection").click(function() {
+        $("#markerSelection").toggle();
+    });
+</script>
+
+<script>
+>>>>>>> 134ea65133d1f0d972cd78705e0ab31c19892f29
 
 
 var latitude = <?php echo json_encode($lat);?>;
