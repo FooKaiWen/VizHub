@@ -104,6 +104,16 @@ foreach($user_details as $row){
     <canvas id="chart" float="right" width="200" height="80" ></canvas>
 </div>
 
+<div style="margin-left :15px">
+    <select id="selected">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50" selected>50</option>
+    </select>
+</div>
+
 <label class="switch">
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
 
@@ -152,26 +162,20 @@ echo '</select>';
 ?>
 </div> -->
 
-<div style="margin-left :15px">
-    <select id="selected" style="display:none;">
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="30">30</option>
-        <option value="40">40</option>
-        <option value="50" selected>50</option>
-    </select>
-</div>
-
 <p>We are still improving our visualization functionality!</p>
+
 <?php
 echo '<div class ="informMessage">';
 echo '<div id="info" style="display:none;"><p>The highest number of likes is ' .htmlspecialchars($highestLikes).' </p></div>';
 echo '</div>';
 ?> 
+<<<<<<< HEAD
 <script type="text/javascript" src="chart.js">
  
 
+=======
+>>>>>>> a9ffa9cd6b31ab17c5e533ac0fbbbad30a1be137
 
-</script>
+<script type="text/javascript" src="chart.js"></script>
 </body>
 </html>

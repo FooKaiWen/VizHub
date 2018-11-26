@@ -20,7 +20,7 @@
        }
 
       .mark:hover{
-        background: yellow;
+        background: rgb(26, 62, 87); 
       }
 
       .mark{
