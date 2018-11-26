@@ -102,6 +102,16 @@ foreach($user_details as $row){
     <canvas id="chart" float="right" width="200" height="80" background="white"></canvas>
 </div>
 
+<div style="margin-left :15px">
+    <select id="selected">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50" selected>50</option>
+    </select>
+</div>
+
 <label class="switch">
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
 
@@ -149,16 +159,6 @@ foreach($timearray as $time){
 echo '</select>';
 ?>
 </div> -->
-
-<div style="margin-left :15px">
-    <select id="selected" style="display:none;">
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="30">30</option>
-        <option value="40">40</option>
-        <option value="50" selected>50</option>
-    </select>
-</div>
 
 <p>We are still improving our visualization functionality!</p>
 
