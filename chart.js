@@ -1,48 +1,61 @@
 var selected_value = 50;
 var selector = document.getElementById("selected");
+var topLikes;
 
-selector.addEventListener('change',function(){
-    if(selected_value != selector[selector.selectedIndex].value){
+selector.addEventListener('change', function () {
+    if (selected_value != selector[selector.selectedIndex].value) {
         selected_value = selector[selector.selectedIndex].value
     }
 });
 
-function hideselect(){
+function hideselect() {
     var selector = document.getElementById("selected");
-    var info = document.getElementById("info");
+    var info = document.getElementById("topInfo");
     info.style.display = 'none';
 }
 
-function showselect(){
+function showselect() {
     var selector = document.getElementById("selected");
-    var info = document.getElementById("info");
+    var info = document.getElementById("topInfo");
     info.style.display = 'inherit';
+}
+
+function showTop() {
+
+    document.getElementById("top1").innerHTML = "The 1st highest number of likes: " + topLikes[0];
+    document.getElementById("top2").innerHTML = "The 2nd highest number of likes: " + topLikes[1];
+    document.getElementById("top3").innerHTML = "The 3rd highest number of likes: " + topLikes[2];
+    document.getElementById("top4").innerHTML = "The 4th highest number of likes: " + topLikes[3];
+    document.getElementById("top5").innerHTML = "The 5th highest number of likes: " + topLikes[4];
+
+
 }
 
 var checkbox_All = document.getElementById("togAllBtn");
 var checkbox_Tot = document.getElementById("togTotBtn");
 var checkbox_Fri = document.getElementById("togFriBtn");
 
-checkbox_All.addEventListener('change',function(){
-    if(this.checked){
+checkbox_All.addEventListener('change', function () {
+    if (this.checked) {
         showselect();
-    } else if(!this.checked){
+        showTop();
+    } else if (!this.checked) {
         hideselect();
     }
 });
 
-checkbox_Tot.addEventListener('change',function(){
-    if(this.checked){
+checkbox_Tot.addEventListener('change', function () {
+    if (this.checked) {
         showselect();
-    } else if(!this.checked){
+    } else if (!this.checked) {
         hideselect();
     }
 });
 
-checkbox_Fri.addEventListener('change',function(){
-    if(this.checked){
+checkbox_Fri.addEventListener('change', function () {
+    if (this.checked) {
         showselect();
-    } else if(!this.checked){
+    } else if (!this.checked) {
         hideselect();
     }
 });
@@ -54,13 +67,18 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
     var checkbox = document.getElementById("togAllBtn")
     console.log(newComment[2]);
 
-    var tempLikes = [], tempComment = [], tempShare = [], tempTime = [];
-    for(i=0;i<selected_value;i++){
+    var tempLikes = [], tempComment = [], tempShare = [], tempTime = [], tempTopLikes = [];
+    for (i = 0; i < selected_value; i++) {
         tempLikes[i] = newLikes[i];
         tempComment[i] = newComment[i];
         tempShare[i] = newShare[i];
         tempTime[i] = newTime[i];
+        tempTopLikes[i] = newLikes[i];
     }
+
+    topLikes = tempTopLikes.sort((a, b) => b - a).slice(0, 5);
+    console.log(topLikes);
+    console.log(newLikes);
 
     var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
@@ -68,15 +86,15 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
 
     if (checkbox_All.checked) {
 
-        if(checkbox_Tot.checked){
+        if (checkbox_Tot.checked) {
             totalChart.destroy();
             checkbox_Tot.checked = false;
         }
-        if(checkbox_Fri.checked){
+        if (checkbox_Fri.checked) {
             allFriendChart.destroy();
             checkbox_Fri.checked = false;
         }
-        
+
         var ctx = document.getElementById(chartid).getContext('2d');
         allReactChart = new Chart(ctx, {
             type: 'line',
@@ -88,8 +106,8 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
                         fill: false,
                         //lineTension: 0.5,
                         data: tempLikes,
-                        backgroundColor: 'rgba(100,149,237, 0.2)',
-                        borderColor: 'rgba(100,149,237, 1)',
+                        backgroundColor: 'rgba(72,61,139, 0.2)',
+                        borderColor: 'rgba(72,61,139, 1)',
                         borderWidth: 3
                     },
                     {
@@ -102,20 +120,25 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
                     {
                         label: 'Share',
                         data: tempShare,
-                        backgroundColor: 'rgba(178,34,34, 0.8)',
+                        backgroundColor: 'rgba(178,34,34, 0.2)',
                         borderColor: 'rgba(178,34,34,1)',
                         borderWidth: 3
                     }]
             },
             options: {
                 scales: {
-                    xAxes:[{
-                        gridLines:{color: 'rgba(0,0,0,1)',
-                        lineWidth: 0.5
-                    }
+                    xAxes: [{
+                        gridLines: {
+                            color: 'rgba(255, 255, 255,0.5)',
+                            lineWidth: 2
+                        }
                     }],
 
                     yAxes: [{
+                        gridLines: {
+                            color: 'rgba(255, 255, 255,0.5)',
+                            lineWidth: 2
+                        },
                         ticks: {
                             beginAtZero: true
                         }
@@ -132,98 +155,11 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
 
 }
 
-var topChart;
-function plotTop(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime) {
-    var selectValue = document.getElementById("topReactId");
-    // console.log(selectValue.value);
-
-    var tempLikes = [], tempLove = [], tempHaha = [], tempWow = [], tempSad = [], tempAngry = [], tempTime = [];
-    for(i=0;i<selected_value;i++){
-        tempLikes[i] = newLikes[i];
-        tempLove[i] = newLove[i];
-        tempHaha[i] = newHaha[i];
-        tempWow[i] = newWow[i];
-        tempSad[i] = newSad[i];
-        tempAngry[i] = newSad[i];
-        tempTime[i] = newTime[i];
-    }
-
-    if (selectValue.value == 50) {
-        var ctx = document.getElementById(chartid).getContext('2d');
-        topChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: tempTime,
-                datasets: [
-                    {
-                        label: 'Likes',
-                        fill: false,
-                        //lineTension: 0.5,
-                        data: newLikes,
-                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        borderWidth: 3
-                    },
-                    {
-                        label: 'Love',
-                        data: newLove,
-                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 3
-                    },
-                    {
-                        label: 'Haha',
-                        data: newHaha,
-                        backgroundColor: 'rgba(255, 206, 86, 0.8)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
-                        borderWidth: 3
-                    },
-                    {
-                        label: 'Wow',
-                        data: newWow,
-                        backgroundColor: 'rgba(75, 192, 192, 0.8)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 3
-                    },
-                    {
-                        label: 'Sad',
-                        data: newSad,
-                        backgroundColor: 'rgba(153, 102, 255, 0.8)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 3
-
-                    },
-                    {
-                        label: 'Angry',
-                        data: newAngry,
-                        backgroundColor: 'rgba(255, 159, 64, 0.8)',
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        borderWidth: 3
-                    }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
-    }
-    else if (!checkbox_All.checked) {
-        allReactChart.destroy();
-
-    }
-}
-
 var totalChart;
 function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
-    
+
     var tempLove = [], tempHaha = [], tempWow = [], tempSad = [], tempAngry = [], tempTime = [];
-    for(i=0;i<selected_value;i++){
+    for (i = 0; i < selected_value; i++) {
         tempLove[i] = newLove[i];
         tempHaha[i] = newHaha[i];
         tempWow[i] = newWow[i];
@@ -234,15 +170,15 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
 
     if (checkbox_Tot.checked) {
 
-        if(checkbox_All.checked){
+        if (checkbox_All.checked) {
             allReactChart.destroy();
             checkbox_All.checked = false;
         }
-        if(checkbox_Fri.checked){
+        if (checkbox_Fri.checked) {
             allFriendChart.destroy();
             checkbox_Fri.checked = false;
         }
-        
+
         var ctx = document.getElementById(chartid).getContext('2d');
         totalChart = new Chart(ctx, {
             type: 'bar',
@@ -288,10 +224,18 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
             options: {
                 scales: {
                     xAxes: [{
+                        gridLines: {
+                            color: 'rgba(255, 255, 255,0.5)',
+                            lineWidth: 2
+                        },
                         stacked: true
                     }],
 
                     yAxes: [{
+                        gridLines: {
+                            color: 'rgba(255, 255, 255,0.5)',
+                            lineWidth: 2
+                        },
                         stacked: true
                     }],
                     ticks: {
@@ -311,11 +255,8 @@ var allFriendChart;
 var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
     var totNum = [];
-<<<<<<< HEAD
     var checkbox = document.getElementById("togFriBtn");
     console.log("hi");
-=======
->>>>>>> a9ffa9cd6b31ab17c5e533ac0fbbbad30a1be137
 
     var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
@@ -339,22 +280,22 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
     }
 
     var tempNum = [], tempTime = [];
-    for(i=0;i<selected_value;i++){
+    for (i = 0; i < selected_value; i++) {
         tempNum[i] = totNum[i];
         tempTime[i] = newTime[i];
     }
 
     if (checkbox_Fri.checked) {
 
-        if(checkbox_All.checked){
+        if (checkbox_All.checked) {
             allReactChart.destroy();
             checkbox_All.checked = false;
         }
-        if(checkbox_Tot.checked){
+        if (checkbox_Tot.checked) {
             totalChart.destroy();
             checkbox_Tot.checked = false;
         }
-        
+
         var ctx = document.getElementById(chartid).getContext('2d');
         allFriendChart = new Chart(ctx, {
             type: 'line',
@@ -364,27 +305,27 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                     {
                         label: 'Number of react',
                         fill: true,
-<<<<<<< HEAD
                         data: totNum,
                         backgroundColor: 'rgba(107,142,35,5)',
                         borderColor: 'rgba(85,107,47,1)',
-=======
-                        data: tempNum,
-                        backgroundColor: 'rgba(85,107,47,1)',
-                        borderColor: 'rgba(85,107,47,5)',
->>>>>>> a9ffa9cd6b31ab17c5e533ac0fbbbad30a1be137
                         borderWidth: 3
                     }]
             },
             options: {
                 scales: {
+                    xAxes: [{
+                        gridLines: {
+                            color: 'rgba(255, 255, 255,0.5)',
+                            lineWidth: 2
+                        }
+                    }],
                     yAxes: [{
+                        gridLines: {
+                            color: 'rgba(255, 255, 255,0.5)',
+                            lineWidth: 2
+                        },
                         ticks: {
-<<<<<<< HEAD
-                            beginAtZero:true,
-=======
-                            min:0,
->>>>>>> a9ffa9cd6b31ab17c5e533ac0fbbbad30a1be137
+                            beginAtZero: true,
                         }
                     }]
                 }
