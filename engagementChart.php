@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
   <script src ="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> 
+  
 </head>
 <body>
 
@@ -99,7 +100,8 @@ foreach($user_details as $row){
 <div class="triggerMessage" >Try CLICK on Parameter: Likes, Love, Haha, Wow, Sad, Angry.</div> 
 
 <div class ="plot">
-    <canvas id="chart" float="right" width="200" height="80" background="white"></canvas>
+    
+    <canvas id="chart" float="right" width="200" height="80" ></canvas>
 </div>
 
 <label class="switch">
@@ -166,8 +168,8 @@ echo '<div class ="informMessage">';
 echo '<div id="info" style="display:none;"><p>The highest number of likes is ' .htmlspecialchars($highestLikes).' </p></div>';
 echo '</div>';
 ?> 
-<script>
-
+<script type="text/javascript" src="chart.js">
+ 
 
 
 </script>
