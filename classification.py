@@ -38,21 +38,22 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid):
     # fit the training dataset on the classifier
     classifier.fit(feature_vector_train, label)
 
-    joblib.dump(classifier,'model.joblib')
+    # joblib.dump(classifier,'model.joblib')
 
     # predict the labels on validation dataset
     predictions = classifier.predict(feature_vector_valid)
     # return predictions
     return metrics.classification_report(valid_y, predictions)
 
-dataset = pandas.read_csv('250_5000.csv',encoding='ISO-8859-1')
+dataset = pandas.read_csv('dataset.csv',encoding='ISO-8859-1')
 oriset = pandas.read_csv('250_5000.csv',encoding='ISO-8859-1')
 
-labels = dataset['likes']
-datacolumn = dataset['orimessage']
+labels = dataset['two_thousand_likes']
+datacolumn = dataset['message']
 
 train_x, valid_x, train_y, valid_y = model_selection.train_test_split(datacolumn, labels, random_state=42)
-
+print(train_x.shape)
+print(valid_x.shape)
 count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}',max_features=1000)
 count_vect.fit(datacolumn)
 
@@ -97,7 +98,7 @@ print("SVM, Count Vectors: ", accuracy)
 tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=1000)
 tfidf_vect.fit(datacolumn)
 
-joblib.dump(tfidf_vect.vocabulary_,'feature.joblib')
+# joblib.dump(tfidf_vect.vocabulary_,'feature.joblib')
 
 xtrain_tfidf =  tfidf_vect.transform(train_x)
 xvalid_tfidf =  tfidf_vect.transform(valid_x)

@@ -11,7 +11,7 @@ datacolumn = dataset['orimessage']
 
 train_x, valid_x, train_y, valid_y = model_selection.train_test_split(datacolumn, labels, random_state=42)
 # print(valid_x)
-valid_x = ["Advocates of the growing raw food movement are preparing artisanal dishes for pets"]
+valid_x = ["If Sen. John Kerry is nominated as Secretary of State, then out-going Sen. Scott Brown is widely expected to seek out his old job."]
 
 loaded_vect = TfidfVectorizer(decode_error="ignore",vocabulary=joblib.load('feature.joblib'))
 loadedmodel = joblib.load('model.joblib')

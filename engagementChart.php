@@ -169,8 +169,6 @@ echo '</select>';
 </div>
 </div>
 
-<script type="text/javascript" src="chart.js">
- 
 
 
 <script type="text/javascript" src="chart.js"></script>
