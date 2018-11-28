@@ -72,85 +72,86 @@ $messagecol = $newdb->selectCollection('predictMessage');
 <?php
 if(isset($_REQUEST['submit_btn'])){
 
-echo '<div id="modelsummary">
-      <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Model Summary Report</i></label>
-        <div id="summary">
-          <p>The machine model was trained with <b>1008</b> instances of data and tested with dataset of <b>336</b> instances. 
-          It was evaluated with confusion matrix as below: </p>
-          <table style="width:75%">
-            <tr>
-              <th>Confusion Matrix</th>
-            </tr>
-            <tr>
-              <th>Number of Likes</th><th>Precision(%)</th><th>Recall(%)</th><th>F1-score(%)</th><th>Support</th>
-            </tr>
-            <tr>
-              <td>0-50</td><td>44</td><td>31</td><td>36</td><td>68</td>
-            </tr>
-            <tr>
-              <td>51-100</td><td>30</td><td>54</td><td>38</td><td>83</td>
-            </tr>
-            <tr>
-              <td>101-150</td><td>38</td><td>25</td><td>30</td><td>65</td>
-            </tr>
-            <tr>
-              <td>151-200</td><td>31</td><td>15</td><td>20</td><td>67</td>
-            </tr>
-            <tr>
-              <td>201-250</td><td>30</td><td>36</td><td>33</td><td>53</td>
-            </tr>
-            <tr><td></td></tr>
-            <tr>
-              <td>weighted average</td><td>35</td><td>33</td><td>32</td><td>336</td>
-            </tr>
-          </table>
-          <p><br/>In Layman\'s terms, the machine can predict the correct number of likes with one-third chance. Although it is not the exact
+  echo 
+  '<div id="modelsummary">
+    <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Model Summary Report</i></label>
+    <div id="summary">
+      <p>The machine model was trained with <b>1008</b> instances of data and tested with dataset of <b>336</b> instances. 
+         It was evaluated with confusion matrix as below: </p>
+      <table style="width:75%">
+        <tr>
+          <th>Confusion Matrix</th>
+        </tr>
+        <tr>
+          <th>Number of Likes</th><th>Precision(%)</th><th>Recall(%)</th><th>F1-score(%)</th><th>Support</th>
+        </tr>
+        <tr>
+          <td>0-50</td><td>44</td><td>31</td><td>36</td><td>68</td>
+        </tr>
+        <tr>
+          <td>51-100</td><td>30</td><td>54</td><td>38</td><td>83</td>
+        </tr>
+        <tr>
+          <td>101-150</td><td>38</td><td>25</td><td>30</td><td>65</td>
+        </tr>
+        <tr>
+          <td>151-200</td><td>31</td><td>15</td><td>20</td><td>67</td>
+        </tr>
+        <tr>
+          <td>201-250</td><td>30</td><td>36</td><td>33</td><td>53</td>
+        </tr>
+        <tr><td></td></tr>
+        <tr>
+          <td>weighted average</td><td>35</td><td>33</td><td>32</td><td>336</td>
+        </tr>
+      </table>
+      <p><br/>In Layman\'s terms, the machine can predict the correct number of likes with one-third chance. Although it is not the exact
           number, it still gives the range of the predicted likes.</p>
-          <p>We are still improving our machine model!</p>
-        </div>
-      </div>';
+      <p>We are still improving our machine model!</p>
+    </div>
+  </div>';
 
   $message = $_POST["predictM"];
-if($message != ""){
-  $messagecol->insertOne(
-    [
+  if($message != ""){
+    $messagecol->insertOne(
+      [
       // '_id'=>'message',
-    'pmessage'=>"$message"]);
-  shell_exec("python readtext.py");
-  $upperboundary = $messagecol->findOne()->likesRange;
-  if($upperboundary == 50){
-    $lowerboundary = 0;
-  } else {
-    $lowerboundary = $upperboundary - 49;
-  }
+      'pmessage'=>"$message"]);
+    shell_exec("python readtext.py");
+    $upperboundary = $messagecol->findOne()->likesRange;
+    if($upperboundary == 50){
+      $lowerboundary = 0;
+    } else {
+      $lowerboundary = $upperboundary - 49;
+    }
 
-  echo '
-  <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Result</i></label>
-  <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <b>';
+    echo '
+    <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Result</i></label>
+    <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <b>';
   
-  if($upperboundary == 250){
-    echo htmlspecialchars($upperboundary).' and above</b>';
+    if($upperboundary == 250){
+      echo htmlspecialchars($upperboundary).' and above</b>';
+    } else {
+      echo htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary).'</b>';
+    }
+    
+    echo ' for the message: '.htmlspecialchars($message).'</div>';   
   } else {
-    echo htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary).'</b>';
+    echo '
+    <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Error</i></label>
+    <div id="summary" style="font-size:20px;">Invalid input! Please re-type the message.</div>';
   }
-  
-  echo ' for the message: '.htmlspecialchars($message).'</div>';   
-} else {
-  echo '
-  <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Error</i></label>
-  <div id="summary" style="font-size:20px;">Invalid input! Please re-type the message.</div>';
-}
 }
 ?>
 
 <form method="POST" action="">
   <div class="container">
     <div class="form-group" >
-      <label for="Message" style="margin-top :15px;"><i>Message:</i></label>
+      <label for="Message" style="margin-top :15px;"><i>Message for Like Prediction:</i></label>
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" 
         placeholder="Type Your Message Here For Like Prediction . . . . . ."><?php if(isset($_REQUEST['submit_btn'])){echo htmlspecialchars($message);}?></textarea>
       <div style ="text-align:center;">  
-        <button class ="copyText" onclick="copyText()">Copy text</button>
+        <button class ="copyText" onclick="copyMessage()">Copy Message</button>
         <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
       </div>
     </div>
@@ -158,7 +159,7 @@ if($message != ""){
 </form>
 
  <script>
-      function copyText() {
+      function copyMessage() {
         var copyText = document.getElementById("message");
         copyText.select();
         document.execCommand("copy");
