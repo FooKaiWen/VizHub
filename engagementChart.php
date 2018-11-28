@@ -35,7 +35,7 @@ $client = new MongoDB\Client;
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 
 $query = new MongoDB\Driver\Query([]);
-$likedata = $connection->executeQuery('fb.post', $query);
+$likedata = $connection->executeQuery('fb.post_detail', $query);
 
 $likearray = array();
 $timearray = array();
@@ -55,7 +55,7 @@ foreach ($likedata as $row) {
 }
 
 $query = new MongoDB\Driver\Query([]);
-$reactdata = $connection->executeQuery('fb.post', $query);
+$reactdata = $connection->executeQuery('fb.post_detail', $query);
 
 $lovearray = array();
 $hahaarray = array();

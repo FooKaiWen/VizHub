@@ -13,28 +13,26 @@ $dbport ='27017';
 $client = new MongoDB\Client;
 
 $tempdb = $client->selectDatabase('fb');
-$tempcol = $tempdb->selectCollection('user');
+$tempcol = $tempdb->selectCollection('post_id');
 $tempcol->drop();
-$tempcol = $tempdb->selectCollection('post');
+$tempcol = $tempdb->selectCollection('post_detail');
 $tempcol->drop();
-$tempcol = $tempdb->selectCollection('location');
+$tempcol = $tempdb->selectCollection('location_id');
 $tempcol->drop();
-$tempcol = $tempdb->selectCollection('place');
-$tempcol->drop();
-$tempcol = $tempdb->selectCollection('accesstoken');
+$tempcol = $tempdb->selectCollection('location_detail');
 $tempcol->drop();
 $tempcol = $tempdb->selectCollection('userdetail');
 $tempcol->drop();
 $tempdb->drop();
 $newdb = $client->selectDatabase('fb');
 
-$usercol = $newdb->selectCollection('user');
-$postcol = $newdb->selectCollection('post');
-$locationcol = $newdb->selectCollection('location');
+$usercol = $newdb->selectCollection('post_id');
+$postcol = $newdb->selectCollection('post_detail');
+$locationcol = $newdb->selectCollection('location_id');
 
-$placecol = $newdb->selectCollection('place');
+$placecol = $newdb->selectCollection('location_detail');
 
-$atcol = $newdb->selectCollection('accesstoken');
+
 $userdetailcol = $newdb->selectCollection('userdetail');
 
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
@@ -129,7 +127,7 @@ $cursor = $usercol->distinct("posts.id");
 
 foreach ($cursor as $doc) {
   try {
-    $reactions_request = $fb->get("/$doc?fields=created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
+    $reactions_request = $fb->get("/$doc?fields=type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -143,7 +141,7 @@ foreach ($cursor as $doc) {
   $insertManyResult = $postcol->insertOne($ReactionNode);
 }
      
-$rows = $connection->executeQuery('fb.post', $query);
+$rows = $connection->executeQuery('fb.post_detail', $query);
   
 foreach ($rows as $row) {
   if(!isset($row->message)){
