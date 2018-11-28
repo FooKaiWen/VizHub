@@ -1,5 +1,5 @@
 <?php
-
+ require_once  'Facebook/autoload.php';
 require_once  "vendor/autoload.php";
 
 $dbhost ='localhost';
@@ -26,6 +26,11 @@ $newdb = $client->selectDatabase('fb');
 $temp = $newdb->selectCollection('predictMessage');
 $temp->drop();
 $messagecol = $newdb->selectCollection('predictMessage');
+
+session_start();
+$logoutUrl = $_SESSION['logoutUrl'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -35,11 +40,13 @@ $messagecol = $newdb->selectCollection('predictMessage');
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="design.css">
+  <link rel="stylesheet" type="text/css" href="home.css">
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   <!-- <script type="text/javascript" src="chart.js"></script> -->
+
 </head>
 <body>
 
@@ -53,6 +60,7 @@ $messagecol = $newdb->selectCollection('predictMessage');
     <img src="<?php echo $url; ?>" alt="Profile Picture">
     <h2 id="detail-name">Name: <?php echo $name; ?><br/></h2>
     <h2 id="detail-id">ID: <?php echo $id; ?></h2>
+    <button style = "margin-top:30px;"class ="Btn Btn--facebook" onclick="logout()">Log Out</button>
   </div>
 </div>
 
@@ -144,19 +152,24 @@ if(isset($_REQUEST['submit_btn'])){
 }
 ?>
 
-<form method="POST" action="">
+  <form method="POST" action="">
   <div class="container">
     <div class="form-group" >
       <label for="Message" style="margin-top :15px;"><i>Message for Like Prediction:</i></label>
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" 
         placeholder="Type Your Message Here For Like Prediction . . . . . ."><?php if(isset($_REQUEST['submit_btn'])){echo htmlspecialchars($message);}?></textarea>
       <div style ="text-align:center;">  
+<<<<<<< HEAD
         <button class ="copyText" onclick="copyMessage()">Copy Message</button>
+=======
+        <button class ="copyText" onclick="copyText();return false;">Copy text</button>
+>>>>>>> 238c32ff9dacad7c5dba66040cefcbd81a38f921
         <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
       </div>
     </div>
   </div>
 </form>
+
 
  <script>
       function copyMessage() {
@@ -165,6 +178,13 @@ if(isset($_REQUEST['submit_btn'])){
         document.execCommand("copy");
         alert("Copied the text: " + copyText.value);
       }
+
+      function logout(){
+        var logoutUrl = <?php echo json_encode($logoutUrl);?>;
+
+        window.location = logoutUrl;
+      }
+      
 </script>
 
 </body>

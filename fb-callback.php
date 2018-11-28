@@ -108,6 +108,10 @@ $tokenMetadata->validateExpiration();
   
 $_SESSION['fb_access_token'] = (string) $accessToken;
 
+
+$logoutUrl = $helper->getLogoutUrl($accessToken, 'http://localhost/VizHub/');
+$_SESSION['logoutUrl'] = $logoutUrl;
+ 
 // getting all posts id published by user
 try {
     $posts_request = $fb->get('/me?fields=posts.limit(55){id}',$accessToken);
@@ -313,5 +317,3 @@ foreach ($tagged as $doc) {
 
   Header("Location: http://localhost/VizHub/user.php");
 ?>
-
-
