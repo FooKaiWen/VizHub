@@ -109,7 +109,7 @@ $tokenMetadata->validateExpiration();
 $_SESSION['fb_access_token'] = (string) $accessToken;
 
 
-$logoutUrl = $helper->getLogoutUrl($accessToken, 'http://localhost/vizhub/');
+$logoutUrl = $helper->getLogoutUrl($accessToken, 'http://localhost/VizHub/');
 $_SESSION['logoutUrl'] = $logoutUrl;
  
 // getting all posts id published by user
