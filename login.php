@@ -15,7 +15,6 @@
 <div class="load" >
 <img  alt="Extracting Facebook Data" src="text-animation-2.4s-793x109px.gif">
 </div>  
-<!-- <div class="lds-hourglass">Loading...</div> -->
 
 <?php
 

@@ -159,11 +159,7 @@ if(isset($_REQUEST['submit_btn'])){
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" 
         placeholder="Type Your Message Here For Like Prediction . . . . . ."><?php if(isset($_REQUEST['submit_btn'])){echo htmlspecialchars($message);}?></textarea>
       <div style ="text-align:center;">  
-<<<<<<< HEAD
         <button class ="copyText" onclick="copyMessage()">Copy Message</button>
-=======
-        <button class ="copyText" onclick="copyText();return false;">Copy text</button>
->>>>>>> 238c32ff9dacad7c5dba66040cefcbd81a38f921
         <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
       </div>
     </div>
