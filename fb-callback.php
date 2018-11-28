@@ -23,8 +23,6 @@ $tempcol = $tempdb->selectCollection('place');
 $tempcol->drop();
 $tempcol = $tempdb->selectCollection('accesstoken');
 $tempcol->drop();
-$tempcol = $tempdb->selectCollection('userprofile');
-$tempcol->drop();
 $tempcol = $tempdb->selectCollection('userdetail');
 $tempcol->drop();
 $tempdb->drop();
@@ -37,7 +35,6 @@ $locationcol = $newdb->selectCollection('location');
 $placecol = $newdb->selectCollection('place');
 
 $atcol = $newdb->selectCollection('accesstoken');
-$userprofcol = $newdb->selectCollection('userprofile');
 $userdetailcol = $newdb->selectCollection('userdetail');
 
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
@@ -147,7 +144,7 @@ foreach ($cursor as $doc) {
 }
      
 $rows = $connection->executeQuery('fb.post', $query);
-
+  
 foreach ($rows as $row) {
   if(!isset($row->message)){
   // $msg = $row->message;  
@@ -310,10 +307,26 @@ foreach ($tagged as $doc) {
     exit;
   }
 
-  $graphNode = $pictureNode->getDecodedBody();
+  
+  $graphNode = $pictureNode->getGraphNode();
+  $url= $graphNode->getField("url");
+  
+  
   $userDetail = $userDetailNode->getDecodedBody();
-  $userprofcol->insertOne($graphNode);
   $userdetailcol->insertOne($userDetail);
+
+  $user_detail = $connection->executeQuery('fb.userdetail', $query);
+  
+foreach ($user_detail as $row) {
+  if(!isset($row->url)){
+  // $msg = $row->message;  
+   $curr_id = $row->id;
+   $userdetailcol->updateOne(
+    [ 'id' => "$curr_id" ],
+    [ '$set' => [ 'url' => $url ]]);
+  }
+
+}
 
   Header("Location: http://localhost/VizHub/user.php");
 ?>

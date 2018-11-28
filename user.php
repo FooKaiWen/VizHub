@@ -9,17 +9,13 @@ $client = new MongoDB\Client;
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]);
 
-$userprofdatas = $connection->executeQuery('fb.userprofile', $query);
-
-foreach($userprofdatas as $userprofdata){
-$url = $userprofdata->data->url;
-}
 
 $userdatas = $connection->executeQuery('fb.userdetail', $query);
 
 foreach($userdatas as $userdata){
 $name = $userdata->name;
 $id = $userdata->id;
+$url =$userdata->url;
 }
 
 $newdb = $client->selectDatabase('fb');
@@ -159,7 +155,7 @@ if(isset($_REQUEST['submit_btn'])){
       <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" 
         placeholder="Type Your Message Here For Like Prediction . . . . . ."><?php if(isset($_REQUEST['submit_btn'])){echo htmlspecialchars($message);}?></textarea>
       <div style ="text-align:center;">  
-        <button class ="copyText" onclick="copyMessage()">Copy Message</button>
+        <button class ="copyText" onclick="copyMessage();return false;">Copy Message</button>
         <button class ="predict" type="submit" name="submit_btn">Predict likes</button>
       </div>
     </div>
