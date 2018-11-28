@@ -9,17 +9,13 @@ $client = new MongoDB\Client;
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]);
 
-$userprofdatas = $connection->executeQuery('fb.userprofile', $query);
-
-foreach($userprofdatas as $userprofdata){
-$url = $userprofdata->data->url;
-}
 
 $userdatas = $connection->executeQuery('fb.userdetail', $query);
 
 foreach($userdatas as $userdata){
 $name = $userdata->name;
 $id = $userdata->id;
+$url =$userdata->url;
 }
 
 $newdb = $client->selectDatabase('fb');
