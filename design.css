@@ -1,6 +1,8 @@
 img{
     float:left;
     margin:0px 50px;
+    border-radius: 25px;
+    border-width: 3px;
 }
 
 #detail-name, #detail-id{
@@ -9,7 +11,7 @@ img{
 }
 
 #detail-id{
-    padding-top: 6%;
+    padding-top: 3%;
     padding-bottom: 0%;
 }
 
