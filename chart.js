@@ -19,9 +19,7 @@ selector.addEventListener('change', function () {
         updateTotData();
 
     }
-    else if(checkbox_Fri.checked){
-        
-    }
+
 });
 
 function hideInsight() {
@@ -85,7 +83,6 @@ function showTop() {
 
 var checkbox_All = document.getElementById("togAllBtn");
 var checkbox_Tot = document.getElementById("togTotBtn");
-var checkbox_Pos = document.getElementById("togPosBtn");
 var checkbox_Type = document.getElementById("togTypBtn");
 
 checkbox_All.addEventListener('change', function () {
@@ -109,20 +106,10 @@ checkbox_Tot.addEventListener('change', function () {
     }
 });
 
-checkbox_Pos.addEventListener('change', function () {
-    if (this.checked) {
-        showInfo("This line graph shows the percentage of your friends reacted to your each post against the posted date.");
-        showInsight();
-    } else if (!this.checked) {
-        hideInfo();
-        hideInsight();
-    }
-});
-
 checkbox_Type.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you.");
-        showselect();
+        // showselect();
     } else if (!this.checked) {
         hideInfo();
         hideselect();
@@ -170,10 +157,6 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
         if (checkbox_Tot.checked) {
             totalChart.destroy();
             checkbox_Tot.checked = false;
-        }
-        if (checkbox_Pos.checked) {
-            postTypeChart.destroy();
-            checkbox_Pos.checked = false;
         }
         if (checkbox_Type.checked) {
             typeChart.destroy();
@@ -261,10 +244,6 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
             allReactChart.destroy();
             checkbox_All.checked = false;
         }
-        if (checkbox_Pos.checked) {
-            postTypeChart.destroy();
-            checkbox_Fri.checked = false;
-        }
 
         if (checkbox_Type.checked) {
             typeChart.destroy();
@@ -338,7 +317,6 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
     }
 }
 
-var postTypeChart;
 var typeChart;
 function plotType(chartid, postCount, postType){
 
@@ -351,10 +329,6 @@ function plotType(chartid, postCount, postType){
         if (checkbox_Tot.checked) {
             totalChart.destroy();
             checkbox_Tot.checked = false;
-        }
-        if (checkbox_Pos.checked) {
-            postTypeChart.destroy();
-            checkbox_Pos.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
@@ -391,104 +365,104 @@ function plotType(chartid, postCount, postType){
     }
 }
 
-var postTypeChart;
-function plotPostType(chartid, newType, newTime){
+// var postTypeChart;
+// function plotPostType(chartid, newType, newTime){
 
-    var tempTime = [];
-    var totLink18 = 0, totStatus18 = 0, totalPhoto18 = 0, totalVideo18 = 0, totalOffer18 = 0;
-    var totLink17 = 0, totStatus17 = 0, totalPhoto17 = 0, totalVideo17 = 0, totalOffer17 = 0;
+//     var tempTime = [];
+//     var totLink18 = 0, totStatus18 = 0, totalPhoto18 = 0, totalVideo18 = 0, totalOffer18 = 0;
+//     var totLink17 = 0, totStatus17 = 0, totalPhoto17 = 0, totalVideo17 = 0, totalOffer17 = 0;
 
-    for (i = 0; i < newType.length; i++) {
-        tempTime[i] = newTime[i].slice(0, 4);
+//     for (i = 0; i < newType.length; i++) {
+//         tempTime[i] = newTime[i].slice(0, 4);
 
-        if(tempTime = "2018"){
-            if(newType[i] == "link"){
-                totLink18 += 1;
-                console.log(totLink18);
-            }
-            else if(newType[i] == "status"){
-                totStatus18 += 1;
-            }
-            else if(newType[i] == "photo"){
-                totalPhoto18 += 1; 
-            }
-            else if(newType[i] == "video"){
-                totalVideo18 += 1;
-            }
-            else if(newType[i] == "offer"){
-                totalOffer18 +=1;
-            }
-        }
-        else{
-            if(newType[i] == "link"){
-                totLink17 += 1;
-            }
-            else if(newType[i] == "status"){
-                totStatus17 += 1;
-            }
-            else if(newType[i] == "photo"){
-                totalPhoto17 += 1; 
-            }
-            else if(newType[i] == "video"){
-                totalVideo17 += 1;
-            }
-            else if(newType[i] == "offer"){
-                totalOffer17 +=1;
-            }
-        }
-        if (checkbox_Type.checked) {
-            typeChart.destroy();
-            checkbox_Type.checked = false;
-        }
+//         if(tempTime = "2018"){
+//             if(newType[i] == "link"){
+//                 totLink18 += 1;
+//                 console.log(totLink18);
+//             }
+//             else if(newType[i] == "status"){
+//                 totStatus18 += 1;
+//             }
+//             else if(newType[i] == "photo"){
+//                 totalPhoto18 += 1; 
+//             }
+//             else if(newType[i] == "video"){
+//                 totalVideo18 += 1;
+//             }
+//             else if(newType[i] == "offer"){
+//                 totalOffer18 +=1;
+//             }
+//         }
+//         else{
+//             if(newType[i] == "link"){
+//                 totLink17 += 1;
+//             }
+//             else if(newType[i] == "status"){
+//                 totStatus17 += 1;
+//             }
+//             else if(newType[i] == "photo"){
+//                 totalPhoto17 += 1; 
+//             }
+//             else if(newType[i] == "video"){
+//                 totalVideo17 += 1;
+//             }
+//             else if(newType[i] == "offer"){
+//                 totalOffer17 +=1;
+//             }
+//         }
+//         if (checkbox_Type.checked) {
+//             typeChart.destroy();
+//             checkbox_Type.checked = false;
+//         }
 
         
-    }
+//     }
 
-    var ctx = document.getElementById(chartid).getContext('2d');
-        postTypeChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['link', 'status', 'photo', 'video', 'offer'],
-                datasets: [
-                    {
-                        label: '2018',
-                        data: totLink18, totStatus18, totalPhoto18, totalVideo18, totalOffer18,
-                        backgroundColor: 'rgba(107,142,35,5)',
-                        borderColor: 'rgba(85,107,47,1)',
-                        borderWidth: 3
-                    },{
-                        label: '2017',
-                        data: totLink17, totStatus17, totalPhoto17, totalVideo17, totalOffer17,
-                        backgroundColor: 'rgba(255,165,0, 0.8)',
-                        borderColor: 'rgba(255,165,0, 1)',
-                        borderWidth: 3
+//     var ctx = document.getElementById(chartid).getContext('2d');
+//         postTypeChart = new Chart(ctx, {
+//             type: 'radar',
+//             data: {
+//                 labels: ['link', 'status', 'photo', 'video', 'offer'],
+//                 datasets: [
+//                     {
+//                         label: '2018',
+//                         data: totLink18, totStatus18, totalPhoto18, totalVideo18, totalOffer18,
+//                         backgroundColor: 'rgba(107,142,35,5)',
+//                         borderColor: 'rgba(85,107,47,1)',
+//                         borderWidth: 3
+//                     },{
+//                         label: '2017',
+//                         data: totLink17, totStatus17, totalPhoto17, totalVideo17, totalOffer17,
+//                         backgroundColor: 'rgba(255,165,0, 0.8)',
+//                         borderColor: 'rgba(255,165,0, 1)',
+//                         borderWidth: 3
 
-                    }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            color: 'rgba(255, 255, 255,0.5)',
-                            lineWidth: 2
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            color: 'rgba(255, 255, 255,0.5)',
-                            lineWidth: 2
-                        },
-                        ticks: {
-                            beginAtZero: true,
-                        }
-                    }]
-                }
-            }
-        });
+//                     }]
+//             },
+//             options: {
+//                 scales: {
+//                     xAxes: [{
+//                         gridLines: {
+//                             color: 'rgba(255, 255, 255,0.5)',
+//                             lineWidth: 2
+//                         }
+//                     }],
+//                     yAxes: [{
+//                         gridLines: {
+//                             color: 'rgba(255, 255, 255,0.5)',
+//                             lineWidth: 2
+//                         },
+//                         ticks: {
+//                             beginAtZero: true,
+//                         }
+//                     }]
+//                 }
+//             }
+//         });
 
 
 
-}
+// }
 
 // var allFriendChart;
 // var friendNum;
