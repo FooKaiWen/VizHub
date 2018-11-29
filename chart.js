@@ -24,16 +24,29 @@ selector.addEventListener('change', function () {
     }
 });
 
-function hideselect() {
-    var selector = document.getElementById("selected");
+function hideInsight() {
     var info = document.getElementById("topInfo");
     info.style.display = 'none';
 }
 
-function showselect() {
-    var selector = document.getElementById("selected");
+function showInsight() {
     var info = document.getElementById("topInfo");
     info.style.display = 'inherit';
+}
+
+var triggerMessage = document.getElementById("triggerMessage");
+var chartInfo = document.getElementById("chartInfo");
+
+function showInfo(message){
+    triggerMessage.setAttribute("style","height:100px");
+    triggerMessage.style.height = '70px';
+    chartInfo.innerHTML = message;
+}
+
+function hideInfo() {
+    chartInfo.innerHTML = "";
+    triggerMessage.setAttribute("style","height:50px");
+    triggerMessage.style.height = '50px';
 }
 
 function showTop() {
@@ -49,28 +62,45 @@ function showTop() {
 var checkbox_All = document.getElementById("togAllBtn");
 var checkbox_Tot = document.getElementById("togTotBtn");
 var checkbox_Fri = document.getElementById("togFriBtn");
+var checkbox_Type = document.getElementById("togTypeBtn");
 
 checkbox_All.addEventListener('change', function () {
     if (this.checked) {
-        showselect();
+        showInfo("This line graph shows the number of Likes, Comments and Shares of each post against the posted date.");
+        showInsight();
         showTop();
     } else if (!this.checked) {
-        hideselect();
+        hideInfo();
+        hideInsight();
     }
 });
 
 checkbox_Tot.addEventListener('change', function () {
     if (this.checked) {
-        showselect();
+        showInfo("This bar graph shows the total number of Reactions such as Wow, Sad, Angry reaction of each post against the posted date.");
+        showInsight();
     } else if (!this.checked) {
-        hideselect();
+        hideInfo();
+        hideInsight();
     }
 });
 
 checkbox_Fri.addEventListener('change', function () {
     if (this.checked) {
+        showInfo("This line graph shows the percentage of your friends reacted to your each post against the posted date.");
+        showInsight();
+    } else if (!this.checked) {
+        hideInfo();
+        hideInsight();
+    }
+});
+
+checkbox_Type.addEventListener('change', function () {
+    if (this.checked) {
+        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you.");
         showselect();
     } else if (!this.checked) {
+        hideInfo();
         hideselect();
     }
 });
@@ -80,31 +110,32 @@ Chart.defaults.global.defaultFontColor = 'white';
 var allReactChart;
 function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
 
-    console.log(newLikes.length);
-    console.log(newTime[0]);
-
-    console.log(newType[0]);
+    // console.log(newLikes.length);
+    // console.log(newTime.length);
+    // console.log(newLikes.length);
+    // console.log(newType[0]);
     globalLikes = newLikes.slice(0, newLikes.length);
     globalComment = newComment.slice(0, newComment.length);
     globalShare = newShare.slice(0, newShare.length);
     globalTime = newTime.slice(0, newTime.length);
        
     var tempLikes = [], tempComment = [], tempShare = [], tempTime = [], tempTopLikes = [];
-    console.log(tempLikes.length);
+    // console.log(tempLikes.length);
     for (i = 0; i < selected_value; i++) {
         tempLikes[i] = newLikes[i];
         tempComment[i] = newComment[i];
         tempShare[i] = newShare[i];
+        // console.log(newTime[i]);
         tempTime[i] = newTime[i].slice(0, 10);
         tempTopLikes[i] = newLikes[i];
-        console.log(tempTime[i]);
+        // console.log(tempTime[i]);
     }
-    console.log(tempTime.length);
+    // console.log(tempTime.length);
     topLikes = tempTopLikes.sort((a, b) => b - a).slice(0, 5);
 
-    for( i=0; i<5; i++){
-        console.log(topLikes[i]);
-    }
+    // for( i=0; i<5; i++){
+    //     console.log(topLikes[i]);
+    // }
 
     if (checkbox_All.checked) {
 
@@ -115,6 +146,10 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
         if (checkbox_Fri.checked) {
             allFriendChart.destroy();
             checkbox_Fri.checked = false;
+        }
+        if (checkbox_Type.checked) {
+            typeChart.destroy();
+            checkbox_Type.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
@@ -155,7 +190,6 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
                             lineWidth: 2
                         }
                     }],
-
                     yAxes: [{
                         gridLines: {
                             color: 'rgba(255, 255, 255,0.5)',
@@ -168,13 +202,10 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
                 }
             }
         });
-
     }
     else if (!checkbox_All.checked) {
         allReactChart.destroy();
-
     }
-
 }
 
 var totalChart;
@@ -198,7 +229,6 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
     }
 
     if (checkbox_Tot.checked) {
-
         if (checkbox_All.checked) {
             allReactChart.destroy();
             checkbox_All.checked = false;
@@ -206,6 +236,11 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
         if (checkbox_Fri.checked) {
             allFriendChart.destroy();
             checkbox_Fri.checked = false;
+        }
+
+        if (checkbox_Type.checked) {
+            typeChart.destroy();
+            checkbox_Type.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
@@ -220,7 +255,6 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
                     borderColor: 'rgba(128,0,0, 1)',
                     data: tempLove,
                 }, {
-
                     label: 'Haha',
                     backgroundColor: 'rgba(255,165,0, 0.8)',
                     borderColor: 'rgba(255,165,0, 1)',
@@ -228,21 +262,18 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
                     fill: true,
 
                 }, {
-
                     label: 'Wow',
                     backgroundColor: 'rgba(46,139,87, 0.8)',
                     borderColor: 'rgba(46,139,87, 1)',
                     data: tempWow,
                     fill: true,
                 }, {
-
                     label: 'Sad',
                     backgroundColor: 'rgba(153,50,204, 0.8)',
                     borderColor: 'rgba(153,50,204, 0.8)',
                     data: tempSad,
                     fill: true,
                 }, {
-
                     label: 'Angry',
                     backgroundColor: 'rgba(112,128,144, 0.8)',
                     borderColor: 'rgba(112,128,144, 1.0)',
@@ -277,15 +308,65 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
     else if (!checkbox_Tot.checked) {
         totalChart.destroy();
     }
+}
 
+var typeChart;
+function plotType(chartid, postCount, postType){
+
+    if(checkbox_Type.checked){
+
+        if (checkbox_All.checked) {
+            allReactChart.destroy();
+            checkbox_All.checked = false;
+        }
+        if (checkbox_Tot.checked) {
+            totalChart.destroy();
+            checkbox_Tot.checked = false;
+        }
+        if (checkbox_Fri.checked) {
+            allFriendChart.destroy();
+            checkbox_Fri.checked = false;
+        }
+
+        var ctx = document.getElementById(chartid).getContext('2d');
+        typeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: postCount,
+                    backgroundColor: ["Red","Green","Blue","Yellow","Purple","Pink"],
+                    hoverBackgroundColor: ["Red","Green","Blue","Yellow","Purple","Pink"],
+                    hoverBorderColor: "Black",
+                }],
+            
+                labels:
+                    postType
+                
+            },
+            options:{
+                segmentShowStroke : true,
+                segmentStrokeWidth : 2,
+                cutoutPercentage : 60,
+                animationSteps : 100,
+                animationEasing : "easeOutBounce",
+                animateRotate : true,
+                animateScale : true,
+                responsive: true,
+                maintainAspectRatio: true,
+                showScale: true,
+                animateScale: true
+            }
+        });
+    } else if(!checkbox_Type.checked){
+        typeChart.destroy();
+    }
 }
 
 var allFriendChart;
 var friendNum;
 function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
     var totNum = [];
-    var checkbox = document.getElementById("togFriBtn");
-    console.log("hi");
+    // console.log("hi");
 
     var checkbox_All = document.getElementById("togAllBtn");
     var checkbox_Tot = document.getElementById("togTotBtn");
@@ -304,8 +385,8 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         // if (totNum[i] < 0.2) {
         //     totNum[i] *= -1;
         // }
-        console.log(newLikes[i]);
-        console.log(totNum[i]);
+        // console.log(newLikes[i]);
+        // console.log(totNum[i]);
     }
 
     var tempNum = [], tempTime = [];
@@ -323,6 +404,10 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         if (checkbox_Tot.checked) {
             totalChart.destroy();
             checkbox_Tot.checked = false;
+        }
+        if (checkbox_Type.checked) {
+            typeChart.destroy();
+            checkbox_Type.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
@@ -360,12 +445,9 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                 }
             }
         });
-
-
     }
     else if (!checkbox_Fri.checked) {
         allFriendChart.destroy();
-
     }
 }
 
@@ -423,7 +505,6 @@ function removeData(chart) {
     console.log(labels.length);
     chart.data.datasets.forEach((dataset) => {
         console.log(dataset.data.pop());
-        
     });
     console.log(chart.data.datasets);
     chart.update();
