@@ -26,13 +26,12 @@ selector.addEventListener('change', function () {
 
 function hideInsight() {
     var info = document.getElementById("topInfo");
-    console.log("hi");
     info.style.display = 'none';
 }
 
 function showInsight() {
     var info = document.getElementById("topInfo");
-    info.style.display = 'inherit';console.log("hi");
+    info.style.display = 'inherit';
 }
 
 var triggerMessage = document.getElementById("triggerMessage");
@@ -62,12 +61,8 @@ function showTop() {
 
 var checkbox_All = document.getElementById("togAllBtn");
 var checkbox_Tot = document.getElementById("togTotBtn");
-var checkbox_Fri = document.getElementById("togFriBtn");
-<<<<<<< HEAD
-var checkbox_Typ = document.getElementById("togTypBtn");
-=======
-var checkbox_Type = document.getElementById("togTypeBtn");
->>>>>>> 4725aca6256f9ad79d64bb898d65c3117e6bb3cc
+var checkbox_Pos = document.getElementById("togPosBtn");
+var checkbox_Type = document.getElementById("togTypBtn");
 
 checkbox_All.addEventListener('change', function () {
     if (this.checked) {
@@ -90,7 +85,7 @@ checkbox_Tot.addEventListener('change', function () {
     }
 });
 
-checkbox_Typ.addEventListener('change', function () {
+checkbox_Pos.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This line graph shows the percentage of your friends reacted to your each post against the posted date.");
         showInsight();
@@ -115,7 +110,7 @@ checkbox_Type.addEventListener('change', function () {
 Chart.defaults.global.defaultFontColor = 'white';
 
 var allReactChart;
-function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
+function plotAll(chartid, newLikes, newComment, newShare, newTime) {
 
     // console.log(newLikes.length);
     // console.log(newTime.length);
@@ -137,15 +132,9 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
         // console.log(newTime[i]);
         tempTime[i] = newTime[i].slice(0, 10);
         tempTopLikes[i] = newLikes[i];
-<<<<<<< HEAD
         averageLikes += newLikes[i];
     }
 
-=======
-        // console.log(tempTime[i]);
-    }
-    // console.log(tempTime.length);
->>>>>>> 4725aca6256f9ad79d64bb898d65c3117e6bb3cc
     topLikes = tempTopLikes.sort((a, b) => b - a).slice(0, 5);
 
     // for( i=0; i<5; i++){
@@ -158,9 +147,9 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
             totalChart.destroy();
             checkbox_Tot.checked = false;
         }
-        if (checkbox_Typ.checked) {
-            allFriendChart.destroy();
-            checkbox_Fri.checked = false;
+        if (checkbox_Pos.checked) {
+            postTypeChart.destroy();
+            checkbox_Pos.checked = false;
         }
         if (checkbox_Type.checked) {
             typeChart.destroy();
@@ -248,8 +237,8 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
             allReactChart.destroy();
             checkbox_All.checked = false;
         }
-        if (checkbox_Fri.checked) {
-            allFriendChart.destroy();
+        if (checkbox_Pos.checked) {
+            postTypeChart.destroy();
             checkbox_Fri.checked = false;
         }
 
@@ -325,6 +314,7 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
     }
 }
 
+var postTypeChart;
 var typeChart;
 function plotType(chartid, postCount, postType){
 
@@ -338,9 +328,9 @@ function plotType(chartid, postCount, postType){
             totalChart.destroy();
             checkbox_Tot.checked = false;
         }
-        if (checkbox_Fri.checked) {
-            allFriendChart.destroy();
-            checkbox_Fri.checked = false;
+        if (checkbox_Pos.checked) {
+            postTypeChart.destroy();
+            checkbox_Pos.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
@@ -377,47 +367,12 @@ function plotType(chartid, postCount, postType){
     }
 }
 
-<<<<<<< HEAD
-var typeChart;
-function plotType(chartid, newType, newTime){
+var postTypeChart;
+function plotPostType(chartid, newType, newTime){
 
     var tempTime = [];
     var totLink18 = 0, totStatus18 = 0, totalPhoto18 = 0, totalVideo18 = 0, totalOffer18 = 0;
     var totLink17 = 0, totStatus17 = 0, totalPhoto17 = 0, totalVideo17 = 0, totalOffer17 = 0;
-=======
-var allFriendChart;
-var friendNum;
-function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngry, newTime, newFriend) {
-    var totNum = [];
-    // console.log("hi");
-
-    var checkbox_All = document.getElementById("togAllBtn");
-    var checkbox_Tot = document.getElementById("togTotBtn");
-    var checkbox_Fri = document.getElementById("togFriBtn");
-
-    for (var i = 0; i < selected_value; i++) {
-        totNum[i] = 0;
-        totNum[i] += newLikes[i];
-        totNum[i] += newLove[i];
-        totNum[i] += newHaha[i];
-        totNum[i] += newWow[i];
-        totNum[i] += newSad[i];
-        totNum[i] += newAngry[i];
-        totNum[i] /= newFriend; //
-
-        // if (totNum[i] < 0.2) {
-        //     totNum[i] *= -1;
-        // }
-        // console.log(newLikes[i]);
-        // console.log(totNum[i]);
-    }
-
-    var tempNum = [], tempTime = [];
-    for (i = 0; i < selected_value; i++) {
-        tempNum[i] = totNum[i];
-        tempTime[i] = newTime[i];
-    }
->>>>>>> 4725aca6256f9ad79d64bb898d65c3117e6bb3cc
 
     for (i = 0; i < newType.length; i++) {
         tempTime[i] = newTime[i].slice(0, 4);
@@ -466,7 +421,7 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
     }
 
     var ctx = document.getElementById(chartid).getContext('2d');
-        typeChart = new Chart(ctx, {
+        postTypeChart = new Chart(ctx, {
             type: 'radar',
             data: {
                 labels: ['link', 'status', 'photo', 'video', 'offer'],
@@ -506,16 +461,9 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
                 }
             }
         });
-<<<<<<< HEAD
 
 
 
-=======
-    }
-    else if (!checkbox_Fri.checked) {
-        allFriendChart.destroy();
-    }
->>>>>>> 4725aca6256f9ad79d64bb898d65c3117e6bb3cc
 }
 
 // var allFriendChart;
