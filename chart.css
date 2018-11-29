@@ -115,17 +115,17 @@ input:checked + .slider .off{
     border-radius: 50%;
 }
 
-.tabcontent {
+.tabheader {
     background: rgb(173, 97, 243);
     padding: 10px 32px;
     text-align: center;
 }
 
-.tabcontent:active{
+.tabheader:active{
   background-color: #ccc;
 }
 
-.tabcontent:hover{
+.tabheader:hover{
   background-color: #440286; 
 }
 

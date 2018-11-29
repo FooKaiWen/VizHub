@@ -32,6 +32,30 @@ function hideInsight() {
 function showInsight() {
     var info = document.getElementById("topInfo");
     info.style.display = 'inherit';
+    var tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+}
+
+function displayInsight(event, order){
+    var i, tabcontent, tabheader;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tabheader = document.getElementsByClassName("tabheader");
+    for (i = 0; i < tabheader.length; i++) {
+        tabheader[i].className = tabheader[i].className.replace("active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(order).style.display = "block";
+    event.currentTarget.className += " active";
 }
 
 var triggerMessage = document.getElementById("triggerMessage");

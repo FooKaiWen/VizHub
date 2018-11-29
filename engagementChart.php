@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>VizHub</title>
+  <title>Engagement</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="chart.css">
@@ -192,15 +192,53 @@ echo '</select> ';
 <p>We are still improving our visualization functionality!</p>
 
 
+<label for="informMessage" class="title"><i>Insight</i></label>
 <div class ="informMessage"  >
 <div id ="topInfo" style = "display:none;">
-<button class="tabcontent" >1st</button>
-<button class="tabcontent">2nd</button>
-<button class="tabcontent">3rd</button>
-<button class="tabcontent">4th</button>
-<button class="tabcontent">5th</button>
+<button class="tabheader" onclick="displayInsight(event,'first')">1st</button>
+<button class="tabheader" onclick="displayInsight(event,'second')">2nd</button>
+<button class="tabheader" onclick="displayInsight(event,'third')">3rd</button>
+<button class="tabheader" onclick="displayInsight(event,'fourth')">4th</button>
+<button class="tabheader" onclick="displayInsight(event,'fifth')">5th</button>
+
+<div id="first" class="tabcontent">
+    <p>Message: Eric Tan is very handsome.</p>
+    <p>Type: Photo</p>
+    <p>Created Time: 2018-11-28</p>
+    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
+</div>
+
+<div id="second" class="tabcontent">
+    <p>Message: Help me!.</p>
+    <p>Type: Status</p>
+    <p>Created Time: 2018-11-28</p>
+    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
+</div>
+
+<div id="third" class="tabcontent">
+    <p>Message: Nasi Lemak is nice.</p>
+    <p>Type: Photo</p>
+    <p>Created Time: 2018-11-28</p>
+    <p>Please edit and publish the post to attract more engagement in Instagram since it's not eligible in current format!</p>
+</div>
+
+<div id="fourth" class="tabcontent">
+    <p>Message: Eric Tan is very handsome.</p>
+    <p>Type: Photo</p>
+    <p>Created Time: 2018-11-28</p>
+    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
+</div>
+
+<div id="fifth" class="tabcontent">
+    <p>Message: Eric Tan is very handsome.</p>
+    <p>Type: Photo</p>
+    <p>Created Time: 2018-11-28</p>
+    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
+</div>
 
 </div>
+
+
 
 
 </div>
