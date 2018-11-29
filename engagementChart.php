@@ -136,16 +136,6 @@ foreach($user_details as $row){
     </div>
 </label>
 
-<!-- <div style="width:25%;">
-    <select id ="topReactId" name="topReactId" 
-    onchange="plotTop('chart','<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>')">
-    <option value="">Select One...</option>
-    <option value="5">5</option>
-    <option value="10">10</option>
-    <option value="15">15</option>
-    </select>
-</div> -->
-
 <label class="switch">
     <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>)'> 
     <div class="slider round">
@@ -154,19 +144,12 @@ foreach($user_details as $row){
 </label>
 
 <!-- <label class="switch">
-    <input type="checkbox" id="togFriBtn" onclick='plotFriend("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>,<?php echo json_encode($num_friends)?>)'>
-    <div class="slider round">
-        <span class="on">Friend</span><span class="off">Friend</span>
-    </div>
-</label> -->
-
-<label class="switch">
     <input type="checkbox" id="togPosBtn" onclick='plotPostType("chart",<?php echo json_encode($typearray) ?>,<?php echo json_encode($timearray) ?>)'>
 
     <div class="slider round">
         <span class="on">Type of Post</span><span class="off">Type of Post</span>
     </div>
-</label>
+</label> -->
 
 <label class="switch">
     <input type="checkbox" id="togTypBtn" onclick='plotType("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>
