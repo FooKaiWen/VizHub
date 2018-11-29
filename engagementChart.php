@@ -135,11 +135,19 @@ foreach($user_details as $row){
     </div>
 </label>
 
-<label class="switch">
+<!-- <label class="switch">
     <input type="checkbox" id="togFriBtn" onclick='plotFriend("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>,<?php echo json_encode($num_friends)?>)'>
 
     <div class="slider round">
         <span class="on">Friend</span><span class="off">Friend</span>
+    </div>
+</label> -->
+
+<label class="switch">
+    <input type="checkbox" id="togTypBtn" onclick='plotType("chart",<?php echo json_encode($typearray) ?>,<?php echo json_encode($timearray) ?>)'>
+
+    <div class="slider round">
+        <span class="on">Type of Post</span><span class="off">Type of Post</span>
     </div>
 </label>
 
@@ -161,14 +169,17 @@ echo '</select>';
 <p>We are still improving our visualization functionality!</p>
 
 
-<div class ="informMessage">
-<div id ="topInfo">
-<button class="tabcontent">1st</button>
+<div class ="informMessage"  >
+<div id ="topInfo" style = "display:none;">
+<button class="tabcontent" >1st</button>
 <button class="tabcontent">2nd</button>
 <button class="tabcontent">3rd</button>
 <button class="tabcontent">4th</button>
 <button class="tabcontent">5th</button>
+
 </div>
+
+
 </div>
 
 
