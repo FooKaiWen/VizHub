@@ -12,7 +12,8 @@
   
 </head>
 <body>
-
+    <h3 align="center" style ="margin-top:10px;">Engagement Visualization</h3>
+    <hr style="border-width:7px; border-color:black;">
 <?php
 // session_start();
 // $likearray = $_SESSION['likes'];
@@ -105,7 +106,6 @@ foreach($user_details as $row){
 
 ?>
 
-<h3>Toggle for graph!</h3>
 
 <label for="triggerMessage" class="title"><i>Info</i></label>
 <div class="triggerMessage" id="triggerMessage" >**Try CLICK on the Parameter !!
@@ -117,7 +117,9 @@ foreach($user_details as $row){
     <canvas id="chart" float="right" width="300" height="150" ></canvas>
 </div>
 
-<div style="margin-left :15px">
+<h5 style="margin-left:15px;width:25%;">Toggle for graph!</h5>
+
+<div class="numselect">
     <select id="selected">
         <option value="10">10</option>
         <option value="20">20</option>
@@ -129,9 +131,8 @@ foreach($user_details as $row){
 
 <label class="switch">
     <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>, <?php echo json_encode($typearray)?>)'>
-
     <div class="slider round">
-        <span class="on">Reaction</span><span class="off">Reaction</span>
+        <span class="on">Reach</span><span class="off">Reach</span>
     </div>
 </label>
 
