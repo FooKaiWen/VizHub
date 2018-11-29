@@ -32,23 +32,28 @@ import pandas, numpy, textblob, string
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
+from sklearn.externals import joblib
 
 def train_model(classifier, feature_vector_train, label, feature_vector_valid):
     # fit the training dataset on the classifier
     classifier.fit(feature_vector_train, label)
+
+    # joblib.dump(classifier,'model.joblib')
+
     # predict the labels on validation dataset
     predictions = classifier.predict(feature_vector_valid)
     # return predictions
     return metrics.classification_report(valid_y, predictions)
 
-dataset = pandas.read_csv('250_5000.csv',encoding='ISO-8859-1')
+dataset = pandas.read_csv('dataset.csv',encoding='ISO-8859-1')
 oriset = pandas.read_csv('250_5000.csv',encoding='ISO-8859-1')
 
-labels = dataset['likes']
-datacolumn = dataset['orimessage']
+labels = dataset['two_thousand_likes']
+datacolumn = dataset['message']
 
 train_x, valid_x, train_y, valid_y = model_selection.train_test_split(datacolumn, labels, random_state=42)
-
+print(train_x.shape)
+print(valid_x.shape)
 count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}',max_features=1000)
 count_vect.fit(datacolumn)
 
@@ -64,11 +69,18 @@ nb = naive_bayes.MultinomialNB() #suitable for word count.
 lr = linear_model.LogisticRegression(random_state=42, solver='lbfgs',max_iter=300)
 rf = ensemble.RandomForestClassifier(random_state=42)
 svc = svm.SVC(kernel='linear',random_state=42)
+gb = ensemble.GradientBoostingClassifier(random_state=42)
+ab = ensemble.AdaBoostClassifier(random_state=42)
 
 # Naive Bayes on Count Vectors
 accuracy = train_model(nb, xtrain_count, train_y, xvalid_count)
 print("NB, Count Vectors: \n", accuracy)
 
+accuracy = train_model(gb, xtrain_count, train_y, xvalid_count)
+print("GB, Count Vectors: \n", accuracy)
+
+accuracy = train_model(ab, xtrain_count, train_y, xvalid_count)
+print("AB, Count Vectors: \n", accuracy)
 
 # Linear Classifier on Count Vectors
 accuracy = train_model(lr, xtrain_count, train_y, xvalid_count)
@@ -86,12 +98,20 @@ print("SVM, Count Vectors: ", accuracy)
 tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=1000)
 tfidf_vect.fit(datacolumn)
 
+# joblib.dump(tfidf_vect.vocabulary_,'feature.joblib')
+
 xtrain_tfidf =  tfidf_vect.transform(train_x)
 xvalid_tfidf =  tfidf_vect.transform(valid_x)
 
 # Naive Bayes on Word Level TF IDF Vectors
 accuracy = train_model(nb, xtrain_tfidf, train_y, xvalid_tfidf)
 print("NB, WordLevel TF-IDF: ", accuracy)
+
+accuracy = train_model(ab, xtrain_tfidf, train_y, xvalid_tfidf)
+print("AB, WordLevel TF-IDF: ", accuracy)
+
+accuracy = train_model(nb, xtrain_tfidf, train_y, xvalid_tfidf)
+print("GB, WordLevel TF-IDF: ", accuracy)
 
 # Linear Classifier on Word Level TF IDF Vectors
 accuracy = train_model(lr, xtrain_tfidf, train_y, xvalid_tfidf)
@@ -116,6 +136,12 @@ xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
 accuracy = train_model(nb, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
 print("NB, N-Gram Vectors: ", accuracy)
 
+accuracy = train_model(ab, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
+print("AB, N-Gram Vectors: ", accuracy)
+
+accuracy = train_model(gb, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
+print("GB, N-Gram Vectors: ", accuracy)
+
 # Linear Classifier on Ngram Level TF IDF Vectors
 accuracy = train_model(lr, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
 print("LR, N-Gram Vectors: ", accuracy)
@@ -138,6 +164,9 @@ xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x)
 # Naive Bayes on Character Level TF IDF Vectors
 accuracy = train_model(nb, xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
 print("NB, CharLevel Vectors: ", accuracy)
+
+accuracy = train_model(gb, xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
+print("GB, CharLevel Vectors: ", accuracy)
 
 # Linear Classifier on Character Level TF IDF Vectors
 accuracy = train_model(lr, xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)

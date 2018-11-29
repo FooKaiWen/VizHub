@@ -38,7 +38,7 @@ $client = new MongoDB\Client;
 $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]);
 
-$place_id = $connection->executeQuery('fb.place', $query);
+$place_id = $connection->executeQuery('fb.location_detail', $query);
 $id = array();
 
 foreach($place_id as $row){
@@ -49,7 +49,7 @@ $vals = array_count_values($id);
 $most = max($vals);
 $least = min($vals);
 
-$tagplaces = $connection->executeQuery('fb.place', $query);
+$tagplaces = $connection->executeQuery('fb.location_detail', $query);
 $big = array();
 
 foreach($tagplaces as $tagplace){

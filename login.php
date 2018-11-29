@@ -12,7 +12,9 @@
 </head>
 <body>
   
-<div class="lds-hourglass">Loading...</div>
+<div class="load" >
+<img  alt="Extracting Facebook Data" src="text-animation-2.4s-793x109px.gif">
+</div>  
 
 <?php
 
@@ -36,7 +38,6 @@ $loginUrl = $helper->getLoginUrl('https://localhost/VizHub/fb-callback.php', $pe
     echo "window.location='$loginUrl';";
     echo "</script>";
   }
-
 ?>
 
 </body>
