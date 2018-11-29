@@ -39,8 +39,8 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]); 
 
 $fb = new Facebook\Facebook([
-  'app_id' => '267157010556839', // Replace {app-id} with your app id
-  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
+  'app_id' => '590344301384464', // Replace {app-id} with your app id
+  'app_secret' => '0e62c56caa857d32e479b8703a7501c4',
   'default_graph_version' => 'v3.1',
 
     ]);
@@ -109,7 +109,7 @@ $_SESSION['logoutUrl'] = $logoutUrl;
  
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(55){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(70){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -127,7 +127,7 @@ $cursor = $usercol->distinct("posts.id");
 
 foreach ($cursor as $doc) {
   try {
-    $reactions_request = $fb->get("/$doc?fields=type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
+    $reactions_request = $fb->get("/$doc?fields=status_type,is_instagram_eligible,type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
