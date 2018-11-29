@@ -105,3 +105,10 @@
   
   .slider.round:before {
     border-radius: 50%;}
+
+    .tabcontent {
+      color: white;
+      display: none;
+      padding: 50px;
+      text-align: center;
+  }

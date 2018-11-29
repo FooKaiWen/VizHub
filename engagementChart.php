@@ -39,6 +39,7 @@ $likedata = $connection->executeQuery('fb.post', $query);
 
 $likearray = array();
 $timearray = array();
+$typearray = array();
 $temporary = 0;
 
 foreach ($likedata as $row) {   
@@ -52,6 +53,7 @@ foreach ($likedata as $row) {
     // print($highestLikes);
     // print(" ");
     $timearray [] = $row->created_time;
+    $typearray [] = $row->type;
 }
 
 $query = new MongoDB\Driver\Query([]);
@@ -92,7 +94,7 @@ foreach($user_details as $row){
 ?>
 
 <h3>Toggle for graph!</h3>
-<div class="triggerMessage" >Try CLICK on Parameter: Likes, Love, Haha, Wow, Sad, Angry.</div> 
+<div class="triggerMessage" >**Try CLICK on the Parameter !!</div> 
 
 <div class ="plot">
     <canvas id="chart" float="right" width="300" height="150" ></canvas>
@@ -109,7 +111,7 @@ foreach($user_details as $row){
 </div>
 
 <label class="switch">
-    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
+    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>, <?php echo json_encode($typearray)?>)'>
 
     <div class="slider round">
         <span class="on">Reaction</span><span class="off">Reaction</span>
@@ -161,11 +163,11 @@ echo '</select>';
 
 <div class ="informMessage">
 <div id ="topInfo">
-<h2 id="top1"></h2>
-<h3 id="top2"></h3>
-<h4 id="top3"></h4>
-<h5 id="top4"></h5>
-<h6 id="top5"></h6>
+<button class="tabcontent">1st</button>
+<button class="tabcontent">2nd</button>
+<button class="tabcontent">3rd</button>
+<button class="tabcontent">4th</button>
+<button class="tabcontent">5th</button>
 </div>
 </div>
 

@@ -1,10 +1,26 @@
 var selected_value = 50;
 var selector = document.getElementById("selected");
-var topLikes;
+var topLikes = [];
+
+var globalLikes = [], globalComment = [], globalShare = [], globalTime = [];
+var globalLove = [], globalHaha = [], globalWow = [], globalSad = [], globalAngry = [];
 
 selector.addEventListener('change', function () {
     if (selected_value != selector[selector.selectedIndex].value) {
         selected_value = selector[selector.selectedIndex].value
+    }
+
+    if(checkbox_All.checked){
+        
+        updateAllData();
+        showTop();    
+    }
+    else if(checkbox_Tot.checked){
+        updateTotData();
+
+    }
+    else if(checkbox_Fri.checked){
+        
     }
 });
 
@@ -22,13 +38,12 @@ function showselect() {
 
 function showTop() {
 
-    document.getElementById("top1").innerHTML = "The 1st highest number of likes: " + topLikes[0];
-    document.getElementById("top2").innerHTML = "The 2nd highest number of likes: " + topLikes[1];
-    document.getElementById("top3").innerHTML = "The 3rd highest number of likes: " + topLikes[2];
-    document.getElementById("top4").innerHTML = "The 4th highest number of likes: " + topLikes[3];
-    document.getElementById("top5").innerHTML = "The 5th highest number of likes: " + topLikes[4];
-
-
+    // document.getElementById("top1").innerHTML = "The 1st highest number of likes: " + topLikes[0];
+    // document.getElementById("top2").innerHTML = "The 2nd highest number of likes: " + topLikes[1];
+    // document.getElementById("top3").innerHTML = "The 3rd highest number of likes: " + topLikes[2];
+    // document.getElementById("top4").innerHTML = "The 4th highest number of likes: " + topLikes[3];
+    // document.getElementById("top5").innerHTML = "The 5th highest number of likes: " + topLikes[4];
+    
 }
 
 var checkbox_All = document.getElementById("togAllBtn");
@@ -63,26 +78,33 @@ checkbox_Fri.addEventListener('change', function () {
 Chart.defaults.global.defaultFontColor = 'white';
 
 var allReactChart;
-function plotAll(chartid, newLikes, newComment, newShare, newTime) {
-    var checkbox = document.getElementById("togAllBtn")
-    console.log(newComment[2]);
+function plotAll(chartid, newLikes, newComment, newShare, newTime, newType) {
 
+    console.log(newLikes.length);
+    console.log(newTime[0]);
+
+    console.log(newType[0]);
+    globalLikes = newLikes.slice(0, newLikes.length);
+    globalComment = newComment.slice(0, newComment.length);
+    globalShare = newShare.slice(0, newShare.length);
+    globalTime = newTime.slice(0, newTime.length);
+       
     var tempLikes = [], tempComment = [], tempShare = [], tempTime = [], tempTopLikes = [];
+    console.log(tempLikes.length);
     for (i = 0; i < selected_value; i++) {
         tempLikes[i] = newLikes[i];
         tempComment[i] = newComment[i];
         tempShare[i] = newShare[i];
-        tempTime[i] = newTime[i];
+        tempTime[i] = newTime[i].slice(0, 10);
         tempTopLikes[i] = newLikes[i];
+        console.log(tempTime[i]);
     }
-
+    console.log(tempTime.length);
     topLikes = tempTopLikes.sort((a, b) => b - a).slice(0, 5);
-    console.log(topLikes);
-    console.log(newLikes);
 
-    var checkbox_All = document.getElementById("togAllBtn");
-    var checkbox_Tot = document.getElementById("togTotBtn");
-    var checkbox_Fri = document.getElementById("togFriBtn");
+    for( i=0; i<5; i++){
+        console.log(topLikes[i]);
+    }
 
     if (checkbox_All.checked) {
 
@@ -148,7 +170,7 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
         });
 
     }
-    else if (!checkbox.checked) {
+    else if (!checkbox_All.checked) {
         allReactChart.destroy();
 
     }
@@ -158,6 +180,13 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
 var totalChart;
 function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
 
+    globalLove = newLove.slice(0, newLove.length);
+    globalHaha = newHaha.slice(0, newHaha.length);
+    globalWow = newWow.slice(0, newWow.length);
+    globalSad = newSad.slice(0, newSad.length);
+    globalAngry = newAngry.slice(0, newAngry.length);
+    globalTime = newTime.slice(0, newTime.length);
+
     var tempLove = [], tempHaha = [], tempWow = [], tempSad = [], tempAngry = [], tempTime = [];
     for (i = 0; i < selected_value; i++) {
         tempLove[i] = newLove[i];
@@ -165,7 +194,7 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
         tempWow[i] = newWow[i];
         tempSad[i] = newSad[i];
         tempAngry[i] = newAngry[i];
-        tempTime[i] = newTime[i];
+        tempTime[i] = newTime[i].slice(0, 10);
     }
 
     if (checkbox_Tot.checked) {
@@ -338,6 +367,66 @@ function plotFriend(chartid, newLikes, newLove, newHaha, newWow, newSad, newAngr
         allFriendChart.destroy();
 
     }
+}
+
+function updateAllData() {
+
+    var updLikes = [], updComment = [], updShare = [], updTime = [], updTopLikes = [];
+    for (i = 0; i < selected_value; i++) {
+        updLikes[i] = globalLikes[i];
+        updComment[i] = globalComment[i];
+        updShare[i] = globalShare[i];
+        updTime[i] = globalTime[i].slice(0, 10);
+        updTopLikes[i] = globalLikes[i];
+        
+    }
+    topLikes = updTopLikes.sort((a, b) => b - a).slice(0, 5);
+
+
+    allReactChart.data.labels = updTime;
+    allReactChart.data.datasets[0].data = updLikes;
+    allReactChart.data.datasets[1].data = updComment;
+    allReactChart.data.datasets[2].data = updShare;
+    allReactChart.update();
+    console.log(topLikes.length + "succeeded");
+    showTop();
+}
+
+function updateTotData(){
+
+    console.log("here");
+
+    var updLove = [], updHaha = [], updWow = [], updSad = [], updAngry = [], updTime = [];
+    for (i = 0; i < selected_value; i++) {
+        updLove[i] = globalLove[i];
+        updHaha[i] = globalHaha[i];
+        updWow[i] = globalWow[i];
+        updSad[i] = globalSad[i];
+        updAngry[i] = globalAngry[i];     
+        updTime[i] = globalTime[i].slice(0, 10);  
+    }
+
+    totalChart.data.labels = updTime;
+    totalChart.data.datasets[0].data = updLove;
+    totalChart.data.datasets[1].data = updHaha;
+    totalChart.data.datasets[2].data = updWow;
+    totalChart.data.datasets[3].data = updSad;
+    totalChart.data.datasets[4].data = updAngry;
+    totalChart.update();
+
+
+}
+
+function removeData(chart) {
+
+    chart.data.labels.pop();
+    console.log(labels.length);
+    chart.data.datasets.forEach((dataset) => {
+        console.log(dataset.data.pop());
+        
+    });
+    console.log(chart.data.datasets);
+    chart.update();
 }
 
 function friendNumber() {
