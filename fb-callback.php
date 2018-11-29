@@ -162,7 +162,7 @@ foreach ($rows as $row) {
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(30)',$accessToken);
+  $location_request = $fb->get('/me?fields=tagged_places.limit(30){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
