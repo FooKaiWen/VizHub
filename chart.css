@@ -6,9 +6,9 @@
     margin: 20px;
   }
   
-  .switch input {display:none;}
+.switch input {display:none;}
 
-  .triggerMessage{
+.triggerMessage{
     height: 50px; 
     width: 970px;
     float: right;
@@ -16,9 +16,9 @@
     padding: 5px;
     border:5px solid royalblue;
 
-  }
+}
 
-  .informMessage{
+.informMessage{
     height: 200px; 
     width: 970px;
     float: right;
@@ -26,16 +26,24 @@
     padding: 5px;
     border:5px solid firebrick;
 
-  }
+}
 
-  .plot{
+.title{
+  width: 970px;
+  height: 20px;
+  float: right;
+  padding: 5px;
+  font-size: 17px;
+}
+
+.plot{
     height: 500px; 
-    width: 1000px ;
+    width: 980px;
     background-color: rgba(169,169,169,0.5);
     float:right;
-  }
+}
   
-  .slider {
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -45,9 +53,9 @@
     background-color: #ca2222;
     -webkit-transition: .4s;
     transition: .4s;
-  }
+}
   
-  .slider:before {
+.slider:before {
     position: absolute;
     content: "";
     height: 26px;
@@ -57,30 +65,28 @@
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-  }
+}
   
-  input:checked + .slider {
+input:checked + .slider {
     background-color: #2ab934;
-  }
+}
   
-  input:focus + .slider {
+input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
-  }
+}
   
-  input:checked + .slider:before {
+input:checked + .slider:before {
     -webkit-transform: translateX(55px);
     -ms-transform: translateX(55px);
     transform: translateX(85px);
-  }
+}
   
   /*------ ADDED CSS ---------*/
-  .on
-  {
+.on{
     display: none;
-  }
+}
   
-  .on, .off
-  {
+.on, .off{
     color: white;
     position: absolute;
     transform: translate(-50%,-50%);
@@ -88,27 +94,72 @@
     left: 50%;
     font-size: 13px;
     font-family: Verdana, sans-serif;
-  }
+}
   
-  input:checked+ .slider .on
-  {display: block;}
+input:checked+ .slider .on{
+  display: block;
+}
   
-  input:checked + .slider .off
-  {display: none;}
+input:checked + .slider .off{
+  display: none;
+}
   
   /*--------- END --------*/
   
   /* Rounded sliders */
-  .slider.round {
+.slider.round {
     border-radius: 34px;
-  }
+}
   
-  .slider.round:before {
-    border-radius: 50%;}
+.slider.round:before {
+    border-radius: 50%;
+}
 
-    .tabcontent {
-      color: white;
-      display: none;
-      padding: 50px;
-      text-align: center;
-  }
+.tabcontent {
+    background: rgb(173, 97, 243);
+    padding: 10px 32px;
+    text-align: center;
+}
+
+.tabcontent:active{
+  background-color: #ccc;
+}
+
+.tabcontent:hover{
+  background-color: #440286; 
+}
+
+.numselect {
+  margin-top: 10px;
+  margin-left: 20px;
+  background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
+  height: 29px;
+  overflow: hidden;
+  width: 120px;
+  background-color: #3b8ec2;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.numselect select {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  height: 29px;
+  padding: 5px;
+  width: 148px;
+} 
+
+.numselect.slate {
+  background: url(http://i62.tinypic.com/2e3ybe1.jpg) no-repeat right center;
+  height: 34px;
+  width: 120px;
+}
+
+.numselect.slate select {
+  border: 1px solid #ccc;
+  font-size: 16px;
+  height: 34px;
+  width: 148px;
+}
