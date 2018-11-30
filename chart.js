@@ -1,30 +1,29 @@
-var selected_value = 50;
+var selectedValue = 50;
 var selector = document.getElementById("selected");
 var info = document.getElementById("topInfo");
-var topLikes = [], averageLikes;
+var topLikes, averageLikes;
 var friendNum = 1;
-var highestReaction = 0;
-var highestReactionType;
+var highestCount = 0;
+var highestCountType;
 var globalLikes = [], globalComment = [], globalShare = [], globalTime = [];
 var globalLove = [], globalHaha = [], globalWow = [], globalSad = [], globalAngry = [];
 
-var allReactChart;
-var totalChart;
+var reactChart;
+var reachChart;
 
 selector.addEventListener('change', function () {
-    if (selected_value != selector[selector.selectedIndex].value) {
-        selected_value = selector[selector.selectedIndex].value
+    if (selectedValue != selector[selector.selectedIndex].value) {
+        selectedValue = selector[selector.selectedIndex].value
     }
 
-    if(checkbox_All.checked){
-        allReactChart.destroy();
-        plotAll("chart", globalLikes, globalComment, globalShare, globalTime)
-        showTop();
+    if(checkBoxReach.checked){
+        reactChart.destroy();
+        plotReachChart("chart", globalLikes, globalComment, globalShare, globalTime);
         showLikeInsight();    
     }
-    else if(checkbox_Tot.checked){
-        totalChart.destroy();
-        plotTotal("chart",globalLove,globalHaha,globalWow,globalSad,globalAngry,globalTime);
+    else if(checkBoxReact.checked){
+        reachChart.destroy();
+        plotReactChart("chart",globalLove,globalHaha,globalWow,globalSad,globalAngry,globalTime);
         showReactionInsight();
     }
 
@@ -54,28 +53,31 @@ function hideInfo() {
     triggerMessage.style.height = '50px';
 }
 
-var checkbox_All = document.getElementById("togAllBtn");
-var checkbox_Tot = document.getElementById("togTotBtn");
-var checkbox_Type = document.getElementById("togTypBtn");
+var checkBoxReach = document.getElementById("togAllBtn");
+var checkBoxReact = document.getElementById("togTotBtn");
+var checkBoxType = document.getElementById("togTypBtn");
 
 function showLikeInsight(){
-    var interactionRate = ((topLikes[0]/friendNum)*100).toFixed(0);
+    var interactionRate = ((topLikes/friendNum)*100).toFixed(2);
     if(interactionRate > 20){
-        info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
     } else {
-        info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
     }
 }
 
 function showReactionInsight(){
-    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestReactionType + " reaction! The number goes as high as " + highestReaction + "!";
+    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestCountType + " reaction! The number goes as high as " + highestCount + "!";
 }
 
-checkbox_All.addEventListener('change', function () {
+function showPostTypeInsight(){
+    info.innerHTML = "As an overall, most of your posts are " + highestCountType + " type and it successfully attracted as much as " + highestCount + " likes!";
+}
+
+checkBoxReach.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This line graph shows the number of Likes, Comments and Shares of each post against the posted date.");
         showInsight();
-        showTop();
         showLikeInsight();
     } else if (!this.checked) {
         hideInfo();
@@ -83,7 +85,7 @@ checkbox_All.addEventListener('change', function () {
     }
 });
 
-checkbox_Tot.addEventListener('change', function () {
+checkBoxReact.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This bar graph shows the total number of Reactions such as Wow, Sad, Angry reaction of each post against the posted date.");
         showInsight();
@@ -94,57 +96,53 @@ checkbox_Tot.addEventListener('change', function () {
     }
 });
 
-checkbox_Type.addEventListener('change', function () {
+checkBoxType.addEventListener('change', function () {
     if (this.checked) {
-        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you.");
-        // showselect();
+        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you. *Changing the number of post WILL NOT change this chart as the result is accumulated from your past posts.*");
+        showInsight();
+        showPostTypeInsight();
     } else if (!this.checked) {
         hideInfo();
-        hideselect();
+        hideInsight();
     }
 });
 
-
-
 Chart.defaults.global.defaultFontColor = 'white';
 
-
-function plotAll(chartid, newLikes, newComment, newShare, newTime) {
+function plotReachChart(chartid, newLikes, newComment, newShare, newTime) {
 
     globalLikes = newLikes.slice(0, newLikes.length);
     globalComment = newComment.slice(0, newComment.length);
     globalShare = newShare.slice(0, newShare.length);
     globalTime = newTime.slice(0, newTime.length);
-
-    console.log(newTime[0]);
        
-    var tempLikes = [], tempComment = [], tempShare = [], tempTime = [], tempTopLikes = [];
-
-    var k = selected_value-1;
-    for (i = 49; i >= 50-selected_value; i--) {
+    var tempLikes = [], tempComment = [], tempShare = [], tempTime = [];
+    topLikes = 0;
+    var k = selectedValue-1;
+    for (i = globalLikes.length-1; i >= (globalLikes.length-1)-selectedValue; i--) {
         tempLikes[k] = newLikes[i];
+        if(tempLikes[k] > topLikes){
+            topLikes = tempLikes[k];
+        }
         tempComment[k] = newComment[i];
         tempShare[k] = newShare[i];
         tempTime[k] = newTime[i].slice(0, 10);
-        tempTopLikes[k] = newLikes[i];
         averageLikes += newLikes[i];
         k--;
     }
 
-    topLikes = tempTopLikes.sort((a, b) => b - a).slice(0, 5);
-
-    if (checkbox_All.checked) {
-        if (checkbox_Tot.checked) {
-            totalChart.destroy();
-            checkbox_Tot.checked = false;
+    if (checkBoxReach.checked) {
+        if (checkBoxReact.checked) {
+            reachChart.destroy();
+            checkBoxReact.checked = false;
         }
-        if (checkbox_Type.checked) {
-            typeChart.destroy();
-            checkbox_Type.checked = false;
+        if (checkBoxType.checked) {
+            postTypeChart.destroy();
+            checkBoxType.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
-        allReactChart = new Chart(ctx, {
+        reactChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: tempTime,
@@ -194,26 +192,24 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
             }
         });
     }
-    else if (!checkbox_All.checked) {
-        allReactChart.destroy();
+    else if (!checkBoxReach.checked) {
+        reactChart.destroy();
     }
 }
 
-function countReaction(love, haha, wow, sad, angry){
-    var lovecount=0, hahacount=0, wowcount=0, sadcount =0, angrycount =0;
-    for (i = 49; i >= 50-selected_value; i--) {
-        lovecount += love[i];
-        hahacount+= haha[i];
-        wowcount += wow[i];
-        sadcount += sad[i];
-        angrycount += angry[i];
-    }
+function sortHighestCount(paramOne, paramTwo, paramThree, paramFour, paramFive,type){
+    var obj;
+    if(type == "reaction"){
+        obj = {
+            Love : paramOne, Haha : paramTwo, Wow : paramThree, Sad : paramFour, Angry : paramFive
+        };
+    } else if(type == "postType"){
+        obj = {
+            Link : paramOne, Video : paramTwo, Photo : paramThree, Event : paramFour, Status : paramFive
+        };
+    }  
 
-    var obj = {
-        Love : lovecount, Haha : hahacount, Wow : wowcount, Sad : sadcount, Angry : angrycount
-    };
-
-    highestReaction = Math.max(lovecount,hahacount,wowcount,sadcount,angrycount);
+    highestCount = Math.max(paramOne,paramTwo,paramThree,paramFour,paramFive);
 
     var keys = Object.keys(obj);
     var max = keys[0];
@@ -223,12 +219,21 @@ function countReaction(love, haha, wow, sad, angry){
           max = k;
        }
     }
-    return max;
+    highestCountType =  max;
 }
 
-function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
+function plotReactChart(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
 
-    highestReactionType =  countReaction(newLove, newHaha, newWow, newSad, newAngry);
+    var loveCount=0, hahaCount=0, wowCount=0, sadCount =0, angryCount =0;
+    for (i = newLove.length-1; i >= (newLove.length-1)-selectedValue; i--) {
+        loveCount += newLove[i];
+        hahaCount+= newHaha[i];
+        wowCount += newWow[i];
+        sadCount += newSad[i];
+        angryCount += newAngry[i];
+    }
+
+    sortHighestCount(loveCount, hahaCount, wowCount, sadCount, angryCount,"reaction");
 
     globalLove = newLove.slice(0, newLove.length);
     globalHaha = newHaha.slice(0, newHaha.length);
@@ -238,8 +243,8 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
     globalTime = newTime.slice(0, newTime.length);
 
     var tempLove = [], tempHaha = [], tempWow = [], tempSad = [], tempAngry = [], tempTime = [];
-    var k = selected_value-1;
-    for (i = 49; i >= 50-selected_value; i--) {
+    var k = selectedValue-1;
+    for (i = newLove.length-1; i >= (newLove.length-1)-selectedValue; i--) {
         tempLove[k] = newLove[i];
         tempHaha[k] = newHaha[i];
         tempWow[k] = newWow[i];
@@ -249,19 +254,19 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
         k--;
     }
 
-    if (checkbox_Tot.checked) {
-        if (checkbox_All.checked) {
-            allReactChart.destroy();
-            checkbox_All.checked = false;
+    if (checkBoxReact.checked) {
+        if (checkBoxReach.checked) {
+            reactChart.destroy();
+            checkBoxReach.checked = false;
         }
 
-        if (checkbox_Type.checked) {
-            typeChart.destroy();
-            checkbox_Type.checked = false;
+        if (checkBoxType.checked) {
+            postTypeChart.destroy();
+            checkBoxType.checked = false;
         }
 
         var ctx = document.getElementById(chartid).getContext('2d');
-        totalChart = new Chart(ctx, {
+        reachChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: tempTime,
@@ -292,8 +297,8 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
                     fill: true,
                 }, {
                     label: 'Angry',
-                    backgroundColor: 'rgba(112,128,144, 0.8)',
-                    borderColor: 'rgba(112,128,144, 1.0)',
+                    backgroundColor: 'black',
+                    borderColor: 'black',
                     data: tempAngry,
                     fill: true,
                 }]
@@ -307,7 +312,6 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
                         },
                         stacked: true
                     }],
-
                     yAxes: [{
                         gridLines: {
                             color: 'rgba(255, 255, 255,0.5)',
@@ -322,27 +326,25 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
             }
         });
     }
-    else if (!checkbox_Tot.checked) {
-        totalChart.destroy();
+    else if (!checkBoxReact.checked) {
+        reachChart.destroy();
     }
 }
 
-var typeChart;
-function plotType(chartid, postCount, postType){
+var postTypeChart;
+function plotPostTypeChart(chartid, postCount, postType){
 
-    if(checkbox_Type.checked){
-
-        if (checkbox_All.checked) {
-            allReactChart.destroy();
-            checkbox_All.checked = false;
+    if(checkBoxType.checked){
+        if (checkBoxReach.checked) {
+            reactChart.destroy();
+            checkBoxReach.checked = false;
         }
-        if (checkbox_Tot.checked) {
-            totalChart.destroy();
-            checkbox_Tot.checked = false;
+        if (checkBoxReact.checked) {
+            reachChart.destroy();
+            checkBoxReact.checked = false;
         }
-
         var ctx = document.getElementById(chartid).getContext('2d');
-        typeChart = new Chart(ctx, {
+        postTypeChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 datasets: [{
@@ -351,10 +353,8 @@ function plotType(chartid, postCount, postType){
                     hoverBackgroundColor: ["Red","Green","Blue","Yellow","Purple","Pink"],
                     hoverBorderColor: "Black",
                 }],
-            
                 labels:
                     postType
-                
             },
             options:{
                 segmentShowStroke : true,
@@ -370,8 +370,8 @@ function plotType(chartid, postCount, postType){
                 animateScale: true
             }
         });
-    } else if(!checkbox_Type.checked){
-        typeChart.destroy();
+    } else if(!checkBoxType.checked){
+        postTypeChart.destroy();
     }
 }
 
@@ -379,8 +379,8 @@ function friendNumber(x) {
     friendNum = x;
 }
 
-// var postTypeChart;
-// function plotPostType(chartid, newType, newTime){
+// var postpostTypeChart;
+// function plotPostTypeChart(chartid, newType, newTime){
 
 //     var tempTime = [];
 //     var totLink18 = 0, totStatus18 = 0, totalPhoto18 = 0, totalVideo18 = 0, totalOffer18 = 0;
@@ -424,16 +424,16 @@ function friendNumber(x) {
 //                 totalOffer17 +=1;
 //             }
 //         }
-//         if (checkbox_Type.checked) {
-//             typeChart.destroy();
-//             checkbox_Type.checked = false;
+//         if (checkBoxType.checked) {
+//             postTypeChart.destroy();
+//             checkBoxType.checked = false;
 //         }
 
         
 //     }
 
 //     var ctx = document.getElementById(chartid).getContext('2d');
-//         postTypeChart = new Chart(ctx, {
+//         postpostTypeChart = new Chart(ctx, {
 //             type: 'radar',
 //             data: {
 //                 labels: ['link', 'status', 'photo', 'video', 'offer'],
@@ -485,11 +485,11 @@ function friendNumber(x) {
 //     var checkbox = document.getElementById("togFriBtn");
 //     console.log("hi");
 
-//     var checkbox_All = document.getElementById("togAllBtn");
-//     var checkbox_Tot = document.getElementById("togTotBtn");
+//     var checkBoxReach = document.getElementById("togAllBtn");
+//     var checkBoxReact = document.getElementById("togTotBtn");
 //     var checkbox_Fri = document.getElementById("togFriBtn");
 
-//     for (var i = 0; i < selected_value; i++) {
+//     for (var i = 0; i < selectedValue; i++) {
 //         totNum[i] = 0;
 //         totNum[i] += newLikes[i];
 //         totNum[i] += newLove[i];
@@ -507,20 +507,20 @@ function friendNumber(x) {
 //     }
 
 //     var tempNum = [], tempTime = [];
-//     for (i = 0; i < selected_value; i++) {
+//     for (i = 0; i < selectedValue; i++) {
 //         tempNum[i] = totNum[i];
 //         tempTime[i] = newTime[i];
 //     }
 
 //     if (checkbox_Fri.checked) {
 
-//         if (checkbox_All.checked) {
-//             allReactChart.destroy();
-//             checkbox_All.checked = false;
+//         if (checkBoxReach.checked) {
+//             reactChart.destroy();
+//             checkBoxReach.checked = false;
 //         }
-//         if (checkbox_Tot.checked) {
-//             totalChart.destroy();
-//             checkbox_Tot.checked = false;
+//         if (checkBoxReact.checked) {
+//             reachChart.destroy();
+//             checkBoxReact.checked = false;
 //         }
 
 //         var ctx = document.getElementById(chartid).getContext('2d');

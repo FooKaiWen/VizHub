@@ -81,7 +81,6 @@ if(isset($_REQUEST['submit_btn'])){
   if($message != ""){
     $messagecol->insertOne(
       [
-      // '_id'=>'message',
       'pmessage'=>"$message"]);
     shell_exec("python readtext.py");
     $upperboundary = $messagecol->findOne()->likesRange;

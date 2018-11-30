@@ -108,7 +108,7 @@ $_SESSION['logoutUrl'] = $logoutUrl;
  
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(55){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(70){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -118,10 +118,12 @@ try {
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
 }
+
 $graphNode = $posts_request->getGraphNode();
 $insertManyResult = $usercol->insertOne(json_decode($graphNode));
 
 $cursor = $usercol->distinct("posts.id");
+
 foreach ($cursor as $doc) {
   try {
     $reactions_request = $fb->get("/$doc?fields=status_type,is_instagram_eligible,type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
@@ -194,7 +196,7 @@ foreach ($tagged as $doc) {
 try {
   // Returns a `FacebookFacebookResponse` object
   $pictureNode = $fb->get("/me/picture?type=large&redirect=false",$accessToken);
-  $userDetailNode = $fb->get("/me?fields=id,name",$accessToken);
+  $userDetailNode = $fb->get("/me?fields=id,name,friends",$accessToken);
 } catch(FacebookExceptionsFacebookResponseException $e) {
   echo 'Graph returned an error: ' . $e->getMessage();
   exit;

@@ -14,104 +14,81 @@
 <body>
     <h3 align="center" style ="margin-top:10px;">Engagement Visualization</h3>
     <hr style="border-width:7px; border-color:black;">
-<?php
-// session_start();
-// $likearray = $_SESSION['likes'];
-// $lovearray = $_SESSION["love"];
-// $hahaarray = $_SESSION["haha"];
-// $wowarray = $_SESSION["wow"];
-// $sadarray = $_SESSION["sad"];
-// $angryarray = $_SESSION["angry"];
-// $timearray = $_SESSION['time'];
-?>
 
 <?php
 
 require_once  "vendor/autoload.php";
 
-$dbhost ='localhost';
-$dbport ='27017';
+$dbHost ='localhost';
+$dbPort ='27017';
 
 $client = new MongoDB\Client;
-$connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
+$connection = new MongoDB\Driver\Manager("mongodb://$dbHost:$dbPort");
 
 $query = new MongoDB\Driver\Query([]);
-$likedata = $connection->executeQuery('fb.post_detail', $query);
+$postDetail = $connection->executeQuery('fb.post_detail', $query);
 
-$likearray = array();
-$timearray = array();
-$typearray = array();
-$temporary = 0;
-
-foreach ($likedata as $row) {   
-    // $likearray [] = [];
-    // echo $row->message;
-    $likearray [] = $row->like->summary->total_count;
-    $temporary = $row->like->summary->total_count;
-    // print($temporary . " ");
-    
-    // print($row->like->summary->total_count);
-    // print($highestLikes);
-    // print(" ");
-    $timearray [] = $row->created_time;
-}
-
-$query = new MongoDB\Driver\Query([]);
-$reactdata = $connection->executeQuery('fb.post_detail', $query);
-
-$lovearray = array();
-$hahaarray = array();
-$wowarray = array();
-$sadarray = array();
-$angryarray = array();
-$num_comment = array();
-$num_share = array();
-$post_type = array();
+$likeArray = array();
+$timeArray = array();
+$typeArray = array();
+$loveArray = array();
+$hahaArray = array();
+$wowArray = array();
+$sadArray = array();
+$angryArray = array();
+$numComment = array();
+$numShare = array();
+$numType = array();
 $i = 0;
+$linkCount = 0;
+$photoCount = 0;
+$statusCount = 0;
+$videoCount = 0;
+$eventCount = 0;
+foreach ($postDetail as $data) {   
+    $likeArray [] = $data->like->summary->total_count;
+    $timeArray [] = $data->created_time;
 
-foreach($reactdata as $row){
-    $lovearray [] = $row->love->summary->total_count;
-    $hahaarray [] = $row->haha->summary->total_count;
-    $wowarray [] = $row->wow->summary->total_count;
-    $sadarray [] = $row->sad->summary->total_count;
-    $angryarray [] = $row->angry->summary->total_count;
-    $num_comment [] = $row->comments->summary->total_count;
+    $loveArray [] = $data->love->summary->total_count;
+    $hahaArray [] = $data->haha->summary->total_count;
+    $wowArray [] = $data->wow->summary->total_count;
+    $sadArray [] = $data->sad->summary->total_count;
+    $angryArray [] = $data->angry->summary->total_count;
+    $numComment [] = $data->comments->summary->total_count;
     if($i < 50){
-        $post_type [] = $row->type;
+        $numType [] = $data->type;
     }
     $i++;
-    // print($row->status_type . " ");
-    if(!isset($row->shares)){
-        $num_share [] = 0;
+    if(!isset($data->shares)){
+        $numShare [] = 0;
     } else {
-        $num_share [] = $row->shares->count;           
+        $numShare [] = $data->shares->count;           
     }
 
-    // if($row->type == "link"){
-    //     $linkcount += $row->like->summary->total_count;
-    // } elseif($row->type == "photo"){
-    //     $photocount += $row->like->summary->total_count;
-    // } elseif($row->type == "status"){
-    //     $statuscount += $row->like->summary->total_count;
-    // } elseif($row->type == "video"){
-    //     $videocount += $row->like->summary->total_count;
-    // } elseif($row->type == "event"){
-    //     $offercount += $row->like->summary->total_count;
-    // }
+    if($data->type == "link"){
+        $linkCount += $data->like->summary->total_count;
+    } elseif($data->type == "photo"){
+        $photoCount += $data->like->summary->total_count;
+    } elseif($data->type == "status"){
+        $statusCount += $data->like->summary->total_count;
+    } elseif($data->type == "video"){
+        $videoCount += $data->like->summary->total_count;
+    } elseif($data->type == "event"){
+        $eventCount += $data->like->summary->total_count;
+    }
 }
 
-$post_type_count = array_count_values($post_type);
-$postdetails = $connection->executeQuery('fb.post_detail', $query);
-foreach($post_type_count as $type => $count){
+$postTypeCount = array_count_values($numType);
+
+foreach($postTypeCount as $type => $count){
     $postType [] = $type;
     $postCount [] = $count;
 }
 
-$user_details = $connection->executeQuery('fb.userdetail', $query);
+$userDetails = $connection->executeQuery('fb.userdetail', $query);
 
-foreach($user_details as $row){
-
-    $num_friends = $row->friends->summary->total_count;    
+foreach($userDetails as $data){
+    $numFriends = $data->friends->summary->total_count;    
 }
 
 ?>
@@ -140,47 +117,25 @@ foreach($user_details as $row){
 </div>
 
 <label class="switch">
-    <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($num_friends) ?>);plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>);'>
+    <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart("chart",<?php echo json_encode($likeArray) ?>,<?php echo json_encode($numComment) ?>,<?php echo json_encode($numShare) ?>, <?php echo json_encode($timeArray)?>);'>
     <div class="slider round">
         <span class="on">Reach</span><span class="off">Reach</span>
     </div>
 </label>
 
 <label class="switch">
-    <input type="checkbox" id="togTotBtn" onclick='plotTotal("chart",<?php echo json_encode($lovearray) ?>,<?php echo json_encode($hahaarray) ?>,<?php echo json_encode($wowarray) ?>,<?php echo json_encode($sadarray) ?>,<?php echo json_encode($angryarray)?>,<?php echo json_encode($timearray)?>)'> 
+    <input type="checkbox" id="togTotBtn" onclick='plotReactChart("chart",<?php echo json_encode($loveArray) ?>,<?php echo json_encode($hahaArray) ?>,<?php echo json_encode($wowArray) ?>,<?php echo json_encode($sadArray) ?>,<?php echo json_encode($angryArray)?>,<?php echo json_encode($timeArray)?>)'> 
     <div class="slider round">
         <span class="on">Other Reaction </span><span class="off">Other Reaction</span>
     </div>
 </label>
 
-<!-- <label class="switch">
-    <input type="checkbox" id="togPosBtn" onclick='plotPostType("chart",<?php echo json_encode($typearray) ?>,<?php echo json_encode($timearray) ?>)'>
-
-    <div class="slider round">
-        <span class="on">Type of Post</span><span class="off">Type of Post</span>
-    </div>
-</label> -->
-
 <label class="switch">
-    <input type="checkbox" id="togTypBtn" onclick='plotType("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>
+    <input type="checkbox" id="togTypBtn" onclick='sortHighestCount(<?php echo json_encode($linkCount) ?>,<?php echo json_encode($videoCount) ?>,<?php echo json_encode($photoCount) ?>,<?php echo json_encode($eventCount) ?>,<?php echo json_encode($statusCount) ?>,"postType");plotPostTypeChart("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>
     <div class="slider round">
         <span class="on">Post Type</span><span class="off">Post Type</span>
     </div>
 </label>
-
-<!-- <div style="width:25%;">
-<label>Time Selection: </label>
-
-<?php
-echo '<select id="timeSelect" onchange=  style=" height: 25px; width: 100px">';
-
-foreach($timearray as $time){
-    echo '<option value="' . htmlspecialchars($time) . '">'
-        . htmlspecialchars($time) . '</option>';
-}
-echo '</select> ';
-?>
-</div> -->
 
 <p>We are still improving our visualization functionality!</p>
 
@@ -190,8 +145,6 @@ echo '</select> ';
     <div id ="topInfo" style = "display:none;">
     </div>
 </div>
-
-
 
 <script type="text/javascript" src="chart.js"></script>
 </body>
