@@ -7,40 +7,40 @@
     session_start();
   }
 
+// $tempcol = $tempdb->selectCollection('post_id');
+// $tempcol->drop();
+// $tempcol = $tempdb->selectCollection('post_detail');
+// $tempcol->drop();
+// $tempcol = $tempdb->selectCollection('location_id');
+// $tempcol->drop();
+// $tempcol = $tempdb->selectCollection('location_detail');
+// $tempcol->drop();
+// $tempcol = $tempdb->selectCollection('userdetail');
+// $tempcol->drop();
+
 $dbhost ='localhost';
 $dbport ='27017';
+
+$connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport"); 
+$query = new MongoDB\Driver\Query([]); 
+
 
 $client = new MongoDB\Client;
 
 $tempdb = $client->selectDatabase('fb');
-$tempcol = $tempdb->selectCollection('post_id');
-$tempcol->drop();
-$tempcol = $tempdb->selectCollection('post_detail');
-$tempcol->drop();
-$tempcol = $tempdb->selectCollection('location_id');
-$tempcol->drop();
-$tempcol = $tempdb->selectCollection('location_detail');
-$tempcol->drop();
-$tempcol = $tempdb->selectCollection('userdetail');
-$tempcol->drop();
 $tempdb->drop();
+
 $newdb = $client->selectDatabase('fb');
 
 $usercol = $newdb->selectCollection('post_id');
 $postcol = $newdb->selectCollection('post_detail');
 $locationcol = $newdb->selectCollection('location_id');
-
 $placecol = $newdb->selectCollection('location_detail');
-
-
 $userdetailcol = $newdb->selectCollection('userdetail');
 
-$connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
-$query = new MongoDB\Driver\Query([]); 
-
 $fb = new Facebook\Facebook([
-  'app_id' => '590344301384464', // Replace {app-id} with your app id
-  'app_secret' => '0e62c56caa857d32e479b8703a7501c4',
+  'app_id' => '267157010556839', // Replace {app-id} with your app id
+  'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
   'default_graph_version' => 'v3.1',
     ]);
  
@@ -118,12 +118,10 @@ try {
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
 }
-
 $graphNode = $posts_request->getGraphNode();
 $insertManyResult = $usercol->insertOne(json_decode($graphNode));
 
 $cursor = $usercol->distinct("posts.id");
-
 foreach ($cursor as $doc) {
   try {
     $reactions_request = $fb->get("/$doc?fields=status_type,is_instagram_eligible,type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
@@ -171,14 +169,14 @@ try {
   echo 'Facebook SDK returned an error: ' . $e->getMessage();
   exit;
 }
-
 $graphNode = $location_request->getGraphNode();
 $insertManyResult = $locationcol->insertOne(json_decode($graphNode));
+
 
 $tagged = $locationcol->distinct("tagged_places.id");
 foreach ($tagged as $doc) {
   try {
-    $place_request = $fb->get("/$doc?fields=place,created_time",$accessToken);
+    $place_request = $fb->get("/$doc?fields=place,created_time,id",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -193,127 +191,24 @@ foreach ($tagged as $doc) {
 }
 
 
-// $_SESSION["location"]=$big;
-// print_r($big);
-// foreach ($big as $b){
-//   print("out");
-//   print_r($b);
-//   echo nl2br ("\n");
-//   foreach($b as $bs){
-//     print_r($bs);
-//     echo nl2br ("\n");
-//   }
-// }
-     
-    // $rows = $connection->executeQuery('test.post', $query);
-    // $pops = $connection->executeQuery('test.post', $query);
-    // $newCsvData = array();
-
-    // $handle = fopen("testfile.csv", "w");
-    // foreach ($rows as $row) {
-    //   $try = $row->message;  
-    //   fputcsv($handle, array($try));
-    // } 
-
-    // $newCsvData = array();
-
-    // if (($handle = fopen("testfile.csv", "r")) !== FALSE) {
-    //     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-    //       //foreach ($pops as $pop) {
-    //         $try2 = $pop->created_time;
-    //         $data[] = "$try2";
-    //         $newCsvData[] = $data;
-    //       //} 
-    //     }
-    //     fclose($handle);
-    // }
-
-    // $handle = fopen("testfile.csv", "w");
-    // foreach ($newCsvData as $line) {
-    //   fputcsv($handle, $line);
-    // }
-
-    // fclose($handle);
-
-// foreach ($cursor as $doc) {
-
-//   $likes= $usercol->find(
-//     ['id' => "$doc"],
-//     ['projection' => ['love.summary.total_count' => 1, '_id' => 0]]
-//   );
-  
-
-//   foreach ($likes as $like) {
-
-//     echo (json_encode($like));
-    
-//   }
-
-// }
+try {
+  // Returns a `FacebookFacebookResponse` object
+  $pictureNode = $fb->get("/me/picture?type=large&redirect=false",$accessToken);
+  $userDetailNode = $fb->get("/me?fields=id,name",$accessToken);
+} catch(FacebookExceptionsFacebookResponseException $e) {
+  echo 'Graph returned an error: ' . $e->getMessage();
+  exit;
+} catch(FacebookExceptionsFacebookSDKException $e) {
+  echo 'Facebook SDK returned an error: ' . $e->getMessage();
+  exit;
+}  
+$userDetail = $userDetailNode->getDecodedBody();
+$userdetailcol->insertOne($userDetail);
 
 
-// $cursor = $usercol->distinct("like.summary.total_count");
-// foreach ($cursor as $doc) {
-//   echo "$doc\n";
-// }
-
-// $bson = MongoDB\BSON\fromPHP(array($graphNode));
-
-// printf("Inserted %d document(s)\n", $insertManyResult->getInsertedCount());
-
-
-// $insertManyResult = $usercol->insertOne(json_decode($graphNode));
-
-
-// printf("Inserted %d document(s)\n", $insertManyResult->getInsertedCount());
-
-
-// $whatIWant = substr((string)$graphNode, strpos((string)$graphNode, "_") + 1);    
-
-// echo $whatIWant;
-
-
-// $total_posts = array();
-// $posts_response = $posts_request->getGraphEdge();
-// if($fb->next($posts_response)) {
-//     $response_array = $posts_response->asArray();
-//     $total_posts = array_merge($total_posts, $response_array);
-//     while ($posts_response = $fb->next($posts_response)) {
-//         $response_array = $posts_response->asArray();
-//         $total_posts = array_merge($total_posts, $response_array);
-//     }
-//     print_r($total_posts);
-// } else {
-//     $posts_response = $posts_request->getGraphEdge()->asArray();
-//     print_r($posts_response);
-// }
-  
-  // User is logged in with a long-lived access token.
-  // You can redirect them to a members-only page.
-  //header('Location: https://example.com/members.php');
-
-  try {
-    // Returns a `FacebookFacebookResponse` object
-    $pictureNode = $fb->get("/me/picture?type=large&redirect=false",$accessToken);
-    $userDetailNode = $fb->get("/me?fields=id,name,friends",$accessToken);
-  } catch(FacebookExceptionsFacebookResponseException $e) {
-    echo 'Graph returned an error: ' . $e->getMessage();
-    exit;
-  } catch(FacebookExceptionsFacebookSDKException $e) {
-    echo 'Facebook SDK returned an error: ' . $e->getMessage();
-    exit;
-  }
-
-  
-  $graphNode = $pictureNode->getGraphNode();
-  $url= $graphNode->getField("url");
-  
-  
-  $userDetail = $userDetailNode->getDecodedBody();
-  $userdetailcol->insertOne($userDetail);
-
-  $user_detail = $connection->executeQuery('fb.userdetail', $query);
-  
+$graphNode = $pictureNode->getGraphNode();
+$url= $graphNode->getField("url");
+$user_detail = $connection->executeQuery('fb.userdetail', $query);
 foreach ($user_detail as $row) {
   if(!isset($row->url)){
   // $msg = $row->message;  
@@ -322,8 +217,7 @@ foreach ($user_detail as $row) {
     [ 'id' => "$curr_id" ],
     [ '$set' => [ 'url' => $url ]]);
   }
-
 }
 
-  Header("Location: http://localhost/VizHub/user.php");
+Header("Location: http://localhost/VizHub/user.php");
 ?>
