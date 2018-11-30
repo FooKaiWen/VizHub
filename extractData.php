@@ -18,30 +18,30 @@
 // $tempcol = $tempdb->selectCollection('userdetail');
 // $tempcol->drop();
 
-$dbhost ='localhost';
-$dbport ='27017';
+$dbHost ='localhost';
+$dbPort ='27017';
 
-$connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport"); 
+$connection = new MongoDB\Driver\Manager("mongodb://$dbHost:$dbPort"); 
 $query = new MongoDB\Driver\Query([]); 
 
 
 $client = new MongoDB\Client;
 
-$tempdb = $client->selectDatabase('fb');
-$tempdb->drop();
+$tempDb = $client->selectDatabase('fb');
+$tempDb->drop();
 
-$newdb = $client->selectDatabase('fb');
+$newDb = $client->selectDatabase('fb');
 
-$userCol = $newdb->selectCollection('post_id');
-$postCol = $newdb->selectCollection('post_detail');
-$locationCol = $newdb->selectCollection('location_id');
-$placeCol = $newdb->selectCollection('location_detail');
-$userdetailcol = $newdb->selectCollection('userdetail');
+$userCol = $newDb->selectCollection('postId');
+$postCol = $newDb->selectCollection('postDetail');
+$locationCol = $newDb->selectCollection('locationId');
+$placeCol = $newDb->selectCollection('locationDetail');
+$userDetailCol = $newDb->selectCollection('userDetail');
 
 $fb = new Facebook\Facebook([
   'app_id' => '267157010556839', // Replace {app-id} with your app id
   'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
-  'default_graph_version' => 'v3.1',
+  'default_graph_version' => 'v3.2',
     ]);
  
 $helper = $fb->getRedirectLoginHelper();
@@ -108,7 +108,7 @@ $_SESSION['logoutUrl'] = $logoutUrl;
  
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(51){id}',$accessToken);
+    $postsRequest = $fb->get('/me?fields=posts.limit(70){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -118,13 +118,13 @@ try {
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
 }
-$graphNode = $posts_request->getGraphNode();
-$insertManyResult = $userCol->insertOne(json_decode($graphNode));
+$postIdNode = $postsRequest->getGraphNode();
+$insertManyResult = $userCol->insertOne(json_decode($postIdNode));
 
 $cursor = $userCol->distinct("posts.id");
 foreach ($cursor as $doc) {
   try {
-    $reactions_request = $fb->get("/$doc?fields=status_type,is_instagram_eligible,type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
+    $reactionsRequest = $fb->get("/$doc?fields=status_type,is_instagram_eligible,type,created_time,message,reactions.type(LIKE).limit(0).summary(1).as(like),reactions.type(LOVE).limit(0).summary(1).as(love),reactions.type(HAHA).limit(0).summary(1).as(haha),reactions.type(WOW).limit(0).summary(1).as(wow),reactions.type(SAD).limit(0).summary(1).as(sad),reactions.type(ANGRY).limit(0).summary(1).as(angry),comments.limit(0).summary(1),shares.summary(1)",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -134,24 +134,24 @@ foreach ($cursor as $doc) {
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
 }
-  $ReactionNode = $reactions_request->getDecodedBody();
-  $insertManyResult = $postCol->insertOne($ReactionNode);
+  $postDetailNode = $reactionsRequest->getDecodedBody();
+  $insertManyResult = $postCol->insertOne($postDetailNode);
 }
      
-$rows = $connection->executeQuery('fb.post_detail', $query);
+$rows = $connection->executeQuery('fb.postDetail', $query);
   
 foreach ($rows as $row) {
   if(!isset($row->message)){
   // $msg = $row->message;  
-   $curr_id = $row->id;
+   $currId = $row->id;
    $postCol->updateOne(
-    [ 'id' => "$curr_id" ],
+    [ 'id' => "$currId" ],
     [ '$set' => [ 'message' => " " ]]);
   }
   if(!isset($row->shares)){
-    $curr_id = $row->id;
+    $currId = $row->id;
     $postCol->updateOne(
-      ['id' => "$curr_id"],
+      ['id' => "$currId"],
       ['$set' => ['shares' => ['count' => 0 ]]]
     );
   }
@@ -159,7 +159,7 @@ foreach ($rows as $row) {
 
 //Get tagged place
 try {
-  $location_request = $fb->get('/me?fields=tagged_places.limit(1){id}',$accessToken);
+  $locationRequest = $fb->get('/me?fields=tagged_places.limit(30){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
@@ -169,14 +169,14 @@ try {
   echo 'Facebook SDK returned an error: ' . $e->getMessage();
   exit;
 }
-$graphNode = $location_request->getGraphNode();
-$insertManyResult = $locationCol->insertOne(json_decode($graphNode));
+$locationIdNode = $locationRequest->getGraphNode();
+$insertManyResult = $locationCol->insertOne(json_decode($locationIdNode));
 
 
 $tagged = $locationCol->distinct("tagged_places.id");
 foreach ($tagged as $doc) {
   try {
-    $place_request = $fb->get("/$doc?fields=place,created_time,id",$accessToken);
+    $placeRequest = $fb->get("/$doc?fields=place,created_time,id",$accessToken);
   } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -186,8 +186,8 @@ foreach ($tagged as $doc) {
     echo 'Facebook SDK returned an error: ' . $e->getMessage();
     exit;
 }
-  $PlaceNode = $place_request->getDecodedBody();
-  $insertManyResult = $placeCol->insertOne($PlaceNode);
+  $placeNode = $placeRequest->getDecodedBody();
+  $insertManyResult = $placeCol->insertOne($placeNode);
 }
 
 
@@ -203,18 +203,18 @@ try {
   exit;
 }  
 $userDetail = $userDetailNode->getDecodedBody();
-$userdetailcol->insertOne($userDetail);
+$userDetailCol->insertOne($userDetail);
 
 
 $graphNode = $pictureNode->getGraphNode();
 $url= $graphNode->getField("url");
-$user_detail = $connection->executeQuery('fb.userdetail', $query);
-foreach ($user_detail as $row) {
+$userDetail = $connection->executeQuery('fb.userDetail', $query);
+foreach ($userDetail as $row) {
   if(!isset($row->url)){
   // $msg = $row->message;  
-   $curr_id = $row->id;
-   $userdetailcol->updateOne(
-    [ 'id' => "$curr_id" ],
+   $currId = $row->id;
+   $userDetailCol->updateOne(
+    [ 'id' => "$currId" ],
     [ '$set' => [ 'url' => $url ]]);
   }
 }
