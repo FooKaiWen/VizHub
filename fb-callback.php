@@ -108,11 +108,7 @@ $_SESSION['logoutUrl'] = $logoutUrl;
  
 // getting all posts id published by user
 try {
-<<<<<<< HEAD
-    $posts_request = $fb->get('/me?fields=posts.limit(50){id}',$accessToken);
-=======
     $posts_request = $fb->get('/me?fields=posts.limit(55){id}',$accessToken);
->>>>>>> f6bcfb1a36cd2763a57a5400efc9158fb9ecc90a
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
