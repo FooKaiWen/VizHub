@@ -26,7 +26,7 @@ $client = new MongoDB\Client;
 $connection = new MongoDB\Driver\Manager("mongodb://$dbHost:$dbPort");
 
 $query = new MongoDB\Driver\Query([]);
-$postDetail = $connection->executeQuery('fb.post_detail', $query);
+$postDetail = $connection->executeQuery('fb.postDetail', $query);
 
 $likeArray = array();
 $timeArray = array();
@@ -85,7 +85,7 @@ foreach($postTypeCount as $type => $count){
     $postCount [] = $count;
 }
 
-$userDetails = $connection->executeQuery('fb.userdetail', $query);
+$userDetails = $connection->executeQuery('fb.userDetail', $query);
 
 foreach($userDetails as $data){
     $numFriends = $data->friends->summary->total_count;    

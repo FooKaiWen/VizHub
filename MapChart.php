@@ -32,16 +32,16 @@
 
 require_once  "vendor/autoload.php";
 
-$dbhost ='localhost';
-$dbport ='27017';
+$dbHost ='localhost';
+$dbPort ='27017';
 $client = new MongoDB\Client;
-$connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
+$connection = new MongoDB\Driver\Manager("mongodb://$dbHost:$dbPort");
 $query = new MongoDB\Driver\Query([]);
 
-$place_id = $connection->executeQuery('fb.location_detail', $query);
+$placeId = $connection->executeQuery('fb.locationDetail', $query);
 $id = array();
 
-foreach($place_id as $row){
+foreach($placeId as $row){
   $id[] = $row->place->id;
 }
 
@@ -49,30 +49,31 @@ $vals = array_count_values($id);
 $most = max($vals);
 $least = min($vals);
 
-$tagplaces = $connection->executeQuery('fb.location_detail', $query);
+
+$tagPlaces = $connection->executeQuery('fb.locationDetail', $query);
 $big = array();
 
-foreach($tagplaces as $tagplace){
-  $lat [] = $tagplace->place->location->latitude;
-  $long []= $tagplace->place->location->longitude;
-  $place_name [] =$tagplace->place->name;
-  $p_id= $tagplace->place->id;
-  $time [] =$tagplace->created_time;
+foreach($tagPlaces as $tagPlace){
+  $lat [] = $tagPlace->place->location->latitude;
+  $long []= $tagPlace->place->location->longitude;
+  $placeName [] =$tagPlace->place->name;
+  $placeId= $tagPlace->place->id;
+  $time [] =$tagPlace->created_time;
  
-  if(!isset($tagplace->place->location->city)){
+  if(!isset($tagPlace->place->location->city)){
     $city [] = "-";
   }else{
-    $city [] = $tagplace->place->location->city;
+    $city [] = $tagPlace->place->location->city;
   }
 
-  if(!isset($tagplace->place->location->country)){
+  if(!isset($tagPlace->place->location->country)){
     $country [] = "-";
   }else{
-    $country [] = $tagplace->place->location->country;
+    $country [] = $tagPlace->place->location->country;
   }
 
-  $count [] = $vals["$p_id"];
-  $count1 =$vals["$p_id"];
+  $count [] = $vals["$placeId"];
+  $count1 =$vals["$placeId"];
     if ($count1 == $most){
         $marker[] = "Most";
     } elseif ($count1 == $least){
@@ -98,47 +99,47 @@ foreach($tagplaces as $tagplace){
 
 var latitude = <?php echo json_encode($lat);?>;
 var longitude = <?php echo json_encode($long);?>;
-var place_name = <?php echo json_encode($place_name);?>;
-var visit_count = <?php echo json_encode($count);?>;
-var visit_type = <?php echo json_encode($marker);?>;
-var visit_date = <?php echo json_encode($time);?>;
+var placeName = <?php echo json_encode($placeName);?>;
+var visitCount = <?php echo json_encode($count);?>;
+var visitType = <?php echo json_encode($marker);?>;
+var visitDate = <?php echo json_encode($time);?>;
 var city = <?php echo json_encode($city);?>;
 var country = <?php echo json_encode($country);?>;
 var most = <?php echo $most;?>;
 var least = <?php echo $least;?>;
 
 
-var datevalue = new Array();
+var dateValue = new Array();
 var temp = new Array();
-for(var i =0;i<visit_date.length;i++){
-    visit_date[i] = visit_date[i].slice(0,10);
-    datevalue[i] = Date.parse(visit_date[i]);
-    temp[i] = Date.parse(visit_date[i]);
+for(var i =0;i<visitDate.length;i++){
+    visitDate[i] = visitDate[i].slice(0,10);
+    dateValue[i] = Date.parse(visitDate[i]);
+    temp[i] = Date.parse(visitDate[i]);
 }
   temp.sort(function(a, b){return b-a});
   recent = temp[0];
-  var recent_count =0;
+  var recentCount =0;
 for(var i =0;i<temp.length;i++){
-  if(datevalue[i] == recent)
+  if(dateValue[i] == recent)
   {
-    visit_type[i] = "Recent";
-    if (visit_count[i] == most )
-      visit_type[i] = "Most_Recent";
-      recent_count = recent_count +1;
+    visitType[i] = "Recent";
+    if (visitCount[i] == most )
+      visitType[i] = "Most_Recent";
+      recentCount = recentCount +1;
   }
 }
-var least_data = marker_type_count("Least",visit_type);
-var average_data = marker_type_count("Average",visit_type);
-var most_data = marker_type_count("Most",visit_type);
-var recent_data = marker_type_count("Recent",visit_type);
-var most_recent_data = marker_type_count("Most_Recent",visit_type);
+var leastData = markerTypeCount("Least",visitType);
+var averageData = markerTypeCount("Average",visitType);
+var mostData  = markerTypeCount("Most",visitType);
+var recentData = markerTypeCount("Recent",visitType);
+var mostRecentData = markerTypeCount("Most_Recent",visitType);
 
- function marker_type_count(object,visit_type){
+ function markerTypeCount(object,visitType){
    var data = new Array();
    var j =0;
-   for(var i = 0; i<visit_type.length;i++)
+   for(var i = 0; i<visitType.length;i++)
    {
-    if(visit_type[i] == object){
+    if(visitType[i] == object){
         data[j] = i;
         j++;
     }
@@ -149,15 +150,15 @@ var most_recent_data = marker_type_count("Most_Recent",visit_type);
 
 function drawMap(data,selection) {
 
-var span_id = ["most","least","average","recent","recent_most","all"];
+var spanId = ["most","least","average","recent","recent_most","all"];
 
-for(var i =0; i<span_id.length;i++)
+for(var i =0; i<spanId.length;i++)
 {
-  if( span_id[i] == selection)
+  if( spanId[i] == selection)
   {
-    document.getElementById(span_id[i]).style.backgroundColor = " rgb(49, 58, 146) ";
+    document.getElementById(spanId[i]).style.backgroundColor = " rgb(49, 58, 146) ";
   }else{
-    document.getElementById(span_id[i]).style.backgroundColor = "";
+    document.getElementById(spanId[i]).style.backgroundColor = "";
   }
 }
 
@@ -187,20 +188,20 @@ var infowindow = new google.maps.InfoWindow();
 
 for (var i= 0; i<=data.length; i++){
     // console.log(data[i]);
-    var feature = {position: new google.maps.LatLng(latitude[data[i]], longitude[data[i]]), type: visit_type[data[i]]}
-    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: place_name[data[i]] });
+    var feature = {position: new google.maps.LatLng(latitude[data[i]], longitude[data[i]]), type: visitType[data[i]]}
+    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: placeName[data[i]] });
 
     google.maps.event.addListener(marker, 'click', (function (marker, i) {
             return function () {
                 var contentString  = '<div id="content">'+
   '<div id="siteNotice">'+
   '</div>'+
-  '<h2 style = "color:black;" id="firstHeading" class="firstHeading">'+ place_name[data[i]] + '</h2>' +
+  '<h2 style = "color:black;" id="firstHeading" class="firstHeading">'+ placeName[data[i]] + '</h2>' +
   '<div id="bodyContent">'+
   '<p style = "color:black;"><b>City</b> : ' + city[data[i]] + '</p>' +
   '<p style = "color:black;"><b>Country</b> : ' + country[data[i]] + '</p>' +
-  '<p style = "color:black;"><b>Number of Visit</b> : ' + visit_count[data[i]] + '</p>' +
-  '<p style = "color:black;"><b>Visit Date (YYYY-MM-DD)</b> : ' + visit_date[data[i]] + '</p>' +
+  '<p style = "color:black;"><b>Number of Visit</b> : ' + visitCount[data[i]] + '</p>' +
+  '<p style = "color:black;"><b>Visit Date (YYYY-MM-DD)</b> : ' + visitDate[data[i]] + '</p>' +
   '</div>'+
   '</div>';
                 infowindow.setContent(contentString);
@@ -209,21 +210,22 @@ for (var i= 0; i<=data.length; i++){
         })(marker, i)); 
     }
   
+
 }
 
 
 // Initialize and add the map
 function initMap() {
 
-var span_id = ["most","least","average","recent","recent_most","all"];
+var spanId = ["most","least","average","recent","recent_most","all"];
 
-for(var i =0; i<span_id.length;i++)
+for(var i =0; i<spanId.length;i++)
 {
-  if( span_id[i] == "all")
+  if( spanId[i] == "all")
   {
-    document.getElementById(span_id[i]).style.backgroundColor = " rgb(49, 58, 146) ";
+    document.getElementById(spanId[i]).style.backgroundColor = " rgb(49, 58, 146) ";
   }else{
-    document.getElementById(span_id[i]).style.backgroundColor = "";
+    document.getElementById(spanId[i]).style.backgroundColor = "";
   }
 }
 
@@ -253,20 +255,20 @@ var infowindow = new google.maps.InfoWindow();
 
 for (var i= 0; i<=latitude.length; i++){
     
-    var feature = {position: new google.maps.LatLng(latitude[i], longitude[i]), type: visit_type[i]}
-    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: place_name[i] });
+    var feature = {position: new google.maps.LatLng(latitude[i], longitude[i]), type: visitType[i]}
+    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: placeName[i] });
 
     google.maps.event.addListener(marker, 'click', (function (marker, i) {
             return function () {
                 var contentString  = '<div id="content">'+
   '<div id="siteNotice">'+
   '</div>'+
-  '<h2 style = "color:black;" id="firstHeading" class="firstHeading">'+ place_name[i] + '</h2>' +
+  '<h2 style = "color:black;" id="firstHeading" class="firstHeading">'+ placeName[i] + '</h2>' +
   '<div id="bodyContent">'+
   '<p style = "color:black;"><b>City</b> : ' + city[i] + '</p>' +
   '<p style = "color:black;"><b>Country</b> : ' + country[i] + '</p>' +
-  '<p style = "color:black;"><b>Number of Visit</b> : ' + visit_count[i] + '</p>' +
-  '<p style = "color:black;"><b>Visit Date (YYYY-MM-DD)</b> : ' + visit_date[i] + '</p>' +
+  '<p style = "color:black;"><b>Number of Visit</b> : ' + visitCount[i] + '</p>' +
+  '<p style = "color:black;"><b>Visit Date (YYYY-MM-DD)</b> : ' + visitDate[i] + '</p>' +
   '</div>'+
   '</div>';
                 infowindow.setContent(contentString);
@@ -328,17 +330,17 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
       <div class="row">
 
         <div class="col-sm-3" style ="margin-left:100px; color:black;">
-          <p><span onclick = "drawMap(most_data,'most')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||07E8BB|000000|D82C2C"  alt="Most Visited Place"><span class="mark" id="most" > Most Visited Places</span></span></p>
-          <p><span onclick = "drawMap(recent_data,'recent')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|R|1758B6|000000"  alt="Recently Visited Place"> <span class="mark" id="recent" >Recently Visited Place</span></span></p>
+          <p><span onclick = "drawMap(mostData,'most')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||07E8BB|000000|D82C2C"  alt="Most Visited Place"><span class="mark" id="most" > Most Visited Places</span></span></p>
+          <p><span onclick = "drawMap(recentData,'recent')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|R|1758B6|000000"  alt="Recently Visited Place"> <span class="mark" id="recent" >Recently Visited Place</span></span></p>
         </div>
 
         <div class="col-sm-3" style ="margin-left:100px; color:black;">
-          <p><span onclick = "drawMap(average_data,'average')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FCFC65|000000|"  alt="Regular Visited Places"> <span class="mark" id="average" >Regular Visited Places</span></span></p>
-          <p><span onclick = "drawMap(most_recent_data,'recent_most')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||1758B6|000000|D82C2C"  alt="recent_most"><span class="mark" id="recent_most" > Recently & Most Visited Place</span></span></p>       
+          <p><span onclick = "drawMap(averageData,'average')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FCFC65|000000|"  alt="Regular Visited Places"> <span class="mark" id="average" >Regular Visited Places</span></span></p>
+          <p><span onclick = "drawMap(mostRecentData,'recent_most')"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin_star||1758B6|000000|D82C2C"  alt="recent_most"><span class="mark" id="recent_most" > Recently & Most Visited Place</span></span></p>       
         </div>
 
         <div class="col-sm-3" style ="margin-left:90px; color:black;">
-            <p><span onclick = "drawMap(least_data,'least')" ><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||DF6458|000000" alt="Least Visited Places"><span class="mark" id="least" > Least Visited Places</span></span></p>
+            <p><span onclick = "drawMap(leastData,'least')" ><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||DF6458|000000" alt="Least Visited Places"><span class="mark" id="least" > Least Visited Places</span></span></p>
             <p><span onclick = "initMap()"><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin||FFFFFF|000000"  alt="Display All"> <span class="mark" id="all" >Display All Visited Places</span></span></p>  
       </div>
         </div>
