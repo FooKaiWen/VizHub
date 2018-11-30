@@ -1,7 +1,7 @@
 var selected_value = 50;
 var selector = document.getElementById("selected");
 var info = document.getElementById("topInfo");
-var topLikes = 0, averageLikes;
+var topLikes, averageLikes;
 var friendNum = 1;
 var highestReaction = 0;
 var highestReactionType;
@@ -18,7 +18,7 @@ selector.addEventListener('change', function () {
 
     if(checkbox_All.checked){
         allReactChart.destroy();
-        plotAll("chart", globalLikes, globalComment, globalShare, globalTime)
+        plotAll("chart", globalLikes, globalComment, globalShare, globalTime);
         showLikeInsight();    
     }
     else if(checkbox_Tot.checked){
@@ -58,7 +58,8 @@ var checkbox_Tot = document.getElementById("togTotBtn");
 var checkbox_Type = document.getElementById("togTypBtn");
 
 function showLikeInsight(){
-    var interactionRate = ((topLikes/friendNum)*100).toFixed(0);
+    console.log("here"+topLikes);
+    var interactionRate = ((topLikes/friendNum)*100).toFixed(2);
     if(interactionRate > 20){
         info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
     } else {
@@ -114,22 +115,21 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
     globalShare = newShare.slice(0, newShare.length);
     globalTime = newTime.slice(0, newTime.length);
        
-    var tempLikes = [], tempComment = [], tempShare = [], tempTime = [], tempTopLikes = [];
-
+    var tempLikes = [], tempComment = [], tempShare = [], tempTime = [];
+    topLikes = 0;
     var k = selected_value-1;
     for (i = globalLikes.length-1; i >= (globalLikes.length-1)-selected_value; i--) {
         tempLikes[k] = newLikes[i];
+        if(tempLikes[k] > topLikes){
+            topLikes = tempLikes[k];
+        }
         tempComment[k] = newComment[i];
         tempShare[k] = newShare[i];
         tempTime[k] = newTime[i].slice(0, 10);
-        tempTopLikes[k] = newLikes[i];
-        if(tempTopLikes[k] > topLikes){
-            topLikes = tempTopLikes[k];
-        }
         averageLikes += newLikes[i];
         k--;
     }
-
+    console.log(topLikes);
     if (checkbox_All.checked) {
         if (checkbox_Tot.checked) {
             totalChart.destroy();
