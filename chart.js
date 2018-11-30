@@ -3,8 +3,8 @@ var selector = document.getElementById("selected");
 var info = document.getElementById("topInfo");
 var topLikes, averageLikes;
 var friendNum = 1;
-var highestReaction = 0;
-var highestReactionType;
+var highestCount = 0;
+var highestCountType;
 var globalLikes = [], globalComment = [], globalShare = [], globalTime = [];
 var globalLove = [], globalHaha = [], globalWow = [], globalSad = [], globalAngry = [];
 
@@ -67,7 +67,11 @@ function showLikeInsight(){
 }
 
 function showReactionInsight(){
-    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestReactionType + " reaction! The number goes as high as " + highestReaction + "!";
+    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestCountType + " reaction! The number goes as high as " + highestCount + "!";
+}
+
+function showPostTypeInsight(){
+    info.innerHTML = "As an overall, most of your posts are " + highestCountType + " type and it successfully attracted as much as " + highestCount + " likes!";
 }
 
 checkBoxReach.addEventListener('change', function () {
@@ -94,11 +98,12 @@ checkBoxReact.addEventListener('change', function () {
 
 checkBoxType.addEventListener('change', function () {
     if (this.checked) {
-        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you.");
-        // showselect();
+        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you. *Changing the number of post WILL NOT change this chart as the result is accumulated from your past posts.*");
+        showInsight();
+        showPostTypeInsight();
     } else if (!this.checked) {
         hideInfo();
-        hideselect();
+        hideInsight();
     }
 });
 
@@ -192,21 +197,19 @@ function plotReachChart(chartid, newLikes, newComment, newShare, newTime) {
     }
 }
 
-function countReaction(love, haha, wow, sad, angry){
-    var lovecount=0, hahacount=0, wowcount=0, sadcount =0, angrycount =0;
-    for (i = love.length-1; i >= (love.length-1)-selectedValue; i--) {
-        lovecount += love[i];
-        hahacount+= haha[i];
-        wowcount += wow[i];
-        sadcount += sad[i];
-        angrycount += angry[i];
-    }
+function sortHighestCount(paramOne, paramTwo, paramThree, paramFour, paramFive,type){
+    var obj;
+    if(type == "reaction"){
+        obj = {
+            Love : paramOne, Haha : paramTwo, Wow : paramThree, Sad : paramFour, Angry : paramFive
+        };
+    } else if(type == "postType"){
+        obj = {
+            Link : paramOne, Video : paramTwo, Photo : paramThree, Event : paramFour, Status : paramFive
+        };
+    }  
 
-    var obj = {
-        Love : lovecount, Haha : hahacount, Wow : wowcount, Sad : sadcount, Angry : angrycount
-    };
-
-    highestReaction = Math.max(lovecount,hahacount,wowcount,sadcount,angrycount);
+    highestCount = Math.max(paramOne,paramTwo,paramThree,paramFour,paramFive);
 
     var keys = Object.keys(obj);
     var max = keys[0];
@@ -216,12 +219,21 @@ function countReaction(love, haha, wow, sad, angry){
           max = k;
        }
     }
-    return max;
+    highestCountType =  max;
 }
 
 function plotReactChart(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime) {
 
-    highestReactionType =  countReaction(newLove, newHaha, newWow, newSad, newAngry);
+    var loveCount=0, hahaCount=0, wowCount=0, sadCount =0, angryCount =0;
+    for (i = newLove.length-1; i >= (newLove.length-1)-selectedValue; i--) {
+        loveCount += newLove[i];
+        hahaCount+= newHaha[i];
+        wowCount += newWow[i];
+        sadCount += newSad[i];
+        angryCount += newAngry[i];
+    }
+
+    sortHighestCount(loveCount, hahaCount, wowCount, sadCount, angryCount,"reaction");
 
     globalLove = newLove.slice(0, newLove.length);
     globalHaha = newHaha.slice(0, newHaha.length);
@@ -285,8 +297,8 @@ function plotReactChart(chartid, newLove, newHaha, newWow, newSad, newAngry, new
                     fill: true,
                 }, {
                     label: 'Angry',
-                    backgroundColor: 'rgba(112,128,144, 0.8)',
-                    borderColor: 'rgba(112,128,144, 1.0)',
+                    backgroundColor: 'black',
+                    borderColor: 'black',
                     data: tempAngry,
                     fill: true,
                 }]
@@ -300,7 +312,6 @@ function plotReactChart(chartid, newLove, newHaha, newWow, newSad, newAngry, new
                         },
                         stacked: true
                     }],
-
                     yAxes: [{
                         gridLines: {
                             color: 'rgba(255, 255, 255,0.5)',
@@ -342,10 +353,8 @@ function plotPostTypeChart(chartid, postCount, postType){
                     hoverBackgroundColor: ["Red","Green","Blue","Yellow","Purple","Pink"],
                     hoverBorderColor: "Black",
                 }],
-            
                 labels:
                     postType
-                
             },
             options:{
                 segmentShowStroke : true,

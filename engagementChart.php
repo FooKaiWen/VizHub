@@ -38,8 +38,13 @@ $sadArray = array();
 $angryArray = array();
 $numComment = array();
 $numShare = array();
-$postType = array();
-
+$numType = array();
+$i = 0;
+$linkCount = 0;
+$photoCount = 0;
+$statusCount = 0;
+$videoCount = 0;
+$eventCount = 0;
 foreach ($postDetail as $data) {   
     $likeArray [] = $data->like->summary->total_count;
     $timeArray [] = $data->created_time;
@@ -50,27 +55,30 @@ foreach ($postDetail as $data) {
     $sadArray [] = $data->sad->summary->total_count;
     $angryArray [] = $data->angry->summary->total_count;
     $numComment [] = $data->comments->summary->total_count;
-    $postType [] = $data->type;
+    if($i < 50){
+        $numType [] = $data->type;
+    }
+    $i++;
     if(!isset($data->shares)){
         $numShare [] = 0;
     } else {
         $numShare [] = $data->shares->count;           
     }
 
-    // if($data->type == "link"){
-    //     $linkcount += $data->like->summary->total_count;
-    // } elseif($data->type == "photo"){
-    //     $photocount += $data->like->summary->total_count;
-    // } elseif($data->type == "status"){
-    //     $statuscount += $data->like->summary->total_count;
-    // } elseif($data->type == "video"){
-    //     $videocount += $data->like->summary->total_count;
-    // } elseif($data->type == "event"){
-    //     $offercount += $data->like->summary->total_count;
-    // }
+    if($data->type == "link"){
+        $linkCount += $data->like->summary->total_count;
+    } elseif($data->type == "photo"){
+        $photoCount += $data->like->summary->total_count;
+    } elseif($data->type == "status"){
+        $statusCount += $data->like->summary->total_count;
+    } elseif($data->type == "video"){
+        $videoCount += $data->like->summary->total_count;
+    } elseif($data->type == "event"){
+        $eventCount += $data->like->summary->total_count;
+    }
 }
 
-$postTypeCount = array_count_values($postType);
+$postTypeCount = array_count_values($numType);
 
 foreach($postTypeCount as $type => $count){
     $postType [] = $type;
@@ -123,7 +131,7 @@ foreach($userDetails as $data){
 </label>
 
 <label class="switch">
-    <input type="checkbox" id="togTypBtn" onclick='plotPostTypeChart("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>
+    <input type="checkbox" id="togTypBtn" onclick='sortHighestCount(<?php echo json_encode($linkCount) ?>,<?php echo json_encode($videoCount) ?>,<?php echo json_encode($photoCount) ?>,<?php echo json_encode($eventCount) ?>,<?php echo json_encode($statusCount) ?>,"postType");plotPostTypeChart("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>
     <div class="slider round">
         <span class="on">Post Type</span><span class="off">Post Type</span>
     </div>
