@@ -19,11 +19,13 @@ selector.addEventListener('change', function () {
     if(checkbox_All.checked){
         allReactChart.destroy();
         plotAll("chart", globalLikes, globalComment, globalShare, globalTime)
-        showTop();    
+        showTop();
+        showLikeInsight();    
     }
     else if(checkbox_Tot.checked){
         totalChart.destroy();
         plotTotal("chart",globalLove,globalHaha,globalWow,globalSad,globalAngry,globalTime);
+        showReactionInsight();
     }
 
 });
@@ -52,33 +54,29 @@ function hideInfo() {
     triggerMessage.style.height = '50px';
 }
 
-function showTop() {
-
-    // document.getElementById("top1").innerHTML = "The 1st highest number of likes:asd " ;
-    // document.getElementById("top2").innerHTML = "The 2nd highest number of likes: " + topLikes[1];
-    // document.getElementById("top3").innerHTML = "The 3rd highest number of likes: " + topLikes[2];
-    // document.getElementById("top4").innerHTML = "The 4th highest number of likes: " + topLikes[3];
-    // document.getElementById("top5").innerHTML = "The 5th highest number of likes: " + topLikes[4];
-
-}
-
 var checkbox_All = document.getElementById("togAllBtn");
 var checkbox_Tot = document.getElementById("togTotBtn");
 var checkbox_Type = document.getElementById("togTypBtn");
+
+function showLikeInsight(){
+    var interactionRate = ((topLikes[0]/friendNum)*100).toFixed(0);
+    if(interactionRate > 20){
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
+    } else {
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
+    }
+}
+
+function showReactionInsight(){
+    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestReactionType + " reaction! The number goes as high as " + highestReaction + "!";
+}
 
 checkbox_All.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This line graph shows the number of Likes, Comments and Shares of each post against the posted date.");
         showInsight();
         showTop();
-        
-        var interactionRate = ((topLikes[0]/friendNum)*100).toFixed(0);
-        if(interactionRate > 20){
-            info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
-        } else {
-            info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
-        }
-        
+        showLikeInsight();
     } else if (!this.checked) {
         hideInfo();
         hideInsight();
@@ -89,7 +87,7 @@ checkbox_Tot.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This bar graph shows the total number of Reactions such as Wow, Sad, Angry reaction of each post against the posted date.");
         showInsight();
-        info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestReactionType + " reaction! The number goes as high as " + highestReaction + "!";
+        showReactionInsight();
     } else if (!this.checked) {
         hideInfo();
         hideInsight();

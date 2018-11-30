@@ -95,7 +95,7 @@ foreach($reactdata as $row){
     //     $statuscount += $row->like->summary->total_count;
     // } elseif($row->type == "video"){
     //     $videocount += $row->like->summary->total_count;
-    // } elseif($row->type == "offer"){
+    // } elseif($row->type == "event"){
     //     $offercount += $row->like->summary->total_count;
     // }
 }
