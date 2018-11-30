@@ -4,20 +4,20 @@ import pandas
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
 
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["fb"]
-mycol = mydb["predictMessage"]
+Client = pymongo.MongoClient("mongodb://localhost:27017/")
+userDB = Client["fb"]
+userCol = userDB["predictMessage"]
 
-getMessage = mycol.find_one()
+getMessage = userCol.find_one()
 message = getMessage['pmessage']
 
 message = re.sub('[^A-Za-z]',' ',message)
 message = message.lower()
 data = [message]
 
-loaded_vect = TfidfVectorizer(decode_error="ignore",vocabulary=joblib.load('feature.joblib'))
-loadedmodel = joblib.load('model.joblib')
-xvalid_tfidf =  loaded_vect.fit_transform(data)
-prediction = loadedmodel.predict(xvalid_tfidf)
+loadedVect = TfidfVectorizer(decode_error="ignore",vocabulary=joblib.load('feature.joblib'))
+loadedModel = joblib.load('model.joblib')
+tranformedData =  loadedVect.fit_transform(data)
+predictedValue = loadedModel.predict(transformedData)
 
-mycol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesRange":int(prediction)}})
+userCol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesRange":int(predictedValue)}})
