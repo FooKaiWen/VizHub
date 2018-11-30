@@ -73,47 +73,9 @@ $logoutUrl = $_SESSION['logoutUrl'];
 <form action="MapChart.php" target="_blank">
   <button id="vizbutton" style="width: 50%; float:right; height:150px; background:#738299; margin:0px">Location Vizualization</button>
 </form>
+
 <?php
 if(isset($_REQUEST['submit_btn'])){
-
-  echo 
-  '<div id="modelsummary">
-    <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Model Summary Report</i></label>
-    <div id="summary">
-      <p>The machine model was trained with <b>1008</b> instances of data and tested with dataset of <b>336</b> instances. 
-         It was evaluated with confusion matrix as below: </p>
-      <table style="width:75%">
-        <tr>
-          <th>Confusion Matrix</th>
-        </tr>
-        <tr>
-          <th>Number of Likes</th><th>Precision(%)</th><th>Recall(%)</th><th>F1-score(%)</th><th>Support</th>
-        </tr>
-        <tr>
-          <td>0-50</td><td>44</td><td>31</td><td>36</td><td>68</td>
-        </tr>
-        <tr>
-          <td>51-100</td><td>30</td><td>54</td><td>38</td><td>83</td>
-        </tr>
-        <tr>
-          <td>101-150</td><td>38</td><td>25</td><td>30</td><td>65</td>
-        </tr>
-        <tr>
-          <td>151-200</td><td>31</td><td>15</td><td>20</td><td>67</td>
-        </tr>
-        <tr>
-          <td>201-250</td><td>30</td><td>36</td><td>33</td><td>53</td>
-        </tr>
-        <tr><td></td></tr>
-        <tr>
-          <td>weighted average</td><td>35</td><td>33</td><td>32</td><td>336</td>
-        </tr>
-      </table>
-      <p><br/>In Layman\'s terms, the machine can predict the correct number of likes with one-third chance. Although it is not the exact
-          number, it still gives the range of the predicted likes.</p>
-      <p>We are still improving our machine model!</p>
-    </div>
-  </div>';
 
   $message = $_POST["predictM"];
   if($message != ""){
@@ -131,12 +93,12 @@ if(isset($_REQUEST['submit_btn'])){
 
     echo '
     <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Result</i></label>
-    <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <b>';
+    <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <strong style="background-color:White; color:Black;">';
   
     if($upperboundary == 250){
-      echo htmlspecialchars($upperboundary).' and above</b>';
+      echo htmlspecialchars($upperboundary).' and above</strong>';
     } else {
-      echo htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary).'</b>';
+      echo htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary).'</strong>';
     }
     
     echo ' for the message: '.htmlspecialchars($message).'</div>';   

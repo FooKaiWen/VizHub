@@ -54,7 +54,6 @@ foreach ($likedata as $row) {
     // print($highestLikes);
     // print(" ");
     $timearray [] = $row->created_time;
-    $typearray [] = $row->type;
 }
 
 $query = new MongoDB\Driver\Query([]);
@@ -69,6 +68,7 @@ $num_comment = array();
 $num_share = array();
 $post_type = array();
 $i = 0;
+
 foreach($reactdata as $row){
     $lovearray [] = $row->love->summary->total_count;
     $hahaarray [] = $row->haha->summary->total_count;
@@ -77,17 +77,27 @@ foreach($reactdata as $row){
     $angryarray [] = $row->angry->summary->total_count;
     $num_comment [] = $row->comments->summary->total_count;
     if($i < 50){
-        $post_type [] = $row->status_type;
+        $post_type [] = $row->type;
     }
     $i++;
     // print($row->status_type . " ");
     if(!isset($row->shares)){
-            $num_share [] = 0;
-        }
-        else 
-        {
-            $num_share [] = $row->shares->count;           
-        }
+        $num_share [] = 0;
+    } else {
+        $num_share [] = $row->shares->count;           
+    }
+
+    // if($row->type == "link"){
+    //     $linkcount += $row->like->summary->total_count;
+    // } elseif($row->type == "photo"){
+    //     $photocount += $row->like->summary->total_count;
+    // } elseif($row->type == "status"){
+    //     $statuscount += $row->like->summary->total_count;
+    // } elseif($row->type == "video"){
+    //     $videocount += $row->like->summary->total_count;
+    // } elseif($row->type == "offer"){
+    //     $offercount += $row->like->summary->total_count;
+    // }
 }
 
 $post_type_count = array_count_values($post_type);
@@ -130,7 +140,7 @@ foreach($user_details as $row){
 </div>
 
 <label class="switch">
-    <input type="checkbox" id="togAllBtn" onclick='plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>)'>
+    <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($num_friends) ?>);plotAll("chart",<?php echo json_encode($likearray) ?>,<?php echo json_encode($num_comment) ?>,<?php echo json_encode($num_share) ?>, <?php echo json_encode($timearray)?>);'>
     <div class="slider round">
         <span class="on">Reach</span><span class="off">Reach</span>
     </div>
@@ -177,53 +187,8 @@ echo '</select> ';
 
 <label for="informMessage" class="title"><i>Insight</i></label>
 <div class ="informMessage"  >
-<div id ="topInfo" style = "display:none;">
-<button class="tabheader" onclick="displayInsight(event,'first')">1st</button>
-<button class="tabheader" onclick="displayInsight(event,'second')">2nd</button>
-<button class="tabheader" onclick="displayInsight(event,'third')">3rd</button>
-<button class="tabheader" onclick="displayInsight(event,'fourth')">4th</button>
-<button class="tabheader" onclick="displayInsight(event,'fifth')">5th</button>
-
-<div id="first" class="tabcontent">
-    <p>Message: Eric Tan is very handsome.</p>
-    <p>Type: Photo</p>
-    <p>Created Time: 2018-11-28</p>
-    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
-</div>
-
-<div id="second" class="tabcontent">
-    <p>Message: Help me!.</p>
-    <p>Type: Status</p>
-    <p>Created Time: 2018-11-28</p>
-    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
-</div>
-
-<div id="third" class="tabcontent">
-    <p>Message: Nasi Lemak is nice.</p>
-    <p>Type: Photo</p>
-    <p>Created Time: 2018-11-28</p>
-    <p>Please edit and publish the post to attract more engagement in Instagram since it's not eligible in current format!</p>
-</div>
-
-<div id="fourth" class="tabcontent">
-    <p>Message: Eric Tan is very handsome.</p>
-    <p>Type: Photo</p>
-    <p>Created Time: 2018-11-28</p>
-    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
-</div>
-
-<div id="fifth" class="tabcontent">
-    <p>Message: Eric Tan is very handsome.</p>
-    <p>Type: Photo</p>
-    <p>Created Time: 2018-11-28</p>
-    <p>We suggest you to publish this post in Instagram since it's eligible!</p>
-</div>
-
-</div>
-
-
-
-
+    <div id ="topInfo" style = "display:none;">
+    </div>
 </div>
 
 
