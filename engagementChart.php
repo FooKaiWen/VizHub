@@ -76,10 +76,8 @@ foreach($reactdata as $row){
     $sadarray [] = $row->sad->summary->total_count;
     $angryarray [] = $row->angry->summary->total_count;
     $num_comment [] = $row->comments->summary->total_count;
-    if($i < 50){
-        $post_type [] = $row->type;
-    }
-    $i++;
+    $post_type [] = $row->type;
+
     // print($row->status_type . " ");
     if(!isset($row->shares)){
         $num_share [] = 0;
@@ -110,7 +108,6 @@ foreach($post_type_count as $type => $count){
 $user_details = $connection->executeQuery('fb.userdetail', $query);
 
 foreach($user_details as $row){
-
     $num_friends = $row->friends->summary->total_count;    
 }
 

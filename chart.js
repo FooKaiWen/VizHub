@@ -1,7 +1,7 @@
 var selected_value = 50;
 var selector = document.getElementById("selected");
 var info = document.getElementById("topInfo");
-var topLikes = [], averageLikes;
+var topLikes = 0, averageLikes;
 var friendNum = 1;
 var highestReaction = 0;
 var highestReactionType;
@@ -19,7 +19,6 @@ selector.addEventListener('change', function () {
     if(checkbox_All.checked){
         allReactChart.destroy();
         plotAll("chart", globalLikes, globalComment, globalShare, globalTime)
-        showTop();
         showLikeInsight();    
     }
     else if(checkbox_Tot.checked){
@@ -59,11 +58,11 @@ var checkbox_Tot = document.getElementById("togTotBtn");
 var checkbox_Type = document.getElementById("togTypBtn");
 
 function showLikeInsight(){
-    var interactionRate = ((topLikes[0]/friendNum)*100).toFixed(0);
+    var interactionRate = ((topLikes/friendNum)*100).toFixed(0);
     if(interactionRate > 20){
-        info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
     } else {
-        info.innerHTML = "The highest number of likes you have gotten is " + topLikes[0] + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
     }
 }
 
@@ -75,7 +74,6 @@ checkbox_All.addEventListener('change', function () {
     if (this.checked) {
         showInfo("This line graph shows the number of Likes, Comments and Shares of each post against the posted date.");
         showInsight();
-        showTop();
         showLikeInsight();
     } else if (!this.checked) {
         hideInfo();
@@ -115,23 +113,22 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
     globalComment = newComment.slice(0, newComment.length);
     globalShare = newShare.slice(0, newShare.length);
     globalTime = newTime.slice(0, newTime.length);
-
-    console.log(newTime[0]);
        
     var tempLikes = [], tempComment = [], tempShare = [], tempTime = [], tempTopLikes = [];
 
     var k = selected_value-1;
-    for (i = 49; i >= 50-selected_value; i--) {
+    for (i = globalLikes.length-1; i >= (globalLikes.length-1)-selected_value; i--) {
         tempLikes[k] = newLikes[i];
         tempComment[k] = newComment[i];
         tempShare[k] = newShare[i];
         tempTime[k] = newTime[i].slice(0, 10);
         tempTopLikes[k] = newLikes[i];
+        if(tempTopLikes[k] > topLikes){
+            topLikes = tempTopLikes[k];
+        }
         averageLikes += newLikes[i];
         k--;
     }
-
-    topLikes = tempTopLikes.sort((a, b) => b - a).slice(0, 5);
 
     if (checkbox_All.checked) {
         if (checkbox_Tot.checked) {
@@ -201,7 +198,7 @@ function plotAll(chartid, newLikes, newComment, newShare, newTime) {
 
 function countReaction(love, haha, wow, sad, angry){
     var lovecount=0, hahacount=0, wowcount=0, sadcount =0, angrycount =0;
-    for (i = 49; i >= 50-selected_value; i--) {
+    for (i = love.length-1; i >= (love.length-1)-selected_value; i--) {
         lovecount += love[i];
         hahacount+= haha[i];
         wowcount += wow[i];
@@ -239,7 +236,11 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
 
     var tempLove = [], tempHaha = [], tempWow = [], tempSad = [], tempAngry = [], tempTime = [];
     var k = selected_value-1;
-    for (i = 49; i >= 50-selected_value; i--) {
+    console.log("there");
+    console.log(k);
+    console.log(newLove.length);
+    for (i = newLove.length-1; i >= (newLove.length-1)-selected_value; i--) {
+        console.log("here1");
         tempLove[k] = newLove[i];
         tempHaha[k] = newHaha[i];
         tempWow[k] = newWow[i];
@@ -321,6 +322,7 @@ function plotTotal(chartid, newLove, newHaha, newWow, newSad, newAngry, newTime)
                 }
             }
         });
+        console.log("end1");
     }
     else if (!checkbox_Tot.checked) {
         totalChart.destroy();
