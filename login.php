@@ -23,13 +23,13 @@ require_once  'Facebook/autoload.php';
 $fb = new Facebook\Facebook([
   'app_id' => '267157010556839', // Replace {app-id} with your app id
   'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
-  'default_graph_version' => 'v3.1',
+  'default_graph_version' => 'v3.2',
   ]);
 
 $helper = $fb->getRedirectLoginHelper();
 
 $permissions = ['user_posts','user_tagged_places']; // Optional permissions
-$loginUrl = $helper->getLoginUrl('https://localhost/VizHub/fb-callback.php', $permissions);
+$loginUrl = $helper->getLoginUrl('https://localhost/VizHub/extractData.php', $permissions);
 
   if (isset($_POST['logInBtn']))
   {

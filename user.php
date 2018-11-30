@@ -10,7 +10,7 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbhost:$dbport");
 $query = new MongoDB\Driver\Query([]);
 
 
-$userdatas = $connection->executeQuery('fb.userdetail', $query);
+$userdatas = $connection->executeQuery('fb.userDetail', $query);
 
 foreach($userdatas as $userdata){
 $name = $userdata->name;
@@ -70,7 +70,7 @@ $logoutUrl = $_SESSION['logoutUrl'];
 <form action="engagementChart.php" target="_blank">
   <button id="vizbutton" style="width: 50%; float:left; height:150px; background:#738299; margin:0px">Engagement Visualization</button>
 </form>
-<form action="MapChart.php" target="_blank">
+<form action="mapChart.php" target="_blank">
   <button id="vizbutton" style="width: 50%; float:right; height:150px; background:#738299; margin:0px">Location Vizualization</button>
 </form>
 
@@ -81,6 +81,7 @@ if(isset($_REQUEST['submit_btn'])){
   if($message != ""){
     $messagecol->insertOne(
       [
+      // '_id'=>'message',
       'pmessage'=>"$message"]);
     shell_exec("python readtext.py");
     $upperboundary = $messagecol->findOne()->likesRange;
