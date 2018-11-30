@@ -42,7 +42,6 @@ $fb = new Facebook\Facebook([
   'app_id' => '590344301384464', // Replace {app-id} with your app id
   'app_secret' => '0e62c56caa857d32e479b8703a7501c4',
   'default_graph_version' => 'v3.1',
-
     ]);
  
 $helper = $fb->getRedirectLoginHelper();
@@ -109,7 +108,7 @@ $_SESSION['logoutUrl'] = $logoutUrl;
  
 // getting all posts id published by user
 try {
-    $posts_request = $fb->get('/me?fields=posts.limit(70){id}',$accessToken);
+    $posts_request = $fb->get('/me?fields=posts.limit(55){id}',$accessToken);
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
