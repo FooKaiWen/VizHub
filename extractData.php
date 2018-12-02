@@ -43,7 +43,7 @@ $fb = new Facebook\Facebook([
   'app_secret' => 'cb8559fb855dcb5a73a624df4fdf58f5',
   'default_graph_version' => 'v3.2',
     ]);
- 
+
 $helper = $fb->getRedirectLoginHelper();
   
 if(isset($_GET['state'])){
