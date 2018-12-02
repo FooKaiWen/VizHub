@@ -39,49 +39,41 @@ $connection = new MongoDB\Driver\Manager("mongodb://$dbHost:$dbPort");
 $query = new MongoDB\Driver\Query([]);
 
 $placeId = $connection->executeQuery('fb.locationDetail', $query);
-$id = array();
 
+$id = array();
 foreach($placeId as $row){
+  if (isset($row->place->location->latitude,$row->place->location->longitude))
+  {
   $id[] = $row->place->id;
+  }
 }
 
 $vals = array_count_values($id);
 $most = max($vals);
 $least = min($vals);
 
-
 $tagPlaces = $connection->executeQuery('fb.locationDetail', $query);
-$big = array();
+foreach($tagPlaces as $tagPlace){ 
+  if (isset($tagPlace->place->location->latitude,$tagPlace->place->location->longitude)){
+    $lat [] = $tagPlace->place->location->latitude;
+    $long []= $tagPlace->place->location->longitude;
+    $placeName [] =$tagPlace->place->name;
+    $placeId= $tagPlace->place->id;
+    $time [] =$tagPlace->created_time;
+    $count [] = $vals["$placeId"];
 
-foreach($tagPlaces as $tagPlace){
-  $lat [] = $tagPlace->place->location->latitude;
-  $long []= $tagPlace->place->location->longitude;
-  $placeName [] =$tagPlace->place->name;
-  $placeId= $tagPlace->place->id;
-  $time [] =$tagPlace->created_time;
- 
-  if(!isset($tagPlace->place->location->city)){
-    $city [] = "-";
-  }else{
-    $city [] = $tagPlace->place->location->city;
-  }
-
-  if(!isset($tagPlace->place->location->country)){
-    $country [] = "-";
-  }else{
-    $country [] = $tagPlace->place->location->country;
-  }
-
-  $count [] = $vals["$placeId"];
-  $count1 =$vals["$placeId"];
-    if ($count1 == $most){
-        $marker[] = "Most";
-    } elseif ($count1 == $least){
-        $marker[] = "Least";
+    if(!isset($tagPlace->place->location->city)){
+      $city [] = "-";
     }else{
-        $marker[] = "Average";    
+      $city [] = $tagPlace->place->location->city;
     }
-
+  
+    if(!isset($tagPlace->place->location->country)){
+      $country [] = "-";
+    }else{
+      $country [] = $tagPlace->place->location->country;
+    }  
+  }
 }
 
 ?>
@@ -101,13 +93,11 @@ var latitude = <?php echo json_encode($lat);?>;
 var longitude = <?php echo json_encode($long);?>;
 var placeName = <?php echo json_encode($placeName);?>;
 var visitCount = <?php echo json_encode($count);?>;
-var visitType = <?php echo json_encode($marker);?>;
 var visitDate = <?php echo json_encode($time);?>;
 var city = <?php echo json_encode($city);?>;
 var country = <?php echo json_encode($country);?>;
 var most = <?php echo $most;?>;
 var least = <?php echo $least;?>;
-
 
 var dateValue = new Array();
 var temp = new Array();
@@ -116,18 +106,31 @@ for(var i =0;i<visitDate.length;i++){
     dateValue[i] = Date.parse(visitDate[i]);
     temp[i] = Date.parse(visitDate[i]);
 }
-  temp.sort(function(a, b){return b-a});
-  recent = temp[0];
-  var recentCount =0;
+  
+temp.sort(function(a, b){return b-a});
+recent = temp[0];
+
+var visitType = new Array();
 for(var i =0;i<temp.length;i++){
+  if (visitCount[i] == most)
+  {
+    visitType[i] = "Most";
+  } else if (visitCount [i] == least)
+  {
+    visitType[i] = "Least";
+  }else 
+  {
+    visitType[i] = "Average";
+  }
+
   if(dateValue[i] == recent)
   {
     visitType[i] = "Recent";
     if (visitCount[i] == most )
       visitType[i] = "Most_Recent";
-      recentCount = recentCount +1;
   }
 }
+
 var leastData = markerTypeCount("Least",visitType);
 var averageData = markerTypeCount("Average",visitType);
 var mostData  = markerTypeCount("Most",visitType);
@@ -146,7 +149,6 @@ var mostRecentData = markerTypeCount("Most_Recent",visitType);
    }
    return data;
  }
-
 
 function drawMap(data,selection) {
 
