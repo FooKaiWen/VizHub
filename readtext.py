@@ -21,3 +21,6 @@ transformedData =  loadedVect.fit_transform(data)
 predictedValue = loadedModel.predict(transformedData)
 
 userCol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesRange":int(predictedValue)}})
+
+
+
