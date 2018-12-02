@@ -19,7 +19,7 @@
 }
 
 .informMessage{
-    height: 200px; 
+    height: 80px; 
     width: 970px;
     float: right;
     margin: 10px;
@@ -136,7 +136,7 @@ input:checked + .slider .off{
   height: 29px;
   overflow: hidden;
   width: 120px;
-  background-color: #3b8ec2;
+  background-color:rgba(255,140,0, 0.5);
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;

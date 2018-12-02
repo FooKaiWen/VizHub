@@ -17,7 +17,10 @@ data = [message]
 
 loadedVect = TfidfVectorizer(decode_error="ignore",vocabulary=joblib.load('feature.joblib'))
 loadedModel = joblib.load('model.joblib')
-tranformedData =  loadedVect.fit_transform(data)
+transformedData =  loadedVect.fit_transform(data)
 predictedValue = loadedModel.predict(transformedData)
 
 userCol.update_one({"pmessage":getMessage['pmessage']},{"$set":{"likesRange":int(predictedValue)}})
+
+
+

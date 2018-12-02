@@ -43,7 +43,7 @@ var chartInfo = document.getElementById("chartInfo");
 
 function showInfo(message){
     triggerMessage.setAttribute("style","height:100px");
-    triggerMessage.style.height = '70px';
+    triggerMessage.style.height = '100px';
     chartInfo.innerHTML = message;
 }
 
