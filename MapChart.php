@@ -94,6 +94,9 @@ foreach($tagPlaces as $tagPlace){
   }
 }
 
+session_start();
+$logoutUrl = $_SESSION['logoutUrl'];
+
 ?>
 
 
@@ -317,6 +320,13 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
     
     <a class="navbar-brand" href="user.php">Home</a>    
      
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+               <li>
+                  <button class ="btn btn-secondary btn-sm" onclick="logout()">Log Out</button>
+               </li>
+            </ul>
+         </div>
     
 </nav>    
     
@@ -356,7 +366,6 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
         <i class="fas fa-chart-area"></i>    
         Location Visualization</div>    
       <div class="card-body">    
-      <h3 align="center" style ="margin-top:10px;">Check-Ins</h3>    
     <!--The div element for the map -->    
         
 <!-- Modal -->    
@@ -441,7 +450,12 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
 <i class="fas fa-angle-up"></i>    
 </a>    
     
-    
+<script>
+      function logout(){
+            var logoutUrl = <?php echo json_encode($logoutUrl);?>;
+            window.location = logoutUrl;
+         }
+      </script>    
 <!-- Bootstrap core JavaScript-->    
 <script src="vendor/jquery/jquery.min.js"></script>    
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>    

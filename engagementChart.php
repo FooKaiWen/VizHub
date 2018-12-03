@@ -95,6 +95,9 @@
              $numFriends = $data->friends->summary->total_count;      
          }  
            
+         session_start();
+         $logoutUrl = $_SESSION['logoutUrl'];
+
          ?>  
 
 <script type="text/javascript">
@@ -111,6 +114,13 @@
          </button>  
          <a class="navbar-brand" href="user.php">Home</a>  
      
+         <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+               <li>
+                  <button class ="btn btn-secondary btn-sm" onclick="logout()">Log Out</button>
+               </li>
+            </ul>
+         </div>
       </nav>
       <div id="wrapper">
       <!-- Sidebar -->  
@@ -221,8 +231,13 @@
       <!-- Scroll to Top Button-->  
       <a class="scroll-to-top rounded" href="#page-top">  
       <i class="fas fa-angle-up"></i>  
-      </a>
-
+      </a>  
+      <script>
+      function logout(){
+            var logoutUrl = <?php echo json_encode($logoutUrl);?>;
+            window.location = logoutUrl;
+         }
+      </script>
       <script type="text/javascript" src="chart.js"></script>  
       <!-- Bootstrap core JavaScript-->  
       <script src="vendor/jquery/jquery.min.js"></script>  

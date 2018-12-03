@@ -58,6 +58,7 @@
             <i class="fas fa-bars"></i>  
          </button>  
          <a class="navbar-brand" href="user.php">Home</a>  
+        
          <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                <li>
@@ -65,6 +66,7 @@
                </li>
             </ul>
          </div>
+         
       </nav>
 
    <div id="wrapper">
