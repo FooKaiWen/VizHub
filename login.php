@@ -28,7 +28,7 @@ $fb = new Facebook\Facebook([
 
 $helper = $fb->getRedirectLoginHelper();
 
-$permissions = ['user_posts','user_tagged_places']; // Optional permissions
+$permissions = ['user_posts','user_tagged_places','user_friends']; // Optional permissions
 $loginUrl = $helper->getLoginUrl('https://localhost/VizHub/extractData.php', $permissions);
 
   if (isset($_POST['logInBtn']))
