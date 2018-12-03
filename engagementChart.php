@@ -96,12 +96,12 @@
            
          ?>  
       <nav class="navbar navbar-expand navbar-dark bg-dark static-top">  
-         <a class="navbar-brand mr-1" href="index.html">VizHub</a>  
+         <a class="navbar-brand mr-1" href="user.php">VizHub</a>  
          <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">  
          <i class="fas fa-bars"></i>  
          </button>  
-         <a class="navbar-brand" href="#">Home</a>  
-         <a class="navbar-brand" href="http://localhost/VizHub/aboutUs.html">About Us</a>  
+         <a class="navbar-brand" href="user.php">Home</a>  
+     
       </nav>
       <div id="wrapper">
       <!-- Sidebar -->  
@@ -136,43 +136,62 @@
                   Engagement Visualization
                </div>
                <div class="card-body">
-                  <label for="triggerMessage" class="title"><i>Info</i></label>  
-                  <div class="triggerMessage" id="triggerMessage" >
-                     **Try CLICK on the Parameter !!  
-                     <p id="chartInfo"></p>
-                  </div>
-                  <label for="" class="title"><i>Chart</i></label>  
-                  <div class ="plot">
-                     <canvas id="chart" float="right" width="300" height="150" ></canvas>
-                  </div>
-                  <h5 style="margin-left:15px;width:25%;">Toggle for graph!</h5>
-                  <div class="numselect">
-                     <select id="selected">
+               <div class="row" style = "width: 980px; float:left;">
+                <label class="switch">
+                    <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart("chart",<?php echo json_encode($likeArray) ?>,<?php echo json_encode($numComment) ?>,<?php echo json_encode($numShare) ?>, <?php echo json_encode($timeArray)?>);'>  
+                    <div class="slider round">  
+                        <span class="on">Reach</span><span class="off">Reach</span>  
+                    </div>
+                </label>
+                <label class="switch">
+                    <input type="checkbox" id="togTotBtn" onclick='plotReactChart("chart",<?php echo json_encode($loveArray) ?>,<?php echo json_encode($hahaArray) ?>,<?php echo json_encode($wowArray) ?>,<?php echo json_encode($sadArray) ?>,<?php echo json_encode($angryArray)?>,<?php echo json_encode($timeArray)?>)'>   
+                    <div class="slider round">  
+                        <span class="on">Other Reaction </span><span class="off">Other Reaction</span>  
+                    </div>
+                </label>
+                <label class="switch">
+                    <input type="checkbox" id="togTypBtn" onclick='sortHighestCount(<?php echo json_encode($linkCount) ?>,<?php echo json_encode($videoCount) ?>,<?php echo json_encode($photoCount) ?>,<?php echo json_encode($eventCount) ?>,<?php echo json_encode($statusCount) ?>,"postType");plotPostTypeChart("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>  
+                    <div class="slider round">  
+                        <span class="on">Post Type</span><span class="off">Post Type</span>  
+                    </div>
+                </label>
+                </div>
+
+                    <div class="row" style = "width: 980px; float:left; margin-bottom:10px;">
+                    <div class="numselect">
+                    <select id="selected">
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="30">30</option>
                         <option value="40">40</option>
                         <option value="50" selected>50</option>
-                     </select>
+                    </select>
+                    </div>
+                    </div>
+
+
+                  <label for="triggerMessage" class="title"><i>Info</i></label>  
+                  <div class="triggerMessage" id="triggerMessage" >
+                     **Try CLICK on the Parameter !!  
+                     <p id="chartInfo"></p>
                   </div>
-                  <label class="switch">
-                     <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart("chart",<?php echo json_encode($likeArray) ?>,<?php echo json_encode($numComment) ?>,<?php echo json_encode($numShare) ?>, <?php echo json_encode($timeArray)?>);'>  
-                     <div class="slider round">  
-                        <span class="on">Reach</span><span class="off">Reach</span>  
-                     </div>
-                  </label>
-                  <label class="switch">
-                     <input type="checkbox" id="togTotBtn" onclick='plotReactChart("chart",<?php echo json_encode($loveArray) ?>,<?php echo json_encode($hahaArray) ?>,<?php echo json_encode($wowArray) ?>,<?php echo json_encode($sadArray) ?>,<?php echo json_encode($angryArray)?>,<?php echo json_encode($timeArray)?>)'>   
-                     <div class="slider round">  
-                        <span class="on">Other Reaction </span><span class="off">Other Reaction</span>  
-                     </div>
-                  </label>
-                  <label class="switch">
-                     <input type="checkbox" id="togTypBtn" onclick='sortHighestCount(<?php echo json_encode($linkCount) ?>,<?php echo json_encode($videoCount) ?>,<?php echo json_encode($photoCount) ?>,<?php echo json_encode($eventCount) ?>,<?php echo json_encode($statusCount) ?>,"postType");plotPostTypeChart("chart",<?php echo json_encode($postCount) ?>,<?php echo json_encode($postType)?>)'>  
-                     <div class="slider round">  
-                        <span class="on">Post Type</span><span class="off">Post Type</span>  
-                     </div>
-                  </label>
+                  
+                 
+
+                  
+
+                  
+                  <label for="" class="title"><i>Chart</i></label>  
+                  
+                  
+                  
+                  
+                  <div class ="plot">
+                     <canvas id="chart" float="right" width="300" height="150" ></canvas>
+                  </div>
+                  
+                 
+                  
                   <label for="informMessage" class="title"><i>Insight</i></label>
                   <div class ="informMessage"  >
                      <div id ="topInfo" style = "display:none;">
