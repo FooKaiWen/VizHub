@@ -208,8 +208,8 @@ var infowindow = new google.maps.InfoWindow();
 
 for (var i= 0; i<=data.length; i++){
     // console.log(data[i]);
-    var feature = {position: new google.maps.LatLng(latitude[data[i]], longitude[data[i]]), type: visitType[data[i]]}
-    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: placeName[data[i]] });
+    var location = {position: new google.maps.LatLng(latitude[data[i]], longitude[data[i]]), type: visitType[data[i]]}
+    var marker= new google.maps.Marker({position: location.position, icon: icons[location.type].icon, map: map , title: placeName[data[i]] });
 
     google.maps.event.addListener(marker, 'click', (function (marker, i) {
             return function () {
@@ -273,8 +273,8 @@ var infowindow = new google.maps.InfoWindow();
     
 for (var i= 0; i<=latitude.length; i++){    
         
-    var feature = {position: new google.maps.LatLng(latitude[i], longitude[i]), type: visitType[i]}    
-    var marker= new google.maps.Marker({position: feature.position, icon: icons[feature.type].icon, map: map , title: placeName[i] });    
+    var location = {position: new google.maps.LatLng(latitude[i], longitude[i]), type: visitType[i]}    
+    var marker= new google.maps.Marker({position: location.position, icon: icons[location.type].icon, map: map , title: placeName[i] });    
     
     google.maps.event.addListener(marker, 'click', (function (marker, i) {    
             return function () {    
@@ -371,7 +371,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
       </div>    
       <div class="modal-body" align="center">    
         <p> <span style ="color:black;"><b>Ctrl + Scroll</b></span>    or   <span style ="color:black;"><b>Double left/right click</b></span>  to <span style ="color:black;"><b>zoom</b></span> in/out the map </p>    
-        <p><span style ="color:black;"><b>Click</b></span> the <span style ="color:black;"><b>marker</b></span>for more in<span style ="color:black;"><b>info</b></span> fo of the visited place</p>    
+        <p><span style ="color:black;"><b>Click</b></span> the <span style ="color:black;"><b>marker</b></span> for more <span style ="color:black;"><b>info</b></span> fo of the visited place</p>    
         <p><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|1|FFFFFF|000000" alt="Number Indicator">    
                <img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|2|FFFFFF|000000" alt="Number Indicator">    
                Number found in markers indicate the visit count</p>      
