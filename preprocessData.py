@@ -1,28 +1,20 @@
 import pandas as pd
-oriset = pd.read_csv('250_5000.csv',encoding='ISO-8859-1')
-dataset = pd.read_csv('250_5000.csv',encoding='ISO-8859-1')
-# for i in range(oriset.shape[0]):
-#     if(pd.notna(oriset.iloc[i,0])):
-#         num = oriset.iloc[i,0]
-#         # print("start")
-#         # print(num)
-#         label = num
-#         # label = int(label)
-#         if(label < 2500):
-#             label = 2500
-#         elif(label < 5000):
-#             label = 5000
-#         elif(label < 7500):
-#             label = 7500  
-#         # elif(label < 8000):
-#         #     label = 8000  
-#         elif(label < 10000):
-#             label = 10000
-#         else:
-#             label = 9999           
-#         dataset.iloc[i,1] = label
-
-# dataset.to_csv('dataset.csv', encoding='utf-8', index=False)
+dataSet = pd.read_csv('messageDataset.csv',encoding='ISO-8859-1')
+for i in range(dataSet.shape[0]):
+    if(pd.notna(dataSet.iloc[i,0])):
+        num = dataSet.iloc[i,0]
+        if(num < 50):
+            label = 50
+        elif(num < 100):
+            label = 100
+        elif(num < 150):
+            label = 150  
+        elif(num < 200):
+            label = 200
+        else:  
+            label = 250          
+        dataSet.iloc[i,0] = label
+dataSet.to_csv('messageDataset.csv', encoding='utf-8', index=False)
 
 from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm
 from sklearn.model_selection import cross_val_score
@@ -45,8 +37,8 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid):
     # return predictions
     return metrics.classification_report(valid_y, predictions)
 
-dataset = pandas.read_csv('dataset.csv',encoding='ISO-8859-1')
-oriset = pandas.read_csv('250_5000.csv',encoding='ISO-8859-1')
+dataset = pandas.read_csv('messageDataset.csv',encoding='ISO-8859-1')
+oriset = pandas.read_csv('messageDataset.csv',encoding='ISO-8859-1')
 
 labels = dataset['two_thousand_likes']
 datacolumn = dataset['message']
@@ -110,7 +102,7 @@ print("NB, WordLevel TF-IDF: ", accuracy)
 accuracy = train_model(ab, xtrain_tfidf, train_y, xvalid_tfidf)
 print("AB, WordLevel TF-IDF: ", accuracy)
 
-accuracy = train_model(nb, xtrain_tfidf, train_y, xvalid_tfidf)
+accuracy = train_model(gb, xtrain_tfidf, train_y, xvalid_tfidf)
 print("GB, WordLevel TF-IDF: ", accuracy)
 
 # Linear Classifier on Word Level TF IDF Vectors

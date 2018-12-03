@@ -13,14 +13,14 @@
       <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>  
       <script src ="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>  
 
-    <!-- Bootstrap core CSS-->
-    <link href="vendor/bootstrap/css2/bootstrap.min.css" rel="stylesheet">
+      <!-- Bootstrap core CSS-->
+      <link href="vendor/bootstrap/css2/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+      <!-- Custom fonts for this template-->
+      <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin.css" rel="stylesheet">
+      <!-- Custom styles for this template-->
+      <link href="css/sb-admin.css" rel="stylesheet">
 
       <?php
          require_once  'Facebook/autoload.php';
@@ -34,46 +34,41 @@
          $query = new MongoDB\Driver\Query([]);
          
          
-         $userdatas = $connection->executeQuery('fb.userDetail', $query);
+         $userDatas = $connection->executeQuery('fb.userDetail', $query);
          
-         foreach($userdatas as $userdata){
-         $name = $userdata->name;
-         $id = $userdata->id;
-         $url =$userdata->url;
+         foreach($userDatas as $userData){
+            $name = $userData->name;
+            $id = $userData->id;
+            $url =$userData->url;
          }
          
          $newdb = $client->selectDatabase('fb');
          $temp = $newdb->selectCollection('predictMessage');
          $temp->drop();
-         $messagecol = $newdb->selectCollection('predictMessage');
+         $messageCol = $newdb->selectCollection('predictMessage');
          
          session_start();
          $logoutUrl = $_SESSION['logoutUrl'];
-         
-         
          ?>
    </head>
    <body>
       <nav class="navbar navbar-expand navbar-dark bg-dark static-top">  
          <a class="navbar-brand mr-1" href="user.php">VizHub</a>  
          <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">  
-         <i class="fas fa-bars"></i>  
+            <i class="fas fa-bars"></i>  
          </button>  
-         <a class="navbar-brand" href="user.php">Home</a>    
-
-                   <div class="collapse navbar-collapse" id="navbarResponsive">
-              <ul class="navbar-nav ml-auto">
-
-                  <li>
-                  <button style = "float:right; background-color: rgba(47,79,79,5); border-radius:5px; color:white;"class ="logout" onclick="logout()">Log Out</button>
-                  </li>
-              </ul>
-          </div>
-
-         
+         <a class="navbar-brand" href="user.php">Home</a>  
+         <a class="navbar-brand" href="http://localhost/VizHub/aboutUs.html">About Us</a>  
+         <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+               <li>
+                  <button style = "float:right;"class ="Btn Btn--facebook" onclick="logout()">Log Out</button>
+               </li>
+            </ul>
+         </div>
       </nav>
 
-       <div id="wrapper">
+   <div id="wrapper">
       <!-- Sidebar -->
       <ul class="sidebar navbar-nav">
          <li class="nav-item active">
@@ -126,27 +121,28 @@
                if(isset($_REQUEST['submit_btn'])){
                
                  $message = $_POST["predictM"];
+                 
                  if($message != ""){
-                   $messagecol->insertOne(
+                   $messageCol->insertOne(
                      [
                      '_id'=>'message',
                      'pmessage'=>"$message"]);
                    shell_exec("python readtext.py");
-                   $upperboundary = $messagecol->findOne()->likesRange;
-                   if($upperboundary == 50){
-                     $lowerboundary = 0;
+                   $upperBoundary = $messageCol->findOne()->likesRange;
+                   if($upperBoundary == 50){
+                     $lowerBoundary = 0;
                    } else {
-                     $lowerboundary = $upperboundary - 49;
+                     $lowerBoundary = $upperBoundary - 49;
                    }
                
                    echo '
                    <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Result:</i></label>
                    <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <strong style=" color:Black;">';
                  
-                   if($upperboundary == 250){
-                     echo htmlspecialchars($upperboundary).' and above</strong>';
+                   if($upperBoundary == 250){
+                     echo htmlspecialchars($upperBoundary).' and above</strong>';
                    } else {
-                     echo htmlspecialchars($lowerboundary).' to '.htmlspecialchars($upperboundary).'</strong>';
+                     echo htmlspecialchars($lowerBoundary).' to '.htmlspecialchars($upperBoundary).'</strong>';
                    }
                    
                    echo ' for the message: '.htmlspecialchars($message).'</div>';   
@@ -165,37 +161,31 @@
                               placeholder="Type Your Message Here For Like Prediction . . . . . ."><?php if(isset($_REQUEST['submit_btn'])){echo htmlspecialchars($message);}?></textarea>
                            <div style ="text-align:center; margin-right:10px;">  
                               <button class ="copyText" onclick="copyMessage();return false;">Copy<br> Message</button>
-                              <button class ="predict" type="submit" name="submit_btn">Predict <br> likes</button>
+                              <button class ="predict" type="submit" name="submitBtn">Predict <br> likes</button>
                            </div>
                         </div>
                      </div>
                   </form>
                </div>
             </div>
-     
          </div>
          <!-- /.container-fluid -->
       </div>
+   </div>
 
-      </div>
+      <script>
+         function copyMessage() {
+            var copyText = document.getElementById("message");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Copied the text: " + copyText.value);
+         }
 
-       <script>
-      function copyMessage() {
-        var copyText = document.getElementById("message");
-        copyText.select();
-        document.execCommand("copy");
-        alert("Copied the text: " + copyText.value);
-      }
-
-      function logout(){
-        var logoutUrl = <?php echo json_encode($logoutUrl);?>;
-
-        window.location = logoutUrl;
-      }
-      
-</script>
- 
-
+         function logout(){
+            var logoutUrl = <?php echo json_encode($logoutUrl);?>;
+            window.location = logoutUrl;
+         }
+      </script>
       <!-- Bootstrap core JavaScript-->
       <script src="vendor/jquery/jquery.min.js"></script>
       <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

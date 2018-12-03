@@ -1,6 +1,5 @@
 import pymongo
 import re
-import pandas
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
 
