@@ -17,6 +17,7 @@
       <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
       <!-- Custom styles for this template-->  
       <link href="css/sb-admin.css" rel="stylesheet">
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>    
    </head>
    <body id="page-top">
       <?php  
@@ -95,6 +96,14 @@
          }  
            
          ?>  
+
+<script type="text/javascript">
+    $(window).on('load',function(){
+        $('#myModal').modal('show');
+    });
+    
+</script>
+
       <nav class="navbar navbar-expand navbar-dark bg-dark static-top">  
          <a class="navbar-brand mr-1" href="user.php">VizHub</a>  
          <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">  
@@ -112,7 +121,7 @@
             <span>Profile</span>  
             </a>  
          </li>
-         <li class="nav-item dropdown">
+         <li class="nav-item active dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"  
                aria-haspopup="true" aria-expanded="false">  
             <i class="fas fa-fw fa-chart-area"></i>  
@@ -126,17 +135,16 @@
                <div class="dropdown-divider"></div>
             </div>
          </li>
-      </ul>
-      <div id="content-wrapper">
-         <div class="container-fluid">
-            <!-- Area Chart Example-->  
-            <div class="card mb-3">
-               <div class="card-header">  
-                  <i class="fas fa-chart-area"></i>  
-                  Engagement Visualization
-               </div>
-               <div class="card-body">
-               <div class="row" style = "width: 980px; float:left;">
+         <li>
+         <div class="numselect">
+                    <select id="selected">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50" selected>50</option>
+                    </select>
+                    </div>
                 <label class="switch">
                     <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart("chart",<?php echo json_encode($likeArray) ?>,<?php echo json_encode($numComment) ?>,<?php echo json_encode($numShare) ?>, <?php echo json_encode($timeArray)?>);'>  
                     <div class="slider round">  
@@ -155,42 +163,48 @@
                         <span class="on">Post Type</span><span class="off">Post Type</span>  
                     </div>
                 </label>
-                </div>
+         </li>
+      </ul>
+      <div id="content-wrapper">
+         <div class="container-fluid">
+            <!-- Area Chart Example-->  
+            <div class="card mb-3">
+               <div class="card-header">  
+                  <i class="fas fa-chart-area"></i>  
+                  Engagement Visualization
+               </div>
+               <div class="card-body">
 
-                    <div class="row" style = "width: 980px; float:left; margin-bottom:10px;">
-                    <div class="numselect">
-                    <select id="selected">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="40">40</option>
-                        <option value="50" selected>50</option>
-                    </select>
+                <!-- Modal -->    
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">    
+                <div class="modal-dialog modal-dialog-centered" role="document">    
+                    <div class="modal-content">    
+                    <div class="modal-header">    
+                        <h5 class="modal-title" id="exampleModalLongTitle">Guides</h5>    
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">    
+                        <span aria-hidden="true">×</span>    
+                        </button>    
+                    </div>    
+                    <div class="modal-body" align="center">    
+                        <p><img src="img/toggleButton.PNG" width="80" height="30"> Toggle <b>buttons</b> for graphs.</p>
+                        <p><img src="img/likeParameter.PNG"> Click the <b>parameters</b> for different data display.</p>
+                        <p>Check on the <b><i>info box</i></b> (the <span style="color:blue;">blue</span> box) at the top for basic information.</p>
+                        <p>Check on the <b><i>insight box</i></b> (the <span style="color:red;">red</span> box) at the bottom for customized insight.</p>
+                    </div>    
+                    <div class="modal-footer">    
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>    
+                    </div>    
+                    </div>    
+                </div>    
+                </div>    
+                    <label for="triggerMessage" class="title"><i>Info</i></label>  
+                    <div class="triggerMessage" id="triggerMessage" > 
+                    <p id="chartInfo">Please toggle the parameters beside for graph!</p>
                     </div>
-                    </div>
-
-
-                  <label for="triggerMessage" class="title"><i>Info</i></label>  
-                  <div class="triggerMessage" id="triggerMessage" >
-                     **Try CLICK on the Parameter !!  
-                     <p id="chartInfo"></p>
-                  </div>
-                  
-                 
-
-                  
-
-                  
-                  <label for="" class="title"><i>Chart</i></label>  
-                  
-                  
-                  
-                  
+                  <p class="title"><i>Chart</i></p> 
                   <div class ="plot">
                      <canvas id="chart" float="right" width="300" height="150" ></canvas>
                   </div>
-                  
-                 
                   
                   <label for="informMessage" class="title"><i>Insight</i></label>
                   <div class ="informMessage"  >
@@ -207,7 +221,8 @@
       <!-- Scroll to Top Button-->  
       <a class="scroll-to-top rounded" href="#page-top">  
       <i class="fas fa-angle-up"></i>  
-      </a>  
+      </a>
+
       <script type="text/javascript" src="chart.js"></script>  
       <!-- Bootstrap core JavaScript-->  
       <script src="vendor/jquery/jquery.min.js"></script>  

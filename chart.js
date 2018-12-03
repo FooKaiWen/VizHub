@@ -42,15 +42,16 @@ var triggerMessage = document.getElementById("triggerMessage");
 var chartInfo = document.getElementById("chartInfo");
 
 function showInfo(message){
-    triggerMessage.setAttribute("style","height:100px");
-    triggerMessage.style.height = '100px';
+    if(checkBoxType.checked){
+        triggerMessage.style.height = '70px';
+    }
     chartInfo.innerHTML = message;
 }
 
 function hideInfo() {
-    chartInfo.innerHTML = "";
-    triggerMessage.setAttribute("style","height:50px");
-    triggerMessage.style.height = '50px';
+    chartInfo.innerHTML = "Please toggle the parameters above for graph!";
+    triggerMessage.setAttribute("style","height:40px");
+    triggerMessage.style.height = '40px';
 }
 
 var checkBoxReach = document.getElementById("togAllBtn");
@@ -67,11 +68,15 @@ function showLikeInsight(){
 }
 
 function showReactionInsight(){
-    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestCountType + " reaction! The number goes as high as " + highestCount + "!";
+    var emoji = "";
+    if(highestCountType == "Haha"){
+        emoji = "😍";
+    }
+    info.innerHTML = "As an overall, your friends frequently interact with your posts with " + highestCountType + " " + emoji + " reaction! The number goes as high as " + highestCount + "!";
 }
 
 function showPostTypeInsight(){
-    info.innerHTML = "As an overall, most of your posts are " + highestCountType + " type and it successfully attracted as much as " + highestCount + " likes!";
+    info.innerHTML = "As an overall, most of your posts are " + highestCountType + " type and they successfully attracted as much as " + highestCount + " likes!";
 }
 
 checkBoxReach.addEventListener('change', function () {
@@ -107,7 +112,8 @@ checkBoxType.addEventListener('change', function () {
     }
 });
 
-Chart.defaults.global.defaultFontColor = 'white';
+Chart.defaults.global.defaultFontColor = 'black';
+Chart.defaults.global.defaultFontSize = 17;
 
 function plotReachChart(chartid, newLikes, newComment, newShare, newTime) {
 
@@ -271,32 +277,32 @@ function plotReactChart(chartid, newLove, newHaha, newWow, newSad, newAngry, new
             data: {
                 labels: tempTime,
                 datasets: [{
-                    label: 'Love',
+                    label: 'Love 😍',
                     fill: true,
                     backgroundColor: 'rgba(128,0,0, 0.8)',
                     borderColor: 'rgba(128,0,0, 1)',
                     data: tempLove,
                 }, {
-                    label: 'Haha',
+                    label: 'Haha 😆',
                     backgroundColor: 'rgba(255,165,0, 0.8)',
                     borderColor: 'rgba(255,165,0, 1)',
                     data: tempHaha,
                     fill: true,
 
                 }, {
-                    label: 'Wow',
+                    label: 'Wow 😲',
                     backgroundColor: 'rgba(46,139,87, 0.8)',
                     borderColor: 'rgba(46,139,87, 1)',
                     data: tempWow,
                     fill: true,
                 }, {
-                    label: 'Sad',
+                    label: 'Sad 😢',
                     backgroundColor: 'rgba(153,50,204, 0.8)',
                     borderColor: 'rgba(153,50,204, 0.8)',
                     data: tempSad,
                     fill: true,
                 }, {
-                    label: 'Angry',
+                    label: 'Angry 😡',
                     backgroundColor: 'black',
                     borderColor: 'black',
                     data: tempAngry,
@@ -320,7 +326,7 @@ function plotReactChart(chartid, newLove, newHaha, newWow, newSad, newAngry, new
                         stacked: true
                     }],
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
                     }
                 }
             }
@@ -358,8 +364,8 @@ function plotPostTypeChart(chartid, postCount, postType){
             },
             options:{
                 segmentShowStroke : true,
-                segmentStrokeWidth : 2,
-                cutoutPercentage : 60,
+                segmentStrokeWidth : 1,
+                cutoutPercentage : 75,
                 animationSteps : 100,
                 animationEasing : "easeOutBounce",
                 animateRotate : true,

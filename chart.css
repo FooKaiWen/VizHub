@@ -9,7 +9,7 @@
 .switch input {display:none;}
 
 .triggerMessage{
-    height: 50px; 
+    height: 40px; 
     width: 1040px;
     float: left;
     margin: 10px;
@@ -19,7 +19,7 @@
 }
 
 .informMessage{
-    height: 80px; 
+    height: 50px; 
     width: 1040px;
     float: left;
     margin: 10px;
@@ -37,7 +37,7 @@
 }
 
 .plot{
-    height: 550px; 
+    height: 528px; 
     width: 1050px;
     background-color: rgba(169,169,169,0.5);
     float:left;

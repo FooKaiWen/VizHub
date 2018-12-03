@@ -330,7 +330,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
             <span>Profile</span>    
         </a>    
     </li>    
-    <li class="nav-item dropdown">    
+    <li class="nav-item active dropdown">    
         <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"    
             aria-haspopup="true" aria-expanded="false">    
             <i class="fas fa-fw fa-chart-area"></i>    
@@ -371,7 +371,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
       </div>    
       <div class="modal-body" align="center">    
         <p> <span style ="color:black;"><b>Ctrl + Scroll</b></span>    or   <span style ="color:black;"><b>Double left/right click</b></span>  to <span style ="color:black;"><b>zoom</b></span> in/out the map </p>    
-        <p><span style ="color:black;"><b>Click</b></span> the <span style ="color:black;"><b>marker</b></span> for more <span style ="color:black;"><b>info</b></span> fo of the visited place</p>    
+        <p><span style ="color:black;"><b>Click</b></span> the <span style ="color:black;"><b>marker</b></span> for more <span style ="color:black;"><b>info</b></span> of the visited place</p>    
         <p><img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|1|FFFFFF|000000" alt="Number Indicator">    
                <img src="https://chart.googleapis.com/chart?chst=d_map_xpin_letter&chld=pin|2|FFFFFF|000000" alt="Number Indicator">    
                Number found in markers indicate the visit count</p>      
