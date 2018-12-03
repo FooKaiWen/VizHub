@@ -59,14 +59,13 @@
          <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">  
          <i class="fas fa-bars"></i>  
          </button>  
-         <a class="navbar-brand" href="user.php">Home</a>  
-         <a class="navbar-brand" href="http://localhost/VizHub/aboutUs.html">About Us</a>  
+         <a class="navbar-brand" href="user.php">Home</a>    
 
                    <div class="collapse navbar-collapse" id="navbarResponsive">
               <ul class="navbar-nav ml-auto">
 
                   <li>
-                  <button style = "float:right;"class ="Btn Btn--facebook" onclick="logout()">Log Out</button>
+                  <button style = "float:right; background-color: rgba(47,79,79,5); border-radius:5px; color:white;"class ="logout" onclick="logout()">Log Out</button>
                   </li>
               </ul>
           </div>
@@ -115,8 +114,15 @@
                </div> 
             </div>
 
+            </div>
 
-            <?php
+                        <div class="card mb-3">
+               <div class="card-header">
+                  <i class="fas fa-chart-area"></i>
+                  Prediction
+               </div>
+               <div class="card-body">
+               <?php
                if(isset($_REQUEST['submit_btn'])){
                
                  $message = $_POST["predictM"];
@@ -134,8 +140,8 @@
                    }
                
                    echo '
-                   <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Result</i></label>
-                   <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <strong style="background-color:White; color:Black;">';
+                   <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Result:</i></label>
+                   <div id="summary" style="font-size:20px;">The machine predicted that the number of likes is somewhat around <strong style=" color:Black;">';
                  
                    if($upperboundary == 250){
                      echo htmlspecialchars($upperboundary).' and above</strong>';
@@ -147,25 +153,17 @@
                  } else {
                    echo '
                    <label for="summary" style="margin-top:15px; margin-left:30px;"><i>Error</i></label>
-                   <div id="summary" style="font-size:20px;">Invalid input! Please re-type the message.</div>';
+                   <div id="summary" style="font-size:20px; margin-top:10px;">Invalid input! Please re-type the message.</div>';
                  }
                }
                ?>
-            </div>
-
-                        <div class="card mb-3">
-               <div class="card-header">
-                  <i class="fas fa-chart-area"></i>
-                  Prediction
-               </div>
-               <div class="card-body">
                   <form method="POST" action="">
                      <div class="container">
                         <div class="form-group" >
-                           <label for="Message" style="margin-top :15px;"><i>Message for Like Prediction:</i></label>
-                           <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); " name="predictM" rows="3" id="message" 
+                           <label for="Message" style="margin-top :15px; margin-left:20px;"><i>Message for Like Prediction:</i></label>
+                           <textarea class="form-control" style ="border: 3px solid rgb(47, 52, 78); width:985px; margin-left:20px;" name="predictM" rows="3" id="message" 
                               placeholder="Type Your Message Here For Like Prediction . . . . . ."><?php if(isset($_REQUEST['submit_btn'])){echo htmlspecialchars($message);}?></textarea>
-                           <div style ="text-align:center;">  
+                           <div style ="text-align:center; margin-right:10px;">  
                               <button class ="copyText" onclick="copyMessage();return false;">Copy<br> Message</button>
                               <button class ="predict" type="submit" name="submit_btn">Predict <br> likes</button>
                            </div>

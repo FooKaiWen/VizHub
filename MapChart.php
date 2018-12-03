@@ -309,14 +309,14 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDycJODMgrTMd6ir8-glqdvhKK
     
 <nav class="navbar navbar-expand navbar-dark bg-dark static-top">    
     
-    <a class="navbar-brand mr-1" href="index.html">VizHub</a>    
+    <a class="navbar-brand mr-1" href="user.php">VizHub</a>    
     
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">    
         <i class="fas fa-bars"></i>    
     </button>    
     
-    <a class="navbar-brand" href="#">Home</a>    
-    <a class="navbar-brand" href="http://localhost/VizHub/aboutUs.html">About Us</a>    
+    <a class="navbar-brand" href="user.php">Home</a>    
+     
     
 </nav>    
     
