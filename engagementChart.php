@@ -55,7 +55,7 @@
              $timeArray [] = substr($data->created_time,0,10);  
 
              if($i >0){  
-                 $numType [] = $data->type;  
+            $numType [] = $data->type;  
              }  
              $i--;  
              if($data->type == "link"){  

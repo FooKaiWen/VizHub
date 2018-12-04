@@ -140,12 +140,13 @@ function plotReachChart() {
     var tempLikes = [], tempTopLikes = [], tempComment = [], tempShare = [], tempTime = [];
     topLikes = 0;
     var k = selectedValue-1;
+    for(i = globalLikes.length-1;i >= (globalLikes.length-1)-selectedValue; i--){
+        if(globalLikes[i] > topLikes){
+            topLikes = globalLikes[i];
+        }
+    }
     for (i = globalAccuLikes.length-1; i >= (globalAccuLikes.length-1)-selectedValue; i--) {
         tempLikes[k] = globalAccuLikes[i];
-        tempTopLikes[k] = globalLikes[i];
-        if(tempTopLikes[k] > topLikes){
-            topLikes = tempTopLikes[k];
-        }
         tempComment[k] = globalAccuComment[i];
         tempShare[k] = globalAccuShare[i];
         tempTime[k] = globalDistinctDate[i];
