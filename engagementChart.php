@@ -35,40 +35,29 @@
          $likeArray = array();  
          $timeArray = array();  
          $typeArray = array();  
-         $loveArray = array();  
-         $hahaArray = array();  
-         $wowArray = array();  
-         $sadArray = array();  
-         $angryArray = array();  
-         $numComment = array();  
-         $numShare = array();  
-         $numType = array();  
-         $i = 0;  
+         $numType = array();
+
+         $i = 50;  
          $linkCount = 0;  
          $photoCount = 0;  
          $statusCount = 0;  
          $videoCount = 0;  
-         $eventCount = 0;  
+         $eventCount = 0;
+         
+        $loveCount = 0;
+        $wowCount = 0;
+        $hahaCount = 0;
+        $angryCount = 0;
+        $sadCount = 0;
+
          foreach ($postDetail as $data) {     
              $likeArray [] = $data->like->summary->total_count;  
-             $timeArray [] = $data->created_time;  
-           
-             $loveArray [] = $data->love->summary->total_count;  
-             $hahaArray [] = $data->haha->summary->total_count;  
-             $wowArray [] = $data->wow->summary->total_count;  
-             $sadArray [] = $data->sad->summary->total_count;  
-             $angryArray [] = $data->angry->summary->total_count;  
-             $numComment [] = $data->comments->summary->total_count;  
-             if($i < 50){  
+             $timeArray [] = substr($data->created_time,0,10);  
+
+             if($i >0){  
                  $numType [] = $data->type;  
              }  
-             $i++;  
-             if(!isset($data->shares)){  
-                 $numShare [] = 0;  
-             } else {  
-                 $numShare [] = $data->shares->count;             
-             }  
-           
+             $i--;  
              if($data->type == "link"){  
                  $linkCount += $data->like->summary->total_count;  
              } elseif($data->type == "photo"){  
@@ -83,12 +72,76 @@
          }  
            
          $postTypeCount = array_count_values($numType);  
-           
+         $timeCount = array_count_values($timeArray);
+
+        foreach($timeCount as $time => $value){
+            $accuLikeCount[$time] = 0;
+            $accuCommentCount[$time] = 0;
+            $accuShareCount[$time] = 0;
+            $accuLoveCount[$time] = 0;
+            $accuAngryCount[$time] = 0;
+            $accuWowCount[$time] = 0;
+            $accuHahaCount[$time] = 0;
+            $accuSadCount[$time] = 0;
+        }
+
+        $timeDetail = $connection->executeQuery('fb.postDetail', $query);  
+        
+        foreach($timeDetail as $data){
+            $accuLikeCount[substr($data->created_time,0,10)] += $data->like->summary->total_count;
+            $accuCommentCount[substr($data->created_time,0,10)] += $data->comments->summary->total_count;
+            $accuShareCount[substr($data->created_time,0,10)] += $data->shares->count; 
+
+            $accuLoveCount[substr($data->created_time,0,10)] += $data->love->summary->total_count;  
+            $accuAngryCount[substr($data->created_time,0,10)] += $data->angry->summary->total_count;  
+            $accuWowCount[substr($data->created_time,0,10)] += $data->wow->summary->total_count;  
+            $accuHahaCount[substr($data->created_time,0,10)] += $data->haha->summary->total_count;  
+            $accuSadCount[substr($data->created_time,0,10)] += $data->sad->summary->total_count;  
+        }
+
          foreach($postTypeCount as $type => $count){  
              $postType [] = $type;  
              $postCount [] = $count;  
          }  
-           
+        
+         foreach($accuLikeCount as $date => $like){
+             $distinctDate [] = $date;
+             $accuLike [] = $like;
+         }
+
+         foreach($accuCommentCount as $date => $comment){
+            $accuComment [] = $comment;
+         }
+
+         foreach($accuShareCount as $date => $share){
+             $accuShare [] = $share;
+         }
+
+         foreach($accuLoveCount as $date => $love){
+            $accuLove [] = $love;
+            $loveCount += $love;
+        }
+
+        foreach($accuAngryCount as $date => $angry){
+            $accuAngry [] = $angry;
+            $angryCount += $angry;
+        }
+
+        foreach($accuWowCount as $date => $wow){
+            $accuWow [] = $wow;
+            $wowCount += $wow;
+        }
+
+        foreach($accuHahaCount as $date => $haha){
+            $accuHaha [] = $haha;
+            $hahaCount += $haha;
+        }
+
+        foreach($accuSadCount as $date => $sad){
+            $accuSad [] = $sad;
+            $sadCount += $sad;
+        }
+
          $userDetails = $connection->executeQuery('fb.userDetail', $query);  
            
          foreach($userDetails as $data){  
@@ -156,15 +209,15 @@
                     </select>
                     </div>
                 <label class="switch">
-                    <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart("chart",<?php echo json_encode($likeArray) ?>,<?php echo json_encode($numComment) ?>,<?php echo json_encode($numShare) ?>, <?php echo json_encode($timeArray)?>);'>  
+                    <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart();'>  
                     <div class="slider round">  
-                        <span class="on">Reach</span><span class="off">Reach</span>  
+                        <span class="on"> Reach Graph</span><span class="off">Reach Graph</span>  
                     </div>
                 </label>
                 <label class="switch">
-                    <input type="checkbox" id="togTotBtn" onclick='plotReactChart("chart",<?php echo json_encode($loveArray) ?>,<?php echo json_encode($hahaArray) ?>,<?php echo json_encode($wowArray) ?>,<?php echo json_encode($sadArray) ?>,<?php echo json_encode($angryArray)?>,<?php echo json_encode($timeArray)?>)'>   
+                    <input type="checkbox" id="togTotBtn" onclick='sortHighestCount(<?php echo json_encode($loveCount) ?>, <?php echo json_encode($hahaCount) ?>, <?php echo json_encode($wowCount) ?>, <?php echo json_encode($sadCount) ?>, <?php echo json_encode($angryCount) ?>,"reaction");plotReactChart()'>   
                     <div class="slider round">  
-                        <span class="on">Other Reaction </span><span class="off">Other Reaction</span>  
+                        <span class="on"> Reaction Graph</span><span class="off">Reaction Graph</span>  
                     </div>
                 </label>
                 <label class="switch">
@@ -218,7 +271,7 @@
                   
                   <label for="informMessage" class="title"><i>Insight</i></label>
                   <div class ="informMessage"  >
-                     <div id ="topInfo" style = "display:none;">
+                     <div id ="topInfo">Please toggle the parameters beside for insight!
                      </div>
                   </div>
                </div>
@@ -238,7 +291,8 @@
             window.location = logoutUrl;
          }
       </script>
-      <script type="text/javascript" src="chart.js"></script>  
+      <script type="text/javascript" src="chart.js"></script>
+      <script>assignValues(<?php echo json_encode($likeArray) ?>, <?php echo json_encode($accuLike) ?>, <?php echo json_encode($accuComment) ?>, <?php echo json_encode($accuShare) ?>, <?php echo json_encode($distinctDate) ?>,<?php echo json_encode($accuLove)?>, <?php echo json_encode($accuHaha)?>, <?php echo json_encode($accuWow)?>, <?php echo json_encode($accuSad)?>, <?php echo json_encode($accuAngry)?>);</script>  
       <!-- Bootstrap core JavaScript-->  
       <script src="vendor/jquery/jquery.min.js"></script>  
       <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>  

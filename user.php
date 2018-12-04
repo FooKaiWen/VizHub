@@ -58,7 +58,7 @@
             <i class="fas fa-bars"></i>  
          </button>  
          <a class="navbar-brand" href="user.php">Home</a>  
-        
+         
          <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                <li>
@@ -128,7 +128,7 @@
                      [
                      '_id'=>'message',
                      'pmessage'=>"$message"]);
-                   shell_exec("python readtext.py");
+                   shell_exec("python readText.py");
                    $upperBoundary = $messageCol->findOne()->likesRange;
                    if($upperBoundary == 50){
                      $lowerBoundary = 0;
