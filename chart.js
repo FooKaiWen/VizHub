@@ -1,11 +1,11 @@
 var selectedValue = 50;
 var selector = document.getElementById("selected");
 var info = document.getElementById("topInfo");
-var topLikes, averageLikes;
+var topLikes;
 var friendNum = 1;
 var highestCount = 0;
 var highestCountType;
-var globalAccuLikes = [], globalAccuComment = [], globalAccuShare = [], globalDistinctReachDate = [];
+var globalLikes = [], globalAccuLikes = [], globalAccuComment = [], globalAccuShare = [], globalDistinctReachDate = [];
 var globalLove = [], globalHaha = [], globalWow = [], globalSad = [], globalAngry = [];
 
 var reactChart;
@@ -32,11 +32,6 @@ selector.addEventListener('change', function () {
 function hideInsight() {
     info.innerHTML ="Please toggle the parameters beside for insight!";
 }
-
-// function showInsight() {
-//     info.style.display = 'inherit';
-
-// }
 
 var triggerMessage = document.getElementById("triggerMessage");
 var chartInfo = document.getElementById("chartInfo");
@@ -154,7 +149,6 @@ function plotReachChart() {
         tempComment[k] = globalAccuComment[i];
         tempShare[k] = globalAccuShare[i];
         tempTime[k] = globalDistinctDate[i];
-        averageLikes += globalLikes[i];
         k--;
     }
 
@@ -236,8 +230,6 @@ function sortHighestCount(paramOne, paramTwo, paramThree, paramFour, paramFive,t
         };
     }  
 
-    highestCount = Math.max(paramOne,paramTwo,paramThree,paramFour,paramFive);
-
     var keys = Object.keys(obj);
     var max = keys[0];
     for (var i = 1, n = keys.length; i < n; ++i) {
@@ -246,8 +238,7 @@ function sortHighestCount(paramOne, paramTwo, paramThree, paramFour, paramFive,t
           max = k;
        }
     }
-    console.log(obj[max]);
-    console.log(max);
+    highestCount = obj[max];
     highestCountType =  max;
 }
 
