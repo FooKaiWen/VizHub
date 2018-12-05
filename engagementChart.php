@@ -54,10 +54,9 @@
              $likeArray [] = $data->like->summary->total_count;  
              $timeArray [] = substr($data->created_time,0,10);  
 
-             if($i >0){  
-            $numType [] = $data->type;  
-             }  
-             $i--;  
+            if($i >0){  
+             $numType [] = $data->type;  
+              
              if($data->type == "link"){  
                  $linkCount += $data->like->summary->total_count;  
              } elseif($data->type == "photo"){  
@@ -68,7 +67,9 @@
                  $videoCount += $data->like->summary->total_count;  
              } elseif($data->type == "event"){  
                  $eventCount += $data->like->summary->total_count;  
-             }  
+             }
+            }
+            $i--;    
          }  
            
          $postTypeCount = array_count_values($numType);  
@@ -103,7 +104,7 @@
              $postType [] = $type;  
              $postCount [] = $count;  
          }  
-        
+
          foreach($accuLikeCount as $date => $like){
              $distinctDate [] = $date;
              $accuLike [] = $like;
@@ -199,15 +200,17 @@
             </div>
          </li>
          <li>
+         <p style="color: white; padding-top:6px;"><u>Select number of days to plot:</u></p>
          <div class="numselect">
-                    <select id="selected">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="40">40</option>
-                        <option value="50" selected>50</option>
-                    </select>
-                    </div>
+                <select id="selected">
+                    <option value="10">10 days</option>
+                    <option value="20">20 days</option>
+                    <option value="30">30 days</option>
+                    <option value="40">40 days</option>
+                    <option value="50" selected>50 days</option>
+            </select>
+        </div>
+        <p style="color: white; padding-top:10px;padding-left:20px;"><u>Toggle for graph:</u></p>
                 <label class="switch">
                     <input type="checkbox" id="togAllBtn" onclick='friendNumber(<?php echo json_encode($numFriends) ?>);plotReachChart();'>  
                     <div class="slider round">  

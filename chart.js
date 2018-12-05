@@ -5,7 +5,7 @@ var topLikes;
 var friendNum = 1;
 var highestCount = 0;
 var highestCountType;
-var globalLikes = [], globalAccuLikes = [], globalAccuComment = [], globalAccuShare = [], globalDistinctReachDate = [];
+var globalLikes = [], globalAccuLikes = [], globalAccuComment = [], globalAccuShare = [], globalDistinctDate = [];
 var globalLove = [], globalHaha = [], globalWow = [], globalSad = [], globalAngry = [];
 
 var reactChart;
@@ -17,11 +17,13 @@ selector.addEventListener('change', function () {
     }
 
     if(checkBoxReach.checked){
+        showInfo("This line graph shows the number of Likes, Comments and Shares of each post against "+selectedValue+" posted date.");
         reactChart.destroy();
         plotReachChart();
         showLikeInsight();    
     }
     else if(checkBoxReact.checked){
+        showInfo("This bar graph shows the total number of Reactions such as Wow, Sad, Angry reaction of each post against "+selectedValue+" posted date.");
         reachChart.destroy();
         plotReactChart();
         showReactionInsight();
@@ -58,9 +60,9 @@ var checkBoxType = document.getElementById("togTypBtn");
 function showLikeInsight(){
     var interactionRate = ((topLikes/friendNum)*100).toFixed(2);
     if(interactionRate > 20){
-        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! " + interactionRate + "% of your friends interacted with you! Well Done!";
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + " per post! " + interactionRate + "% of your friends interacted with you! Well Done!";
     } else {
-        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + "! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
+        info.innerHTML = "The highest number of likes you have gotten is " + topLikes + " per post! Only " + interactionRate + "% of your friends interacted with you. Please keep it up!";
     }
 }
 
@@ -86,8 +88,7 @@ function showPostTypeInsight(){
 
 checkBoxReach.addEventListener('change', function () {
     if (this.checked) {
-        showInfo("This line graph shows the number of Likes, Comments and Shares of each post against the posted date.");
-        // showInsight();
+        showInfo("This line graph shows the number of Likes, Comments and Shares of each post against "+selectedValue+" posted date.");
         showLikeInsight();
     } else if (!this.checked) {
         hideInfo();
@@ -97,8 +98,7 @@ checkBoxReach.addEventListener('change', function () {
 
 checkBoxReact.addEventListener('change', function () {
     if (this.checked) {
-        showInfo("This bar graph shows the total number of Reactions such as Wow, Sad, Angry reaction of each post against the posted date.");
-        // showInsight();
+        showInfo("This bar graph shows the total number of Reactions such as Wow, Sad, Angry reaction of each post against "+selectedValue+" posted date.");
         showReactionInsight();
     } else if (!this.checked) {
         hideInfo();
@@ -108,8 +108,7 @@ checkBoxReact.addEventListener('change', function () {
 
 checkBoxType.addEventListener('change', function () {
     if (this.checked) {
-        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you. *Changing the number of post WILL NOT change this chart as the result is accumulated from your past posts.*");
-        // showInsight();
+        showInfo("This pie chart shows the accumulated different types of post, up to 50 posts, created by you. <i>*Changing the number of days WILL NOT change this chart as the result is accumulated from your past posts.*</i>");
         showPostTypeInsight();
     } else if (!this.checked) {
         hideInfo();
@@ -118,7 +117,7 @@ checkBoxType.addEventListener('change', function () {
 });
 
 Chart.defaults.global.defaultFontColor = 'black';
-Chart.defaults.global.defaultFontSize = 17;
+Chart.defaults.global.defaultFontSize = 13;
 
 function assignValues(newLikes, accuLike, accuComment, accuShare, distinctDate, accuLove, accuHaha, accuWow, accuSad, accuAngry){
 
@@ -140,11 +139,15 @@ function plotReachChart() {
     var tempLikes = [], tempTopLikes = [], tempComment = [], tempShare = [], tempTime = [];
     topLikes = 0;
     var k = selectedValue-1;
-    for(i = globalLikes.length-1;i >= (globalLikes.length-1)-selectedValue; i--){
+    console.log(globalLikes.length);
+    console.log(globalDistinctDate.length);
+
+    for(i = 0;i < globalLikes.length; i++){
         if(globalLikes[i] > topLikes){
             topLikes = globalLikes[i];
         }
     }
+
     for (i = globalAccuLikes.length-1; i >= (globalAccuLikes.length-1)-selectedValue; i--) {
         tempLikes[k] = globalAccuLikes[i];
         tempComment[k] = globalAccuComment[i];
@@ -209,7 +212,13 @@ function plotReachChart() {
                         ticks: {
                             beginAtZero: true
                         }
-                    }]
+                    }],
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontSize: 20
+                        }
+                    }
                 }
             }
         });

@@ -14,7 +14,7 @@
     float: left;
     margin: 10px;
     padding: 5px;
-    border:5px solid royalblue;
+    border:3px solid royalblue;
 
 }
 
@@ -24,7 +24,7 @@
     float: left;
     margin: 10px;
     padding: 5px;
-    border:5px solid firebrick;
+    border:3px solid firebrick;
 
 }
 
@@ -41,6 +41,7 @@
     width: 1050px;
     background-color: rgba(169,169,169,0.5);
     float:left;
+    border: 3px solid black;
 }
   
 .slider {
@@ -91,7 +92,7 @@ input:checked + .slider:before {
     position: absolute;
     transform: translate(-50%,-50%);
     top: 50%;
-    left: 55%;
+    left: 54%;
     font-size: 13px;
     font-family: Verdana, sans-serif;
 }
@@ -136,7 +137,7 @@ input:checked + .slider .off{
   height: 29px;
   overflow: hidden;
   width: 120px;
-  background-color:rgba(255,140,0, 0.5);
+  background-color:rgba(231, 162, 78, 0.719);
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
