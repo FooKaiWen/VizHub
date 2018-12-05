@@ -1,8 +1,8 @@
 .switch {
     position: relative;
     display: block;
-    width: 120px;
-    height: 34px;
+    width: 125px;
+    height: 40px;
     margin: 20px;
   }
   
@@ -12,7 +12,7 @@
     height: 40px; 
     width: 1040px;
     float: left;
-    margin: 10px;
+    margin: 5px;
     padding: 5px;
     border:3px solid royalblue;
 
@@ -32,7 +32,7 @@
   width: 1050px;
   height: 20px;
   float: left;
-  padding: 5px;
+  padding: 2px;
   font-size: 17px;
 }
 
@@ -51,9 +51,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ca2222;
+    background-color: rgb(219, 50, 54);
     -webkit-transition: .4s;
     transition: .4s;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    
 }
   
 .slider:before {
@@ -61,15 +63,15 @@
     content: "";
     height: 26px;
     width: 26px;
-    left: 4px;
-    bottom: 4px;
+    left: 5px;
+    bottom: 7px;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
 }
   
 input:checked + .slider {
-    background-color: #2ab934;
+    background-color: rgb(46,139,87);
 }
   
 input:focus + .slider {
@@ -109,7 +111,7 @@ input:checked + .slider .off{
   
   /* Rounded sliders */
 .slider.round {
-    border-radius: 34px;
+    border-radius: 50px;
 }
   
 .slider.round:before {
@@ -137,7 +139,7 @@ input:checked + .slider .off{
   height: 29px;
   overflow: hidden;
   width: 120px;
-  background-color:rgba(231, 162, 78, 0.719);
+  background-color:rgba(255,165,0, 1);
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -145,11 +147,12 @@ input:checked + .slider .off{
 
 .numselect select {
   background: transparent;
+  background-color: rgba(255,165,0, 1);
   border: none;
   font-size: 14px;
   height: 29px;
   padding: 5px;
-  width: 148px;
+  width: 120px;
 } 
 
 .numselect.slate {
@@ -164,3 +167,4 @@ input:checked + .slider .off{
   height: 34px;
   width: 148px;
 }
+

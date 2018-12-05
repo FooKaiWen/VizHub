@@ -361,8 +361,8 @@ function plotPostTypeChart(chartid, postCount, postType){
             data: {
                 datasets: [{
                     data: postCount,
-                    backgroundColor: ["Red","Green","Blue","Yellow","Purple","Pink"],
-                    hoverBackgroundColor: ["Red","Green","Blue","Yellow","Purple","Pink"],
+                    backgroundColor: ["#B22222","#2E8B57","#4682B4","#FFA500","#BA55D3"],
+                    hoverBackgroundColor: ["#B22222","#2E8B57","#4682B4","#FFA500","#BA55D3"],
                     hoverBorderColor: "Black",
                 }],
                 labels:
